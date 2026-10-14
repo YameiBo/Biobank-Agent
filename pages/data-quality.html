@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>样本数据质控  - 体系管理智能体</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924j" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item active" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>平台级模块</span><span class="sep">/</span>
+        <span class="current">样本数据质控</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">样本数据质控</div>
+          <div class="page-desc">多维度质量规则 · 数据清洗 · 质量评分与报告 · 血缘追踪 · 质量预警 · 脱敏与加密存储</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" id="dq-detect">⟳ 立即检测</button>
+          <button class="btn btn-primary" id="dq-report">▤ 质量报告</button>
+        </div>
+      </div>
+
+      <!-- 四维质量评分 -->
+      <div class="grid grid-4" id="dq-kpi" style="margin-bottom:16px;"></div>
+
+      <div class="card">
+        <div class="tabs">
+          <div class="tab active" data-target="pane-rules">规则管理</div>
+          <div class="tab" data-target="pane-clean">数据清洗 <span id="dq-issue-badge" style="color:var(--warning);">(52 个问题)</span></div>
+          <div class="tab" data-target="pane-trend">质量趋势</div>
+          <div class="tab" data-target="pane-lineage">数据血缘</div>
+          <div class="tab" data-target="pane-alert">预警配置</div>
+          <div class="tab" data-target="pane-mask">安全与脱敏</div>
+        </div>
+
+        <!-- ============ 规则管理 ============ -->
+        <div data-pane="pane-rules">
+          <div class="pm-toolbar" style="justify-content:flex-end;">
+            <button class="btn" id="dq-rule-lib">📚 从规则库引入</button>
+            <button class="btn btn-primary btn-sm" id="dq-rule-new">＋ 新建质量规则</button>
+          </div>
+          <div id="dq-rule-list">
+            <div class="pm-rule" data-name="样本温度范围检查">
+              <div class="pm-rule-main">
+                <div class="pm-rule-name">样本温度范围检查 <span class="pm-chip pm-chip-type">准确性</span></div>
+                <div class="pm-rule-expr">IF -80℃ ≤ 储存温度 ≤ -60℃</div>
+              </div>
+              <div class="pm-rule-score"><b class="pm-score-good" data-pct="98.2">98.2%</b><small>通过率</small></div>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+
+            <div class="pm-rule" data-name="采集时间完整性">
+              <div class="pm-rule-main">
+                <div class="pm-rule-name">采集时间完整性 <span class="pm-chip pm-chip-type">完整性</span></div>
+                <div class="pm-rule-expr">IF 采集日期时间字段非空</div>
+              </div>
+              <div class="pm-rule-score"><b class="pm-score-good" data-pct="100">100%</b><small>通过率</small></div>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+
+            <div class="pm-rule" data-name="样本标识唯一性">
+              <div class="pm-rule-main">
+                <div class="pm-rule-name">样本标识唯一性 <span class="pm-chip pm-chip-type">一致性</span></div>
+                <div class="pm-rule-expr">IF 样本编号在全库唯一</div>
+              </div>
+              <div class="pm-rule-score"><b class="pm-score-good" data-pct="100">100%</b><small>通过率</small></div>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+
+            <div class="pm-rule" data-name="处理时限符合性">
+              <div class="pm-rule-main">
+                <div class="pm-rule-name">处理时限符合性 <span class="pm-chip pm-chip-type">及时性</span></div>
+                <div class="pm-rule-expr">IF 从采集到入库 ≤ 4h</div>
+              </div>
+              <div class="pm-rule-score"><b class="pm-score-ok" data-pct="94.7">94.7%</b><small>通过率</small></div>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+
+            <div class="pm-rule" data-name="供者信息完整性">
+              <div class="pm-rule-main">
+                <div class="pm-rule-name">供者信息完整性 <span class="pm-chip pm-chip-type">完整性</span></div>
+                <div class="pm-rule-expr">IF 知情同意书关联字段非空</div>
+              </div>
+              <div class="pm-rule-score"><b class="pm-score-good" data-pct="99.1">99.1%</b><small>通过率</small></div>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+
+            <div class="pm-rule" data-name="样本量最低要求">
+              <div class="pm-rule-main">
+                <div class="pm-rule-name">样本量最低要求 <span class="pm-chip pm-chip-type">准确性</span></div>
+                <div class="pm-rule-expr">IF 血清/血浆分装量 ≥ 0.3mL</div>
+              </div>
+              <div class="pm-rule-score"><b class="pm-score-bad" data-pct="87.3">87.3%</b><small>通过率</small></div>
+              <button class="pm-switch" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px;">
+            共 <strong id="dq-rule-count">6</strong> 条质量规则 · 规则停用后该维度不再参与自动检测，历史评分保留 ·
+            带 <span class="tag tag-primary" style="font-size:10px;padding:1px 6px;">规则库</span> 标记的规则由「规则库」引入，与库内版本同源
+          </div>
+        </div>
+
+        <!-- ============ 数据清洗 ============ -->
+        <div data-pane="pane-clean" style="display:none;">
+          <div class="pm-banner">
+            <span class="pm-banner-ico">🔍</span>
+            <div>
+              <strong>上次全库检测：<span id="dq-last">2024-12-01 06:00</span></strong><br />
+              共检测 <strong>12,847</strong> 条样本记录，发现 <strong id="dq-issue-total">52</strong> 个质量问题，总体质量评分 <strong id="dq-score">97.8</strong>/100
+            </div>
+          </div>
+          <div id="dq-issue-list">
+            <div class="pm-issue" data-field="储存温度记录">
+              <div class="pm-issue-body">
+                <div class="pm-issue-head"><span class="pm-issue-field">储存温度记录</span><span class="pm-chip pm-chip-type">异常数据</span><span class="tag tag-error">严重</span></div>
+                <div class="pm-issue-desc">18 条记录温度超出 -80℃±2℃ 范围，请核查对应冰箱校准状态</div>
+              </div>
+              <div class="pm-issue-count"><b>18</b><small>条记录</small></div>
+              <div class="pm-issue-sug">
+                <span class="pm-sug-label">清洗建议</span>
+                <span>先核验 ULT-03 温度探头校准状态；确认属设备异常的记录保留原值并标记，属探针漂移的按同批次均值修正并留痕</span>
+                <button class="btn btn-sm" data-dq-adopt="储存温度记录">采纳建议</button>
+              </div>
+            </div>
+            <div class="pm-issue" data-field="处理时间">
+              <div class="pm-issue-body">
+                <div class="pm-issue-head"><span class="pm-issue-field">处理时间</span><span class="pm-chip pm-chip-type">超时数据</span><span class="tag tag-warning">中等</span></div>
+                <div class="pm-issue-desc">7 批次从采集到处理超过 4h，建议追溯原因并记录说明</div>
+              </div>
+              <div class="pm-issue-count"><b>7</b><small>条记录</small></div>
+              <div class="pm-issue-sug">
+                <span class="pm-sug-label">清洗建议</span>
+                <span>自动补全「超时原因」字段为空值的记录，按交接班记录回填说明；无法溯源的统一标记为「待人工确认」</span>
+                <button class="btn btn-sm" data-dq-adopt="处理时间">采纳建议</button>
+              </div>
+            </div>
+            <div class="pm-issue" data-field="供者ID">
+              <div class="pm-issue-body">
+                <div class="pm-issue-head"><span class="pm-issue-field">供者 ID</span><span class="pm-chip pm-chip-type">重复数据</span><span class="tag tag-warning">中等</span></div>
+                <div class="pm-issue-desc">3 条记录供者 ID 相同但采集时间不同，请确认是否为同一供者的多次采集</div>
+              </div>
+              <div class="pm-issue-count"><b>3</b><small>条记录</small></div>
+              <div class="pm-issue-sug">
+                <span class="pm-sug-label">清洗建议</span>
+                <span>按「供者 ID + 采集时间 + 采集部位」组合判重：确为多次采集的合并供者档案并保留独立样本号，真重复记录标记作废</span>
+                <button class="btn btn-sm" data-dq-adopt="供者ID">采纳建议</button>
+              </div>
+            </div>
+            <div class="pm-issue" data-field="样本分装量">
+              <div class="pm-issue-body">
+                <div class="pm-issue-head"><span class="pm-issue-field">样本分装量</span><span class="pm-chip pm-chip-type">异常数据</span><span class="tag tag-default">轻微</span></div>
+                <div class="pm-issue-desc">18 管分装量 &lt; 0.3mL，建议核实是否满足下游使用要求</div>
+              </div>
+              <div class="pm-issue-count"><b>18</b><small>条记录</small></div>
+              <div class="pm-issue-sug">
+                <span class="pm-sug-label">清洗建议</span>
+                <span>不修改原始分装量，改为在样本卡上附加「分装量偏低」标记并通知下游；建议在分装工位张贴最低分装量标识</span>
+                <button class="btn btn-sm" data-dq-adopt="样本分装量">采纳建议</button>
+              </div>
+            </div>
+            <div class="pm-issue" data-field="知情同意书编号">
+              <div class="pm-issue-body">
+                <div class="pm-issue-head"><span class="pm-issue-field">知情同意书编号</span><span class="pm-chip pm-chip-type">缺失数据</span><span class="tag tag-error">严重</span></div>
+                <div class="pm-issue-desc">6 条样本记录未关联知情同意书编号，违反伦理合规要求</div>
+              </div>
+              <div class="pm-issue-count"><b>6</b><small>条记录</small></div>
+              <div class="pm-issue-sug">
+                <span class="pm-sug-label">清洗建议</span>
+                <span>按供者档案与纸质同意书编号自动回填；30 天内无法补齐的记录冻结出库权限并生成整改工单</span>
+                <button class="btn btn-sm" data-dq-adopt="知情同意书编号">采纳建议</button>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px;">
+            点击任意问题卡可查看命中记录明细 · 清洗结果<strong>不直接改写原始数据</strong>，只生成待处理工单；采纳建议后由责任人确认执行
+          </div>
+        </div>
+
+        <!-- ============ 质量趋势 ============ -->
+        <div data-pane="pane-trend" style="display:none;">
+          <div class="chart-title" style="font-size:13px;font-weight:600;margin-bottom:10px;">质量评分趋势（最近 6 个月）</div>
+          <div class="pm-chart-wrap" id="dq-trend"></div>
+          <div class="pm-legend" style="margin-top:10px;">
+            <span><i style="background:#00B42A;"></i>完整性</span>
+            <span><i style="background:#2B7FFF;"></i>一致性</span>
+            <span><i style="background:#FF7D00;"></i>准确性</span>
+            <span><i style="background:#722ED1;"></i>及时性</span>
+          </div>
+
+          <!-- 质量报告定期生成（17.5-3：定期输出质量评估报告） -->
+          <div class="pm-sub-card">
+            <div class="pm-sub-head">
+              <strong>质量报告定期生成</strong>
+              <span class="tag tag-success" data-dq-sub-tag>已启用</span>
+              <button class="pm-switch on" id="dq-sub-switch" aria-label="启用 / 停用定期生成"></button>
+            </div>
+            <div class="pm-meta-grid" style="margin-bottom:0;">
+              <div><small>生成周期</small><b>每周一 08:00</b></div>
+              <div><small>收件人</small><b>质量主管、技术主管</b></div>
+              <div><small>输出格式</small><b>PDF + Word</b></div>
+            </div>
+            <div class="pm-report-list" id="dq-report-list"></div>
+            <div style="font-size:11.5px;color:var(--text-tertiary);margin-top:10px;">
+              下次生成：2024-12-02 08:00 · 报告生成后自动归档至「智能报告」模块，并同步至 CNAS 迎检材料
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ 数据血缘 ============ -->
+        <div data-pane="pane-lineage" style="display:none;">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
+            <div style="font-size:13px;font-weight:600;">数据血缘追踪</div>
+            <div style="font-size:12px;color:var(--text-tertiary);">记录数据从采集到使用的完整路径</div>
+          </div>
+          <div class="pm-lineage-wrap" id="dq-lineage"></div>
+
+          <div style="display:flex;align-items:baseline;gap:10px;margin:18px 0 10px;">
+            <div style="font-size:13px;font-weight:600;">流转路径明细</div>
+            <div style="font-size:12px;color:var(--text-tertiary);">完整记录数据来源、加工过程与流转路径，可按环节逐条审计</div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:104px;">环节</th>
+                  <th style="width:136px;">来源系统</th>
+                  <th>加工过程</th>
+                  <th>流转路径</th>
+                  <th style="width:92px;">记录数</th>
+                  <th style="width:130px;">最近更新</th>
+                </tr>
+              </thead>
+              <tbody id="dq-flow-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ============ 预警配置 ============ -->
+        <div data-pane="pane-alert" style="display:none;">
+          <div class="pm-toolbar">
+            <span style="font-size:12.5px;color:var(--text-secondary);">
+              当质量指标低于阈值时自动告警，并按「通知对象」推送至对应责任人；告警记录同步写入事件管控中心
+            </span>
+            <button class="btn btn-primary btn-sm" id="dq-alert-new">＋ 新建预警规则</button>
+          </div>
+          <div id="dq-alert-list">
+            <div class="pm-alert" data-name="温度超限预警">
+              <div class="pm-alert-ico">🔔</div>
+              <div class="pm-alert-body">
+                <div class="pm-alert-name">温度超限预警</div>
+                <div class="pm-alert-cond"><span>阈值：储存温度超出 -80℃±2℃</span><span>通知对象：储存管理员、质量主管</span><span>通知方式：短信 + 邮件</span><span>频率：立即</span><span>最近触发：12-01 02:14</span></div>
+              </div>
+              <span class="tag tag-success" data-dq-alert-tag>已启用</span>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+            <div class="pm-alert" data-name="数据质量分下降">
+              <div class="pm-alert-ico">📉</div>
+              <div class="pm-alert-body">
+                <div class="pm-alert-name">数据质量分下降</div>
+                <div class="pm-alert-cond"><span>阈值：任一维度评分下降 &gt; 2%</span><span>通知对象：质量主管</span><span>通知方式：邮件</span><span>频率：每日 08:00</span><span>最近触发：11-26 08:00</span></div>
+              </div>
+              <span class="tag tag-success" data-dq-alert-tag>已启用</span>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+            <div class="pm-alert" data-name="样本处理超时">
+              <div class="pm-alert-ico">⏱</div>
+              <div class="pm-alert-body">
+                <div class="pm-alert-name">样本处理超时</div>
+                <div class="pm-alert-cond"><span>阈值：采集到入库 &gt; 4h</span><span>通知对象：样本管理员、技术主管</span><span>通知方式：系统通知</span><span>频率：实时</span><span>最近触发：11-30 12:45</span></div>
+              </div>
+              <span class="tag tag-success" data-dq-alert-tag>已启用</span>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+            <div class="pm-alert" data-name="知情同意缺失告警">
+              <div class="pm-alert-ico">📋</div>
+              <div class="pm-alert-body">
+                <div class="pm-alert-name">知情同意缺失告警</div>
+                <div class="pm-alert-cond"><span>阈值：知情同意书编号为空</span><span>通知对象：质量主管、文件管理员</span><span>通知方式：邮件 + 系统通知</span><span>频率：每日 09:00</span><span>最近触发：11-29 09:00</span></div>
+              </div>
+              <span class="tag tag-success" data-dq-alert-tag>已启用</span>
+              <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+            <div class="pm-alert off" data-name="存储容量预警">
+              <div class="pm-alert-ico" style="background:var(--bg-disabled);color:var(--text-tertiary);">💾</div>
+              <div class="pm-alert-body">
+                <div class="pm-alert-name">存储容量预警</div>
+                <div class="pm-alert-cond"><span>阈值：库存使用率 &gt; 85%</span><span>通知对象：样本库主管、质量主管</span><span>通知方式：邮件 + 系统通知</span><span>频率：每周汇报</span><span>最近触发：—</span></div>
+              </div>
+              <span class="tag tag-default" data-dq-alert-tag>已禁用</span>
+              <button class="pm-switch" data-dq-switch aria-label="启用 / 停用"></button>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px;">
+            共 <strong id="dq-alert-count">5</strong> 条预警规则 · 停用后不再推送，历史触发记录保留
+          </div>
+        </div>
+
+        <!-- ============ 安全与脱敏（17.5-6） ============ -->
+        <div data-pane="pane-mask" style="display:none;">
+          <div class="pm-mask-grid" id="dq-mask-kpi"></div>
+
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px;">
+            <div style="font-size:13px;font-weight:600;">敏感字段脱敏与加密存储</div>
+            <div style="font-size:12px;color:var(--text-tertiary);">字段级脱敏规则 + 落库加密，展示层默认脱敏；确需明文时按权限申请并留痕</div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:150px;">字段</th>
+                  <th style="width:104px;">所属对象</th>
+                  <th style="width:88px;">敏感等级</th>
+                  <th>脱敏规则</th>
+                  <th style="width:134px;">加密算法</th>
+                  <th style="width:92px;">存储状态</th>
+                  <th class="col-actions" style="width:96px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="dq-mask-body"></tbody>
+            </table>
+          </div>
+
+          <div class="grid grid-2" style="margin-top:16px;">
+            <div class="pm-key-card">
+              <div class="pm-rail-title">密钥与加密策略</div>
+              <div class="pm-key-row"><span class="k">主密钥算法</span><span class="v">SM4-CBC（国密）</span></div>
+              <div class="pm-key-row"><span class="k">数据加密算法</span><span class="v">AES-256-GCM + SM4 双模式</span></div>
+              <div class="pm-key-row"><span class="k">密钥轮换周期</span><span class="v">90 天（自动）</span></div>
+              <div class="pm-key-row"><span class="k">上次轮换</span><span class="v">2024-10-08</span></div>
+              <div class="pm-key-row"><span class="k">下次轮换</span><span class="v">2025-01-06</span></div>
+              <div class="pm-key-row"><span class="k">加密覆盖率</span><span class="v" id="dq-key-cov">12 / 12 个敏感字段 · 100%</span></div>
+              <div class="pm-key-progress"><span id="dq-key-bar" style="width:72%;"></span></div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+                <span style="font-size:11.5px;color:var(--text-tertiary);">距下次自动轮换还有 36 天</span>
+                <button class="btn btn-sm" id="dq-key-rotate" style="margin-left:auto;">立即轮换密钥</button>
+              </div>
+            </div>
+
+            <div class="pm-key-card">
+              <div class="pm-rail-title">敏感数据访问审计（近 24 小时）</div>
+              <div id="dq-access-list"></div>
+            </div>
+          </div>
+
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px;">
+            共 <strong>8</strong> 个敏感字段已配置脱敏规则 · 全部敏感字段落库加密 · 每次敏感数据访问均写入操作日志，符合数据安全管理规范
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/rule-store.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+<script>
+/* ===================== 样本数据质控 · 页面交互 ===================== */
+(function () {
+  /* ---------- 四维评分数据 ---------- */
+  var DIMS = [
+    { key: '完整性', pct: 99.1, color: '#00B42A', grade: '优秀', gradeCls: 'pm-grade-good', note: '必填字段完整率' },
+    { key: '一致性', pct: 100,  color: '#2B7FFF', grade: '优秀', gradeCls: 'pm-grade-good', note: '跨系统取值一致' },
+    { key: '准确性', pct: 98.2, color: '#FF7D00', grade: '良好', gradeCls: 'pm-grade-ok',   note: '与实测值偏差' },
+    { key: '及时性', pct: 94.7, color: '#722ED1', grade: '需改进', gradeCls: 'pm-grade-bad', note: '时限内完成率' }
+  ];
+  var TREND = {
+    months: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    series: [
+      { name: '完整性', color: '#00B42A', v: [97.0, 98.0, 98.5, 98.8, 99.0, 99.1] },
+      { name: '一致性', color: '#2B7FFF', v: [99.0, 99.5, 99.8, 100, 100, 100] },
+      { name: '准确性', color: '#FF7D00', v: [95.0, 96.0, 96.8, 97.5, 98.0, 98.2] },
+      { name: '及时性', color: '#722ED1', v: [88.0, 90.0, 91.5, 92.8, 94.0, 94.7] }
+    ]
+  };
+  var LINEAGE = {
+    nodes: [
+      { x: 40,  y: 124, w: 104, h: 52, t: '供者',     s: '知情同意', bg: '#E8F1FF', bd: '#B7D2FF', fg: '#1E5BD6' },
+      { x: 186, y: 124, w: 104, h: 52, t: '样本采集', s: '7.2 条款', bg: '#E8FFEA', bd: '#B8F0C2', fg: '#00892A' },
+      { x: 332, y: 72,  w: 104, h: 52, t: '血液处理', s: 'SOP-007',  bg: '#FFF3E0', bd: '#FFE0B2', fg: '#B25E00' },
+      { x: 332, y: 176, w: 104, h: 52, t: '组织处理', s: 'SOP-009',  bg: '#FFF3E0', bd: '#FFE0B2', fg: '#B25E00' },
+      { x: 478, y: 124, w: 104, h: 52, t: '冻存储存', s: 'ULT / LN', bg: '#F5EDFF', bd: '#D8C2FF', fg: '#722ED1' },
+      { x: 624, y: 72,  w: 104, h: 52, t: '科研使用', s: '分发记录',  bg: '#FFECE8', bd: '#FFC9BE', fg: '#C4341F' },
+      { x: 624, y: 176, w: 104, h: 52, t: '质量检测', s: 'QC 记录',   bg: '#E8FFFB', bd: '#B0EFEC', fg: '#0A8F8C' }
+    ],
+    edges: [[0, 1], [1, 2], [1, 3], [2, 4], [3, 4], [4, 5], [4, 6]]
+  };
+  var ringEls = {};
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+  function pad(s, n) { return String(s) + '&nbsp;'.repeat(Math.max(0, n - String(s).length)); }
+
+  /* ---------- 四维评分环 ---------- */
+  var C = 2 * Math.PI * 26;
+  function renderKpi() {
+    document.getElementById('dq-kpi').innerHTML = DIMS.map(function (d, i) {
+      var off = C * (1 - d.pct / 100);
+      return '<div class="pm-kpi">' +
+        '<div class="pm-ring"><svg width="62" height="62" viewBox="0 0 62 62">' +
+        '<circle class="pm-ring-track" cx="31" cy="31" r="26"/>' +
+        '<circle class="pm-ring-bar" id="ring-' + i + '" cx="31" cy="31" r="26" stroke="' + d.color + '" stroke-dasharray="' + C.toFixed(2) + '" stroke-dashoffset="' + C.toFixed(2) + '" data-off="' + off.toFixed(2) + '"/>' +
+        '</svg><div class="pm-ring-val" id="ringv-' + i + '" style="color:' + d.color + ';">' + d.pct + '%</div></div>' +
+        '<div class="pm-kpi-body"><div class="pm-kpi-name">' + d.key + '</div>' +
+        '<div class="pm-kpi-grade ' + d.gradeCls + '">' + d.grade + '</div>' +
+        '<div class="pm-kpi-note">' + d.note + '</div></div></div>';
+    }).join('');
+    requestAnimationFrame(function () {
+      DIMS.forEach(function (d, i) {
+        var el = document.getElementById('ring-' + i);
+        if (el) el.style.strokeDashoffset = el.getAttribute('data-off');
+      });
+    });
+  }
+
+  function updateKpi() {
+    DIMS.forEach(function (d, i) {
+      var el = document.getElementById('ring-' + i), v = document.getElementById('ringv-' + i);
+      if (!el) return;
+      el.style.strokeDashoffset = (C * (1 - d.pct / 100)).toFixed(2);
+      if (v) v.textContent = d.pct.toFixed(1).replace(/\.0$/, '') + '%';
+    });
+  }
+
+  /* ---------- 质量趋势 ---------- */
+  function renderTrend() {
+    var W = 860, H = 320, PL = 44, PR = 20, PT = 16, PB = 34;
+    var iw = W - PL - PR, ih = H - PT - PB, min = 88, max = 101;
+    function x(i) { return PL + iw * i / (TREND.months.length - 1); }
+    function y(v) { return PT + ih - ih * (v - min) / (max - min); }
+    var grid = [88, 92, 96, 100].map(function (v) {
+      return '<line class="pm-grid-line" x1="' + PL + '" y1="' + y(v).toFixed(1) + '" x2="' + (W - PR) + '" y2="' + y(v).toFixed(1) + '"/>' +
+        '<text class="pm-axis-text" x="' + (PL - 8) + '" y="' + (y(v) + 3.5).toFixed(1) + '" text-anchor="end">' + v + '</text>';
+    }).join('');
+    var xl = TREND.months.map(function (m, i) {
+      return '<text class="pm-axis-text" x="' + x(i).toFixed(1) + '" y="' + (H - 10) + '" text-anchor="middle">' + m + '</text>';
+    }).join('');
+    var lines = TREND.series.map(function (s) {
+      var d = s.v.map(function (v, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1); }).join(' ');
+      var dots = s.v.map(function (v, i) {
+        return '<circle class="pm-trend-dot" cx="' + x(i).toFixed(1) + '" cy="' + y(v).toFixed(1) + '" r="3" fill="' + s.color + '"><title>' + s.name + ' ' + TREND.months[i] + '：' + v + '</title></circle>';
+      }).join('');
+      return '<path class="pm-trend-line" d="' + d + '" stroke="' + s.color + '"/>' + dots;
+    }).join('');
+    document.getElementById('dq-trend').innerHTML = '<svg class="pm-chart-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet">' + grid + xl + lines + '</svg>';
+  }
+
+  /* ---------- 血缘图 ---------- */
+  function renderLineage() {
+    var n = LINEAGE.nodes;
+    var edges = LINEAGE.edges.map(function (p) {
+      var a = n[p[0]], b = n[p[1]];
+      var x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2;
+      var mx = (x1 + x2) / 2;
+      return '<path class="pm-lin-edge" d="M' + x1 + ' ' + y1 + ' C' + mx + ' ' + y1 + ', ' + mx + ' ' + y2 + ', ' + x2 + ' ' + y2 + '"/>';
+    }).join('');
+    var nodes = n.map(function (d, i) {
+      return '<g class="pm-lin-node" data-node="' + i + '" style="cursor:pointer;">' +
+        '<rect x="' + d.x + '" y="' + d.y + '" width="' + d.w + '" height="' + d.h + '" rx="8" fill="' + d.bg + '" stroke="' + d.bd + '"/>' +
+        '<text class="pm-lin-title" x="' + (d.x + d.w / 2) + '" y="' + (d.y + 23) + '" text-anchor="middle" fill="' + d.fg + '">' + d.t + '</text>' +
+        '<text class="pm-lin-sub" x="' + (d.x + d.w / 2) + '" y="' + (d.y + 39) + '" text-anchor="middle" fill="' + d.fg + '" opacity=".72">' + d.s + '</text>' +
+        '</g>';
+    }).join('');
+    document.getElementById('dq-lineage').innerHTML =
+      '<svg class="pm-lineage-svg" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">' + edges + nodes + '</svg>';
+  }
+
+  /* ---------- 弹窗 ---------- */
+  function modal(opts) {
+    var root = document.getElementById('pm-modal-root');
+    if (!root) { root = document.createElement('div'); root.id = 'pm-modal-root'; document.body.appendChild(root); }
+    root.innerHTML =
+      '<div class="modal-overlay show"><div class="modal' + (opts.size ? ' ' + opts.size : '') + '" role="dialog" aria-modal="true">' +
+      '<div class="modal-header"><div><div class="modal-title">' + opts.title + '</div>' +
+      (opts.sub ? '<div class="modal-subtitle">' + opts.sub + '</div>' : '') + '</div>' +
+      '<button class="modal-close" data-pm-close aria-label="关闭">×</button></div>' +
+      '<div class="modal-body">' + opts.body + '</div>' +
+      '<div class="modal-footer">' + (opts.footer ||
+        ('<button class="btn" data-pm-close>取消</button>' +
+         '<button class="btn btn-primary" data-pm-ok>' + (opts.ok || '确定') + '</button>')) + '</div></div></div>';
+    var ov = root.querySelector('.modal-overlay');
+    ov.addEventListener('mousedown', function (e) { if (e.target === ov) close(); });
+    root.querySelectorAll('[data-pm-close]').forEach(function (b) { b.addEventListener('click', close); });
+    var ok = root.querySelector('[data-pm-ok]');
+    if (ok) ok.addEventListener('click', function () {
+      if (typeof opts.onOk === 'function' && opts.onOk(root) === false) return;
+      close();
+    });
+    if (opts.onMount) opts.onMount(root);
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
+    });
+  }
+  function close() {
+    var root = document.getElementById('pm-modal-root');
+    if (!root) return;
+    var ov = root.querySelector('.modal-overlay');
+    if (!ov) { root.innerHTML = ''; return; }
+    ov.classList.remove('show');
+    setTimeout(function () { root.innerHTML = ''; }, 180);
+  }
+
+  /* ---------- 开关 ---------- */
+  document.addEventListener('click', function (e) {
+    var sw = e.target.closest('[data-dq-switch]');
+    if (!sw) return;
+    var on = sw.classList.toggle('on');
+    var host = sw.closest('.pm-rule, .pm-alert');
+    var name = host ? host.getAttribute('data-name') : '';
+    if (host && host.classList.contains('pm-alert')) {
+      host.classList.toggle('off', !on);
+      var tag = host.querySelector('[data-dq-alert-tag]');
+      if (tag) { tag.className = 'tag ' + (on ? 'tag-success' : 'tag-default'); tag.textContent = on ? '已启用' : '已禁用'; }
+    }
+    if (host && host.classList.contains('pm-rule')) {
+      host.style.opacity = on ? '' : '.55';
+    }
+    window.showToast((on ? '已启用「' : '已停用「') + name + '」', on ? 'success' : 'info');
+  });
+
+  /* ---------- 页签切换后重绘图表 ---------- */
+  document.querySelectorAll('.tabs .tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var t = tab.getAttribute('data-target');
+      if (t === 'pane-trend') setTimeout(renderTrend, 20);
+      if (t === 'pane-lineage') setTimeout(renderLineage, 20);
+    });
+  });
+
+  /* ---------- 立即检测 ---------- */
+  var detecting = false;
+  document.getElementById('dq-detect').addEventListener('click', function () {
+    if (detecting) return;
+    detecting = true;
+    var btn = this;
+    var old = btn.innerHTML;
+    btn.innerHTML = '⟳ 检测中…';
+    btn.disabled = true;
+    btn.style.opacity = '.7';
+    var banner = document.querySelector('[data-pane="pane-clean"]');
+    if (banner) banner.classList.add('pm-scanning');
+    var steps = [0, 1, 2, 3];
+    var i = 0;
+    var timer = setInterval(function () {
+      if (i < steps.length) {
+        DIMS[steps[i]].pct = Math.min(100, +(DIMS[steps[i]].pct + 0.2 + Math.random() * 0.3).toFixed(1));
+        i++;
+        updateKpi();
+        return;
+      }
+      clearInterval(timer);
+      var total = 44 + Math.floor(Math.random() * 12);
+      var badge = document.getElementById('dq-issue-badge');
+      if (badge) badge.textContent = '(' + total + ' 个问题)';
+      var it = document.getElementById('dq-issue-total');
+      if (it) it.textContent = total;
+      var sc = document.getElementById('dq-score');
+      if (sc) sc.textContent = (97 + Math.random()).toFixed(1);
+      var now = new Date();
+      var lp = function (n) { return n < 10 ? '0' + n : '' + n; };
+      var last = document.getElementById('dq-last');
+      if (last) last.textContent = '2024-12-01 ' + lp(now.getHours()) + ':' + lp(now.getMinutes());
+      btn.innerHTML = old;
+      btn.disabled = false;
+      btn.style.opacity = '';
+      if (banner) banner.classList.remove('pm-scanning');
+      detecting = false;
+      window.showToast('全库检测完成：12,847 条记录，发现 ' + total + ' 个质量问题', 'success');
+    }, 420);
+  });
+
+  /* ---------- 质量报告 ---------- */
+  document.getElementById('dq-report').addEventListener('click', function () {
+    var rows = DIMS.map(function (d) {
+      return '<tr><td>' + d.key + '</td><td><strong>' + d.pct + '%</strong></td><td>' + d.grade + '</td><td>' + d.note + '</td></tr>';
+    }).join('');
+    modal({
+      title: '数据质量报告 · 2024-12', sub: '检测范围：12,847 条样本记录 · 6 条质量规则', size: 'modal-lg',
+      body: '<div class="pm-banner" style="background:var(--primary-50);border-color:var(--primary-100);color:var(--primary-dark);">' +
+        '<span class="pm-banner-ico">▤</span><div><strong>报告目录</strong>：① 总体评分 ② 四维明细 ③ 主要质量问题 ④ 整改建议 ⑤ 附录（命中记录明细）</div></div>' +
+        '<div class="table-wrap"><table class="table"><thead><tr><th>质量维度</th><th>评分</th><th>等级</th><th>口径</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+        '<div style="font-size:12.5px;color:var(--text-secondary);line-height:1.8;margin-top:12px;">' +
+        '<strong>整改建议：</strong><br/>1）及时性 94.7% 为主要短板，建议对「处理时限符合性」命中的 7 个批次做原因追溯并纳入下月培训；<br/>' +
+        '2）准确性维度中「样本量最低要求」仅 87.3%，建议在分装工位张贴最低分装量标识；<br/>' +
+        '3）储温异常 18 条记录需核查 ULT-03 冰箱校准状态，已同步生成事件工单。</div>',
+      footer: '<button class="btn" data-pm-close>取消</button><button class="btn" id="dq-export-word" data-pm-close>导出 Word</button><button class="btn btn-primary" id="dq-export-pdf" data-pm-close>导出 PDF</button>',
+      onMount: function (root) {
+        root.querySelector('#dq-export-word').addEventListener('click', function () { window.showToast('质量报告已导出为 Word', 'success'); });
+        root.querySelector('#dq-export-pdf').addEventListener('click', function () { window.showToast('质量报告已导出为 PDF', 'success'); });
+      }
+    });
+  });
+
+  /* ---------- 问题明细 ---------- */
+  var ISSUE_ROWS = {
+    '储存温度记录': [['S-20241128-013', '-58.2℃', '2024-11-28 03:14', '核查 ULT-03 校准状态'], ['S-20241129-027', '-57.6℃', '2024-11-29 05:40', '核查 ULT-03 校准状态'], ['S-20241130-041', '-82.9℃', '2024-11-30 09:12', '检查探头贴合度'], ['S-20241201-004', '-56.8℃', '2024-12-01 01:05', '转入备用冰箱'], ['S-20241201-019', '-84.1℃', '2024-12-01 04:33', '检查探头贴合度']],
+    '处理时间': [['S-20241130-008', '5.2h', '2024-11-30 08:10', '追溯并补录说明'], ['S-20241130-022', '4.8h', '2024-11-30 12:45', '追溯并补录说明'], ['S-20241201-007', '6.1h', '2024-12-01 02:20', '追溯并补录说明'], ['S-20241201-015', '4.4h', '2024-12-01 06:50', '追溯并补录说明'], ['S-20241201-031', '5.6h', '2024-12-01 10:15', '追溯并补录说明']],
+    '供者ID': [['D-00128', 'ID 重复（2 次采集）', '2024-11-24 / 11-29', '确认是否同一供者'], ['D-00455', 'ID 重复（2 次采集）', '2024-11-26 / 12-01', '确认是否同一供者'], ['D-00612', 'ID 重复（3 次采集）', '2024-11-20 / 11-25 / 11-30', '建议合并供者档案']],
+    '样本分装量': [['S-20241201-052', '0.24mL', '2024-12-01 11:02', '核实下游用量要求'], ['S-20241201-063', '0.18mL', '2024-12-01 11:40', '核实下游用量要求'], ['S-20241201-071', '0.27mL', '2024-12-01 12:05', '核实下游用量要求'], ['S-20241201-088', '0.21mL', '2024-12-01 12:30', '核实下游用量要求'], ['S-20241201-094', '0.26mL', '2024-12-01 13:10', '核实下游用量要求']],
+    '知情同意书编号': [['S-20241126-011', '编号为空', '2024-11-26 09:20', '按供者档案回填同意书编号'], ['S-20241128-034', '编号为空', '2024-11-28 10:45', '调阅纸质同意书补齐'], ['S-20241129-048', '编号为空', '2024-11-29 14:12', '按供者档案回填同意书编号'], ['S-20241130-057', '编号为空', '2024-11-30 08:35', '冻结出库并生成整改工单'], ['S-20241201-072', '编号为空', '2024-12-01 09:50', '调阅纸质同意书补齐']]
+  };
+
+  document.getElementById('dq-issue-list').addEventListener('click', function (e) {
+    var card = e.target.closest('.pm-issue');
+    if (!card) return;
+    var field = card.getAttribute('data-field');
+    var rows = ISSUE_ROWS[field] || [];
+    var total = card.querySelector('.pm-issue-count b').textContent;
+    modal({
+      title: '命中记录明细 · ' + field, sub: '共 ' + total + ' 条，以下展示前 ' + rows.length + ' 条', size: 'modal-lg',
+      body: '<div class="table-wrap"><table class="table"><thead><tr><th>样本 / 供者编号</th><th>异常值</th><th>发生时间</th><th>处理建议</th></tr></thead><tbody>' +
+        rows.map(function (r) { return '<tr><td><strong>' + r[0] + '</strong></td><td style="color:var(--error);">' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>'; }).join('') +
+        '</tbody></table></div>',
+      footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" id="dq-gen-order" data-pm-close>批量生成整改工单</button>',
+      onMount: function (root) {
+        root.querySelector('#dq-gen-order').addEventListener('click', function () {
+          window.showToast('已生成 ' + total + ' 条整改工单，可在「事件管控中心」跟踪', 'success');
+        });
+      }
+    });
+  });
+
+  /* ---------- 血缘节点点击 ---------- */
+  document.getElementById('dq-lineage').addEventListener('click', function (e) {
+    var g = e.target.closest('[data-node]');
+    if (!g) return;
+    var d = LINEAGE.nodes[+g.getAttribute('data-node')];
+    modal({
+      title: d.t, sub: '数据血缘 · ' + d.s,
+      body: '<div class="pm-desc-list">' +
+        '<div class="pm-desc-row"><span class="k">环节</span><span class="v">' + d.t + '</span></div>' +
+        '<div class="pm-desc-row"><span class="k">依据</span><span class="v">' + d.s + '</span></div>' +
+        '<div class="pm-desc-row"><span class="k">上游</span><span class="v">' + (LINEAGE.edges.filter(function (p) { return p[1] === +g.getAttribute('data-node'); }).map(function (p) { return LINEAGE.nodes[p[0]].t; }).join('、') || '—') + '</span></div>' +
+        '<div class="pm-desc-row"><span class="k">下游</span><span class="v">' + (LINEAGE.edges.filter(function (p) { return p[0] === +g.getAttribute('data-node'); }).map(function (p) { return LINEAGE.nodes[p[1]].t; }).join('、') || '—') + '</span></div>' +
+        '<div class="pm-desc-row"><span class="k">记录数</span><span class="v">12,847 条</span></div>' +
+        '<div class="pm-desc-row"><span class="k">最近更新</span><span class="v">2024-12-01 11:32</span></div>' +
+        '</div>',
+      footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" id="dq-lin-goto" data-pm-close>查看该环节记录</button>',
+      onMount: function (root) {
+        root.querySelector('#dq-lin-goto').addEventListener('click', function () { window.showToast('已跳转至「' + d.t + '」环节记录', 'success'); });
+      }
+    });
+  });
+
+  /* ==========================================================
+     质量报告定期生成（17.5-3）
+     ========================================================== */
+  var REPORTS = [
+    { n: '数据质量报告 · 2024-11（第 48 周）', t: '2024-11-25 08:00', s: '总体 97.6 分 · 问题 52 个 · PDF + Word' },
+    { n: '数据质量报告 · 2024-11（第 47 周）', t: '2024-11-18 08:00', s: '总体 97.2 分 · 问题 61 个 · PDF + Word' },
+    { n: '数据质量报告 · 2024-11（第 46 周）', t: '2024-11-11 08:00', s: '总体 96.8 分 · 问题 74 个 · PDF + Word' }
+  ];
+
+  function renderReports() {
+    var host = document.getElementById('dq-report-list');
+    if (!host) return;
+    host.innerHTML = REPORTS.map(function (r, i) {
+      return '<div class="pm-report-item">' +
+        '<span class="pm-report-name">' + esc(r.n) + '</span>' +
+        '<span class="pm-report-meta">' + r.t + '</span>' +
+        '<span class="pm-report-meta">' + r.s + '</span>' +
+        '<button class="btn-text" data-report-dl="' + i + '">下载</button></div>';
+    }).join('');
+  }
+
+  document.getElementById('dq-report-list').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-report-dl]');
+    if (!b) return;
+    window.showToast('已开始下载「' + REPORTS[+b.getAttribute('data-report-dl')].n + '」', 'success');
+  });
+
+  document.getElementById('dq-sub-switch').addEventListener('click', function () {
+    var on = this.classList.toggle('on');
+    var tag = document.querySelector('[data-dq-sub-tag]');
+    tag.className = 'tag ' + (on ? 'tag-success' : 'tag-default');
+    tag.textContent = on ? '已启用' : '已停用';
+    window.showToast(on ? '已启用每周一 08:00 自动生成质量报告' : '已停用定期生成，历史报告保留', on ? 'success' : 'info');
+  });
+
+  /* ==========================================================
+     流转路径明细（17.5-4）
+     ========================================================== */
+  var FLOW = [
+    { a: '供者', src: '供者管理模块 / 纸质知情同意书', p: '身份核验 → 知情同意书编号登记 → 敏感字段脱敏入库', path: '供者档案库 → 样本记录', cnt: '2,146', up: '2024-12-01 11:32' },
+    { a: '样本采集', src: '采集终端（移动端）', p: '条码绑定 → 采集时间戳写入 → 温度即时记录', path: '采集终端 → 样本记录', cnt: '12,847', up: '2024-12-01 11:32' },
+    { a: '血液处理', src: '前处理工作站', p: '离心分装 → 分装量校验 → SOP-007 执行记录', path: '样本记录 → 处理记录 → 库存台账', cnt: '8,920', up: '2024-12-01 10:15' },
+    { a: '组织处理', src: '前处理工作站', p: '取材分割 → 冻存管编号 → SOP-009 执行记录', path: '样本记录 → 处理记录 → 库存台账', cnt: '3,927', up: '2024-12-01 09:48' },
+    { a: '冻存储存', src: '超低温冰箱 / 液氮罐监控', p: '位置编码绑定 → 温度曲线采集 → 异常自动告警', path: '库存台账 → 设备监控库', cnt: '12,847', up: '2024-12-01 11:40' },
+    { a: '科研使用', src: '样本分发模块', p: '出库申请 → 审批 → 分发记录 → 用途登记', path: '库存台账 → 分发记录', cnt: '1,264', up: '2024-11-30 17:20' },
+    { a: '质量检测', src: 'QC 检测模块', p: '指标检测 → 结果录入 → 偏差判定（±5%）', path: '检测记录 → 质量评分库', cnt: '2,058', up: '2024-11-30 16:05' }
+  ];
+
+  function renderFlow() {
+    var host = document.getElementById('dq-flow-body');
+    if (!host) return;
+    host.innerHTML = FLOW.map(function (f) {
+      return '<tr><td><strong>' + f.a + '</strong></td><td>' + f.src + '</td><td>' + f.p + '</td>' +
+        '<td>' + f.path + '</td><td>' + f.cnt + '</td><td>' + f.up + '</td></tr>';
+    }).join('');
+  }
+
+  /* ==========================================================
+     安全与脱敏（17.5-6）
+     ========================================================== */
+  var MASKS = [
+    { f: '供者姓名', obj: '供者档案', lv: '高', lvc: 'tag-error', rule: '保留姓氏，其余以 * 代替', algo: 'SM4-CBC', raw: '张明华', masked: '张**', st: '已加密' },
+    { f: '身份证号', obj: '供者档案', lv: '高', lvc: 'tag-error', rule: '保留前 6 位与后 4 位，中间掩码', algo: 'AES-256-GCM', raw: '510107199203181234', masked: '510107********1234', st: '已加密' },
+    { f: '手机号', obj: '供者档案', lv: '高', lvc: 'tag-error', rule: '中间 4 位掩码', algo: 'AES-256-GCM', raw: '13812346677', masked: '138****6677', st: '已加密' },
+    { f: '家庭住址', obj: '供者档案', lv: '中', lvc: 'tag-warning', rule: '截断到区县一级', algo: 'SM4-CBC', raw: '四川省成都市武侯区某某路 128 号 3 栋 502', masked: '四川省成都市武侯区', st: '已加密' },
+    { f: '知情同意书编号', obj: '样本记录', lv: '中', lvc: 'tag-warning', rule: '保留后 4 位，其余掩码', algo: 'AES-256-GCM', raw: 'IC-2024-SC-0421', masked: '************0421', st: '已加密' },
+    { f: '临床诊断信息', obj: '供者档案', lv: '高', lvc: 'tag-error', rule: '仅展示 ICD 大类，不展示明细', algo: 'SM4-CBC', raw: 'D32.9 脑膜良性肿瘤', masked: 'C/D 类 · 良性肿瘤', st: '已加密' },
+    { f: '样本位置编码', obj: '库存台账', lv: '低', lvc: 'tag-default', rule: '内部编码，不脱敏', algo: 'AES-256-GCM', raw: 'LN-002-B3-014', masked: 'LN-002-B3-014', st: '已加密' },
+    { f: '检测原始结果', obj: '检测记录', lv: '中', lvc: 'tag-warning', rule: '数值区间化（±5% 区间）', algo: 'SM4-CBC', raw: '5.02 mmol/L', masked: '4.8–5.3 mmol/L', st: '已加密' }
+  ];
+
+  var ACCESS = [
+    { t: '12-01 11:32', who: '孙伟（样本管理员）', act: '查询 供者姓名', mode: '脱敏展示', use: '样本接收核对' },
+    { t: '12-01 09:15', who: '王志强（技术主管）', act: '导出 检测原始结果', mode: '脱敏导出', use: '方法学验证' },
+    { t: '12-01 08:40', who: '王明（质量主管）', act: '申请明文 身份证号', mode: '已审批（限时 30 分钟）', use: 'CNAS 评审取证' },
+    { t: '11-30 17:20', who: '刘梅（文件管理员）', act: '查询 知情同意书编号', mode: '脱敏展示', use: '文件关联校对' },
+    { t: '11-30 14:05', who: '赵丽（审计员）', act: '查询 临床诊断信息', mode: '脱敏展示', use: '内审抽样' }
+  ];
+
+  function renderMask() {
+    var kpi = [
+      { n: '8', c: '敏感字段', s: '覆盖供者与样本两类对象', color: 'var(--primary)' },
+      { n: '8', c: '已配脱敏规则', s: '字段级规则，覆盖率 100%', color: 'var(--success)' },
+      { n: '12', c: '已加密字段', s: 'AES-256-GCM / SM4-CBC', color: 'var(--pm-violet)' },
+      { n: '90', c: '密钥轮换周期（天）', s: '下次轮换 2025-01-06', color: 'var(--warning)' }
+    ];
+    document.getElementById('dq-mask-kpi').innerHTML = kpi.map(function (k) {
+      return '<div class="pm-mask-tile"><div class="pm-mask-num" style="color:' + k.color + ';">' + k.n + '</div>' +
+        '<div class="pm-mask-cap">' + k.c + '</div><div class="pm-mask-sub">' + k.s + '</div></div>';
+    }).join('');
+
+    document.getElementById('dq-mask-body').innerHTML = MASKS.map(function (m, i) {
+      return '<tr><td><strong>' + m.f + '</strong></td><td>' + m.obj + '</td>' +
+        '<td><span class="tag ' + m.lvc + '">' + m.lv + '</span></td>' +
+        '<td><span class="pm-mask-rule">' + m.rule + '</span></td>' +
+        '<td><span class="pm-hash">' + m.algo + '</span></td>' +
+        '<td><span class="tag tag-success">' + m.st + '</span></td>' +
+        '<td class="col-actions"><button class="btn-text" data-mask-view="' + i + '">脱敏预览</button></td></tr>';
+    }).join('');
+
+    document.getElementById('dq-access-list').innerHTML = ACCESS.map(function (a) {
+      return '<div class="pm-report-item"><span class="pm-report-name">' + a.who + '</span>' +
+        '<span class="pm-report-meta">' + a.act + ' · ' + a.mode + '</span>' +
+        '<span class="pm-report-meta" style="margin-left:auto;">' + a.t + '</span></div>';
+    }).join('');
+  }
+
+  document.getElementById('dq-mask-body').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-mask-view]');
+    if (!b) return;
+    var m = MASKS[+b.getAttribute('data-mask-view')];
+    modal({
+      title: '脱敏预览 · ' + m.f,
+      sub: '敏感等级 ' + m.lv + ' · 加密算法 ' + m.algo,
+      body: '<div class="pm-mask-demo">' +
+        '<div class="pm-mask-cell raw">' + esc(m.raw) + '</div>' +
+        '<div class="pm-mask-arrow">➜</div>' +
+        '<div class="pm-mask-cell masked">' + esc(m.masked) + '</div></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-tertiary);margin-top:6px;">' +
+        '<span>原始值（落库已加密，界面不展示）</span><span>脱敏后展示值</span></div>' +
+        '<div class="pm-desc-list" style="margin-top:14px;">' +
+        '<div class="pm-desc-row"><span class="k">脱敏规则</span><span class="v">' + m.rule + '</span></div>' +
+        '<div class="pm-desc-row"><span class="k">所属对象</span><span class="v">' + m.obj + '</span></div>' +
+        '<div class="pm-desc-row"><span class="k">存储加密</span><span class="v">' + m.algo + '（密文存储，密钥由 KMS 托管）</span></div>' +
+        '<div class="pm-desc-row"><span class="k">明文申请</span><span class="v">需在「规则库 · 用户管理」中具备该模块审批权限，且申请记录写入操作日志</span></div>' +
+        '</div>',
+      footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" data-pm-close id="dq-mask-apply">申请查看明文</button>',
+      onMount: function (root) {
+        root.querySelector('#dq-mask-apply').addEventListener('click', function () {
+          window.showToast('明文查看申请已提交，待质量主管审批（限时 30 分钟，访问将记入审计）', 'success');
+        });
+      }
+    });
+  });
+
+  document.getElementById('dq-key-rotate').addEventListener('click', function () {
+    var btn = this;
+    if (btn.disabled) return;
+    btn.disabled = true;
+    var old = btn.textContent;
+    btn.textContent = '轮换中…';
+    setTimeout(function () {
+      btn.disabled = false;
+      btn.textContent = old;
+      document.getElementById('dq-key-bar').style.width = '100%';
+      document.getElementById('dq-key-cov').textContent = '12 / 12 个敏感字段 · 100%（密钥已轮换）';
+      window.showToast('密钥已轮换完成：SM4 主密钥重新生成，历史密文已用新密钥重新加密', 'success');
+    }, 1200);
+  });
+
+  /* ==========================================================
+     新建质量规则 / 新建预警 / 采纳清洗建议
+     ========================================================== */
+  function addQualityRule(name, dim, expr, fromLib) {
+    var host = document.getElementById('dq-rule-list');
+    var row = document.createElement('div');
+    row.className = 'pm-rule pm-flash';
+    row.setAttribute('data-name', name);
+    row.innerHTML =
+      '<div class="pm-rule-main">' +
+      '<div class="pm-rule-name">' + esc(name) + ' <span class="pm-chip pm-chip-type">' + esc(dim) + '</span>' +
+      (fromLib ? ' <span class="tag tag-primary">规则库</span>' : '') + '</div>' +
+      '<div class="pm-rule-expr">' + esc(expr) + '</div></div>' +
+      '<div class="pm-rule-score"><b class="pm-score-good" data-pct="100">—</b><small>待检测</small></div>' +
+      '<button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>';
+    host.insertBefore(row, host.firstChild);
+    document.getElementById('dq-rule-count').textContent = host.querySelectorAll('.pm-rule').length;
+    setTimeout(function () { row.classList.remove('pm-flash'); }, 1700);
+  }
+
+  /* ==========================================================
+     从规则库引入（与 rule-store.js 同一数据源）
+     规则库页的启停 / 新增都写 localStorage，本模块实时读到同一份；
+     引入后本模块的规则列表加「规则库」标记，参与质量检测与评分。
+     ========================================================== */
+  document.getElementById('dq-rule-lib').addEventListener('click', function () {
+    var rules = (window.RULE_STORE ? RULE_STORE.all() : []);
+    if (!rules.length) { window.showToast('规则库暂无规则可引入', 'info'); return; }
+    var existing = {};
+    document.querySelectorAll('#dq-rule-list .pm-rule').forEach(function (r) { existing[r.getAttribute('data-name')] = 1; });
+    modal({
+      title: '从规则库引入规则', sub: '样本数据质控 · 规则管理 · 数据源：规则库（实时同源）', size: 'modal-lg',
+      body: '<div class="pm-toolbar" style="margin-bottom:12px;">' +
+        '<span style="font-size:12.5px;color:var(--text-secondary);">选择引入后按此维度参与质量评分：</span>' +
+        '<select class="select" id="dq-lib-dim" style="width:120px;height:32px;">' +
+        ['完整性', '一致性', '准确性', '及时性'].map(function (d) { return '<option>' + d + '</option>'; }).join('') + '</select>' +
+        '<span style="font-size:12px;color:var(--text-tertiary);margin-left:auto;">规则库共 ' + rules.length + ' 条规则</span></div>' +
+        '<div class="table-wrap"><table class="table"><thead><tr>' +
+        '<th style="width:186px;">规则名称</th><th style="width:64px;">版本</th><th style="width:140px;">触发方式</th><th>触发条件 → 执行动作</th><th style="width:64px;">状态</th><th class="col-actions" style="width:96px;">操作</th>' +
+        '</tr></thead><tbody>' +
+        rules.map(function (r) {
+          var taken = !!existing[r.name];
+          return '<tr data-lib-id="' + esc(r.id) + '">' +
+            '<td><span class="pm-rule-title">' + esc(r.name) + '</span></td>' +
+            '<td><span class="pm-chip pm-chip-type">' + esc(r.ver) + '</span></td>' +
+            '<td>' + esc(r.trigger || '—') + '</td>' +
+            '<td><span class="pm-expr" title="' + esc(r.expr) + '">' + esc(r.expr) + '</span></td>' +
+            '<td><span class="tag ' + (r.on ? 'tag-success' : 'tag-default') + '">' + (r.on ? '已启用' : '已禁用') + '</span></td>' +
+            '<td class="col-actions"><button class="btn btn-sm' + (taken ? '' : ' btn-primary') + '" data-dq-lib-take="' + esc(r.id) + '"' + (taken ? ' disabled style="opacity:.55;"' : '') + '>' + (taken ? '已引入' : '引入') + '</button></td></tr>';
+        }).join('') + '</tbody></table></div>' +
+        '<div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">引入的规则在本模块独立启停与计分，规则库内的原件不受影响；同名规则不重复引入。</div>',
+      footer: '<button class="btn" data-pm-close>关闭</button>',
+      onMount: function (root) {
+        root.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-dq-lib-take]');
+          if (!b || b.disabled) return;
+          var r = rules.filter(function (x) { return x.id === b.getAttribute('data-dq-lib-take'); })[0];
+          if (!r) return;
+          addQualityRule(r.name, root.querySelector('#dq-lib-dim').value, r.expr, true);
+          b.disabled = true;
+          b.classList.remove('btn-primary');
+          b.style.opacity = '.55';
+          b.textContent = '已引入';
+          window.showToast('已从规则库引入「' + r.name + '」（' + root.querySelector('#dq-lib-dim').value + '），纳入下次检测', 'success');
+        });
+      }
+    });
+  });
+
+  document.getElementById('dq-rule-new').addEventListener('click', function () {
+    modal({
+      title: '新建质量规则', sub: '样本数据质控 · 规则管理',
+      body: '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">规则名称 <span class="req">*</span></label><input class="input" id="dq-nr-name" placeholder="例如：冻存管编号唯一性" /></div>' +
+        '<div class="form-item"><label class="form-label">质量维度</label><select class="select" id="dq-nr-dim">' +
+        ['完整性', '一致性', '准确性', '及时性'].map(function (d) { return '<option>' + d + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">严重级别</label><select class="select" id="dq-nr-lv"><option>严重</option><option>中等</option><option selected>轻微</option></select></div>' +
+        '<div class="form-item full"><label class="form-label">校验表达式</label><input class="input" id="dq-nr-expr" placeholder="IF 样本编号在全库唯一" /></div>' +
+        '</div>',
+      ok: '保存并启用',
+      onOk: function (root) {
+        var nm = root.querySelector('#dq-nr-name').value.trim();
+        if (!nm) { window.showToast('请填写规则名称', 'error'); return false; }
+        addQualityRule(nm, root.querySelector('#dq-nr-dim').value, root.querySelector('#dq-nr-expr').value.trim() || ('IF ' + nm + ' 校验通过'));
+        window.showToast('质量规则「' + nm + '」已创建并启用，下次检测生效', 'success');
+        return true;
+      }
+    });
+  });
+
+  document.getElementById('dq-alert-new').addEventListener('click', function () {
+    modal({
+      title: '新建预警规则', sub: '样本数据质控 · 预警配置',
+      body: '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">预警名称 <span class="req">*</span></label><input class="input" id="dq-na-name" placeholder="例如：分装量低于阈值告警" /></div>' +
+        '<div class="form-item"><label class="form-label">监控指标</label><select class="select" id="dq-na-metric">' +
+        ['样本分装量', '储存温度', '处理时长', '质量评分', '知情同意完整性'].map(function (m) { return '<option>' + m + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">触发阈值</label><input class="input" id="dq-na-thr" value="< 0.3mL" /></div>' +
+        '<div class="form-item"><label class="form-label">通知对象</label><select class="select" id="dq-na-who">' +
+        ['样本管理员、质量主管', '质量主管', '技术主管', '储存管理员'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">通知方式</label><select class="select" id="dq-na-how">' +
+        ['系统通知', '邮件', '短信 + 邮件'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '</div>',
+      ok: '保存并启用',
+      onOk: function (root) {
+        var nm = root.querySelector('#dq-na-name').value.trim();
+        if (!nm) { window.showToast('请填写预警名称', 'error'); return false; }
+        var host = document.getElementById('dq-alert-list');
+        var el = document.createElement('div');
+        el.className = 'pm-alert pm-flash';
+        el.setAttribute('data-name', nm);
+        el.innerHTML = '<div class="pm-alert-ico">🔔</div><div class="pm-alert-body">' +
+          '<div class="pm-alert-name">' + esc(nm) + '</div>' +
+          '<div class="pm-alert-cond"><span>阈值：' + esc(root.querySelector('#dq-na-metric').value + ' ' + root.querySelector('#dq-na-thr').value) + '</span>' +
+          '<span>通知对象：' + esc(root.querySelector('#dq-na-who').value) + '</span>' +
+          '<span>通知方式：' + esc(root.querySelector('#dq-na-how').value) + '</span>' +
+          '<span>频率：实时</span><span>最近触发：—</span></div></div>' +
+          '<span class="tag tag-success" data-dq-alert-tag>已启用</span>' +
+          '<button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>';
+        host.insertBefore(el, host.firstChild);
+        document.getElementById('dq-alert-count').textContent = host.querySelectorAll('.pm-alert').length;
+        window.showToast('预警规则「' + nm + '」已创建并启用', 'success');
+        return true;
+      }
+    });
+  });
+
+  document.getElementById('dq-issue-list').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-dq-adopt]');
+    if (!b) return;
+    var card = b.closest('.pm-issue');
+    var field = b.getAttribute('data-dq-adopt');
+    b.disabled = true;
+    b.style.opacity = '.55';
+    b.textContent = '已采纳';
+    var head = card.querySelector('.pm-issue-head');
+    if (head && !head.querySelector('[data-dq-adopted]')) {
+      var tag = document.createElement('span');
+      tag.className = 'tag tag-success';
+      tag.setAttribute('data-dq-adopted', '1');
+      tag.textContent = '已生成清洗工单';
+      head.appendChild(tag);
+    }
+    card.classList.add('pm-flash');
+    setTimeout(function () { card.classList.remove('pm-flash'); }, 1700);
+    window.showToast('已采纳「' + field + '」清洗建议，工单已生成并推送至事件管控中心', 'success');
+  });
+
+  /* ---------- 初始化 ---------- */
+  renderKpi();
+  renderTrend();
+  renderLineage();
+  renderReports();
+  renderFlow();
+  renderMask();
+})();
+</script>
+</body>
+</html>

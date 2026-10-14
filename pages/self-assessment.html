@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>条款自评 - 体系管理智能体</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<style>
+  /* 条款自评页专属样式（数据驱动区） */
+  .sa-main-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary);margin-left:5px;vertical-align:2px;}
+  #sa-nav .sidebar-clause strong{width:46px;}
+  .clause-status.nc{background:var(--error);}
+  .sa-drop{margin-top:10px;border:1.5px dashed var(--border);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:all .18s;}
+  .sa-drop:hover{border-color:var(--primary);background:var(--primary-50);}
+  .sa-form{border-top:1px solid var(--border-light);margin-top:14px;padding-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .sa-row-on{background:var(--primary-lighter);}
+  #sa-detail p{margin:0;}
+  @media (max-width:1200px){.sa-form{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3 active" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>CNAS 迎检</span><span class="sep">/</span>
+        <span>条款管理</span><span class="sep">/</span>
+        <span class="current">条款自评</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div>
+        <div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">条款自评</div>
+          <div class="page-desc" id="sa-desc">基于 ISO 20387 全部 30 条条款，逐条提交自评结论、证据材料与整改记录</div>
+        </div>
+        <div class="page-actions">
+          <select class="select" id="sa-lib" style="width:196px; margin-right:8px;"></select>
+          <button class="btn" data-action="toast" data-msg="自评表导出中，请稍候">📤 导出自评表</button>
+          <button class="btn" data-action="toast" data-msg="已生成条款自评模板">📋 下载模板</button>
+          <button class="btn btn-primary" data-action="selfassess-new">＋ 新增自评</button>
+        </div>
+      </div>
+
+      <!-- 概览 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="grid grid-4">
+          <div class="stat stat-tile">
+            <div class="stat-ico" style="background:var(--primary-light); color:var(--primary);">📐</div>
+            <div>
+              <div class="stat-label">条款总数</div>
+              <div class="stat-value" id="sa-kpi-total" style="color:var(--primary);">30<span class="stat-unit">条</span></div>
+              <div class="stat-meta" id="sa-kpi-total-meta">ISO 20387 全部条款</div>
+            </div>
+          </div>
+          <div class="stat stat-tile">
+            <div class="stat-ico" style="background:var(--success-bg); color:var(--success);">✓</div>
+            <div>
+              <div class="stat-label">已完成</div>
+              <div class="stat-value" id="sa-kpi-done" style="color:var(--success);">11<span class="stat-unit">条</span></div>
+              <div class="stat-meta" id="sa-kpi-done-meta"><span class="pos">占比 37%</span></div>
+            </div>
+          </div>
+          <div class="stat stat-tile">
+            <div class="stat-ico" style="background:var(--warning-bg); color:var(--warning);">⏳</div>
+            <div>
+              <div class="stat-label">进行中</div>
+              <div class="stat-value" id="sa-kpi-doing" style="color:var(--warning);">10<span class="stat-unit">条</span></div>
+              <div class="stat-meta" id="sa-kpi-doing-meta">待继续推进</div>
+            </div>
+          </div>
+          <div class="stat stat-tile">
+            <div class="stat-ico" style="background:var(--error-bg); color:var(--error);">⚠</div>
+            <div>
+              <div class="stat-label">不符合项</div>
+              <div class="stat-value" id="sa-kpi-nc" style="color:var(--error);">1<span class="stat-unit">条</span></div>
+              <div class="stat-meta" id="sa-kpi-nc-meta"><span class="neg">需整改</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 条款自评工作区（数据驱动：章节导航 + 条款详情 + 五类评审方式 + 自评填写） -->
+      <div class="card sa-hover" style="margin-bottom:16px; padding:0; overflow:hidden;">
+        <div style="display:grid; grid-template-columns:236px minmax(0,1fr); min-height:270px;">
+          <div style="border-right:1px solid var(--border-light); background:var(--bg-page); padding:14px 0; display:flex; flex-direction:column; min-width:0;">
+            <div style="padding:0 16px 8px; display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-size:12px; font-weight:600; color:var(--text-secondary);">条款导航</span>
+              <span style="font-size:11px; color:var(--text-tertiary);" id="sa-nav-count"></span>
+            </div>
+            <div style="padding:0 14px 10px;">
+              <input class="input" id="sa-search" placeholder="搜索条款号 / 名称" style="width:100%; font-size:12px; height:30px;" />
+            </div>
+            <div id="sa-nav" style="overflow:auto; max-height:356px; padding-bottom:8px;"></div>
+          </div>
+          <div id="sa-detail" style="min-width:0;"></div>
+        </div>
+      </div>
+
+      <!-- 筛选 + 条款自评清单 -->
+      <div class="card">
+        <div class="tabs" id="sa-filters"></div>
+
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <div class="search-box"><input class="input" id="sa-table-search" placeholder="搜索条款编号 / 名称" /></div>
+            <select class="select" id="sa-owner" style="width:140px;"></select>
+            <select class="select" id="sa-result" style="width:140px;">
+              <option>全部结果</option>
+              <option>符合</option><option>部分符合</option><option>不符合</option><option>未填写</option>
+            </select>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn" data-action="toast" data-msg="数据已刷新">🔄 刷新</button>
+            <button class="btn" data-action="toast" data-msg="已按截止日期排序">⇅ 排序</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width:32px;"><div class="checkbox"></div></th>
+                <th>条款</th>
+                <th>条款内容</th>
+                <th>负责人</th>
+                <th>自评人</th>
+                <th>截止日期</th>
+                <th>结果</th>
+                <th>状态</th>
+                <th class="col-actions">操作</th>
+              </tr>
+            </thead>
+            <tbody id="sa-tbody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination" id="sa-pager"></div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../assets/clause-lib.js?v=20260924j"></script>
+<script src="../assets/clause-reading.js?v=20260924j"></script>
+<script src="../assets/evidence-store.js?v=20260924j"></script>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/self-assessment.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+</body>
+</html>

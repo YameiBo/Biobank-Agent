@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>材料智能归档 - CNAS 迎检</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<style>
+  /* ===== 材料智能归档页专属样式（数据驱动区） =====
+     表格改 table-layout:fixed + 显式列宽：之前是 auto 布局，浏览器会把
+     「上传人」「上传时间」压成三四行、「状态」标签挤变形，这是本次要修的主问题。 */
+  .arc-table { table-layout: fixed; min-width: 828px; }
+  .arc-table th, .arc-table td { padding: 10px 12px; vertical-align: middle; }
+  .arc-table td > .ell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* 文件名单元格：图标 + 名称（单行省略）+ 副行元信息 */
+  .arc-file { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .arc-file .ic { font-size: 18px; flex-shrink: 0; }
+  .arc-file .meta { min-width: 0; }
+  .arc-file .nm { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .arc-file .sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .arc-file + .arc-file { margin-top: 8px; }
+
+  /* 归属条款单元格：标签行 + 要素分类小字 */
+  .arc-clause { display: flex; flex-wrap: wrap; gap: 4px; overflow: hidden; max-height: 22px; }
+  .arc-clause .tag { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .arc-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* 左侧分类项 */
+  .arc-nav { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; color: var(--text-secondary); transition: background .15s; }
+  .arc-nav:hover { background: var(--bg-hover); }
+  .arc-nav.on { background: var(--primary-light); color: var(--primary); font-weight: 500; }
+  .arc-nav .cnt { margin-left: auto; font-size: 12px; color: var(--text-tertiary); font-weight: 400; font-variant-numeric: tabular-nums; }
+  .arc-nav.on .cnt { color: var(--primary); }
+  .arc-nav .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .arc-sep { height: 1px; background: var(--border-light); margin: 10px 4px; }
+  .arc-cap { font-size: 11px; color: var(--text-tertiary); padding: 0 10px 4px; }
+
+  /* 上传区（紧凑版） */
+  .arc-drop { border: 1.5px dashed var(--primary-100); background: var(--primary-lighter); border-radius: 8px;
+              padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all .18s; }
+  .arc-drop:hover, .arc-drop.hot { border-color: var(--primary); background: var(--primary-light); }
+  .arc-drop .ic { font-size: 26px; line-height: 1; }
+  .arc-drop .tx { flex: 1; min-width: 0; font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; }
+  .arc-drop .tx b { color: var(--primary); }
+
+  /* 批量操作条 */
+  .arc-bulk { display: none; align-items: center; gap: 10px; padding: 9px 12px; margin-bottom: 12px;
+              background: var(--primary-lighter); border: 1px solid var(--primary-100); border-radius: 8px; font-size: 12.5px; }
+  .arc-bulk.on { display: flex; }
+  .arc-bulk .sp { flex: 1; }
+
+  /* 表格内的状态标签不换行 */
+  .arc-table .tag { white-space: nowrap; }
+  .arc-table .col-actions { width: 132px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3 active" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>CNAS 迎检</span><span class="sep">/</span>
+        <span>证据材料中心</span><span class="sep">/</span>
+        <span class="current">材料智能归档</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">材料智能归档</div>
+          <div class="page-desc" id="arc-desc">按 CNAS-CL10 / ISO 20387 要素自动分类归档迎检材料，支持 OCR 识别与条款智能匹配</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" data-action="evidence-upload" data-mode="batch">📥 批量导入</button>
+          <button class="btn" data-action="arc-search-focus">🔍 全文检索</button>
+          <button class="btn btn-primary" data-action="evidence-upload">＋ 上传材料</button>
+        </div>
+      </div>
+
+      <!-- 统计概览（全部由材料数据算出） -->
+      <div class="grid grid-4" style="margin-bottom:16px;" id="arc-kpi"></div>
+
+      <div class="grid" style="grid-template-columns: 236px minmax(0,1fr); gap:16px; align-items:start;">
+        <!-- 左侧：要素分类 + 归核状态 -->
+        <div class="card" style="padding:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <strong style="font-size:14px;">要素分类</strong>
+            <button class="btn-text" data-action="toast" data-msg="分类管理功能演示：可新增 / 重命名 / 合并要素分类" title="管理分类">＋</button>
+          </div>
+          <div id="arc-cats"></div>
+        </div>
+
+        <!-- 右侧：上传区 + 材料列表 -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" id="arc-list-title">材料列表</div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="search-box"><input class="input" id="arc-search" placeholder="按文件名 / 条款 / 标签搜索" /></div>
+              <select class="select" id="arc-sort" style="width:124px;">
+                <option value="time">最新上传</option>
+                <option value="name">文件名 A→Z</option>
+                <option value="matched">识别匹配度</option>
+                <option value="pending">待处理优先</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 上传区：点击 / 拖拽都会真实入列表 -->
+          <div class="arc-drop" id="arc-drop" data-action="evidence-upload">
+            <div class="ic">📤</div>
+            <div class="tx">
+              <b>点击或拖拽文件到此处上传</b><br />
+              <span style="font-size:11.5px; color:var(--text-tertiary);">支持 PDF / Word / Excel / JPG / PNG，单文件不超过 50MB</span>
+            </div>
+            <button class="btn btn-sm btn-upload" data-action="evidence-upload" type="button">选择文件</button>
+          </div>
+          <div style="font-size:11.5px; color:var(--primary); margin:8px 2px 14px;">💡 上传后系统将自动识别条款归属与归档位置，未达阈值时转人工确认</div>
+
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <select class="select" id="arc-lib" style="width:150px;">
+                <option value="all">全部标准库</option>
+                <option value="iso20387">ISO 20387</option>
+                <option value="cl10">CNAS-CL10:2020</option>
+              </select>
+              <select class="select" id="arc-ext" style="width:116px;">
+                <option value="all">全部格式</option>
+                <option value="pdf">PDF</option>
+                <option value="docx">Word</option>
+                <option value="xlsx">Excel</option>
+                <option value="img">图片</option>
+              </select>
+              <select class="select" id="arc-range" style="width:126px;">
+                <option value="all">全部时间</option>
+                <option value="week">本周新增</option>
+                <option value="month">近一个月</option>
+                <option value="quarter">近三个月</option>
+              </select>
+              <button class="btn btn-sm" data-action="arc-reset" id="arc-reset">清空筛选</button>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn" data-action="arc-export">⬇ 导出清单</button>
+              <button class="btn" data-action="toast" data-msg="材料列表已刷新">🔄 刷新</button>
+            </div>
+          </div>
+
+          <div class="arc-bulk" id="arc-bulk">
+            <span>已选 <strong id="arc-bulk-n">0</strong> 项</span>
+            <div class="sp"></div>
+            <button class="btn btn-sm" data-action="arc-bulk-verify">✓ 批量核验归档</button>
+            <button class="btn btn-sm" data-action="arc-bulk-classify">🏷 批量归类</button>
+            <button class="btn btn-sm" data-action="arc-bulk-remove">🗑 移出归档</button>
+            <button class="btn btn-sm" data-action="arc-bulk-clear">取消选择</button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table arc-table">
+              <colgroup>
+                <!-- 上传时间列必须放得下「2026-09-21 16:26」整串：
+                     126px 减去单元格左右内边距只剩约 100px，会截成「2026-09-21 1…」。
+                     142px 留够余量，宽度从「文件名」列让出（该列是自适应列）。 -->
+                <col style="width:38px;" /><col /><col style="width:200px;" /><col style="width:142px;" />
+                <col style="width:86px;" /><col style="width:132px;" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th><div class="checkbox" id="arc-check-all" title="全选本页"></div></th>
+                  <th>文件名</th>
+                  <th>归属条款 / 要素分类</th>
+                  <th>上传时间</th>
+                  <th>状态</th>
+                  <th class="col-actions">操作</th>
+                </tr>
+              </thead>
+              <tbody id="arc-tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination" id="arc-pager"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../assets/clause-lib.js?v=20260924j"></script>
+<script src="../assets/evidence-store.js?v=20260924j"></script>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/archive-page.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+</body>
+</html>

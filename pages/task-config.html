@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>任务分配 - CNAS 迎检</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<style>
+  /* 任务清单：分组视图 + 全部任务弹窗（2026-09-24） */
+  .tc-view-hint { font-size: 12px; color: var(--text-tertiary); margin: 2px 0 10px; }
+  .tc-view-hint b { color: var(--text-secondary); font-weight: 600; }
+  .tc-group-row td { background: var(--bg-page); font-size: 12px; font-weight: 600; color: var(--text-secondary); padding: 7px 16px; border-bottom: 1px solid var(--border-light); }
+  .tc-group-row .tc-g-count { font-weight: 400; color: var(--text-tertiary); margin-left: 6px; }
+  .tc-group-row .tc-g-ico { margin-right: 6px; }
+  .tc-due-soon { color: var(--error); font-weight: 600; }
+  .tc-all-wrap { max-height: 420px; overflow: auto; border: 1px solid var(--border-light); border-radius: var(--radius-lg); }
+  .tc-all-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .tc-all-toolbar .search-box { flex: 1; min-width: 200px; }
+  .tc-due-list { max-height: 220px; overflow: auto; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 4px 0; }
+  .tc-due-list .check-item { padding: 7px 12px; margin: 0; border-radius: 0; }
+  .tc-due-list .check-item + .check-item { border-top: 1px solid var(--border-light); }
+  .tc-due-list .tc-due-cur { margin-left: auto; font-size: 12px; color: var(--text-tertiary); }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3 active" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>CNAS 迎检</span><span class="sep">/</span>
+        <span>迎检筹备</span><span class="sep">/</span>
+        <span class="current">任务分配</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">任务分配</div>
+          <div class="page-desc">为每条 CNAS 条款配置负责人、自评人、复核人、截止日期</div>
+        </div>
+        <div class="page-actions">
+          <a class="btn" href="event-control.html">🧭 事件管控中心</a>
+          <button class="btn btn-primary" data-action="task-new">＋ 新增任务</button>
+        </div>
+      </div>
+
+      <!-- 配置概览 -->
+      <div class="grid grid-4" style="margin-bottom:16px;">
+        <div class="stat">
+          <div class="stat-label">📋 总任务数</div>
+          <div class="stat-value">30</div>
+          <div class="stat-meta">覆盖全部条款</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">✓ 已分配</div>
+          <div class="stat-value">28<span class="stat-unit">条</span></div>
+          <div class="stat-meta"><span class="pos">93% 覆盖率</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">⚠ 待分配</div>
+          <div class="stat-value">2<span class="stat-unit">条</span></div>
+          <div class="stat-meta"><span class="neg">需尽快分配</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">⏰ 即将到期</div>
+          <div class="stat-value">6<span class="stat-unit">条</span></div>
+          <div class="stat-meta">7 天内截止</div>
+        </div>
+      </div>
+
+      <!-- 批量配置 + 列表 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">任务清单</div>
+          <div>
+            <button class="btn btn-sm" data-action="task-view-all">👁 查看全部（30 条）</button>
+            <button class="btn btn-sm" data-action="batch-assign">⚙ 批量分配</button>
+            <button class="btn btn-sm" data-action="task-batch-due">📅 批量修改截止日期</button>
+          </div>
+        </div>
+
+        <div class="tabs" id="tc-tabs">
+          <div class="tab active" data-tab="clause">按条款</div>
+          <div class="tab" data-tab="dept">按部门</div>
+          <div class="tab" data-tab="person">按人员</div>
+          <div class="tab" data-tab="due">按截止日期</div>
+        </div>
+        <div class="tc-view-hint" id="tc-view-hint"></div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width:32px;"><div class="checkbox"></div></th>
+                <th>条款</th>
+                <th>分类</th>
+                <th>负责人 <span class="tag tag-warning" style="margin-left:4px;">必填</span></th>
+                <th>自评人</th>
+                <th>复核人</th>
+                <th>开始日期</th>
+                <th>截止日期</th>
+                <th>状态</th>
+                <th style="width:104px;">任务阶段</th>
+                <th class="col-actions">操作</th>
+              </tr>
+            </thead>
+            <tbody id="tc-tbody">
+              <tr>
+                <td><div class="checkbox"></div></td>
+                <td><strong>4.1 公正性</strong></td>
+                <td><span class="tag tag-primary">管理</span></td>
+                <td><select class="select" style="width:120px;"><option>张三</option></select></td>
+                <td><select class="select" style="width:120px;"><option>李四</option></select></td>
+                <td><select class="select" style="width:120px;"><option>陈主管</option></select></td>
+                <td>2026-10-01</td>
+                <td>2026-11-30</td>
+                <td><span class="tag tag-success">已分配</span></td>
+                <td><select class="select tc-stage" data-code="4.1" style="width:104px;"></select></td>
+                <td class="col-actions"><button class="btn-text" data-action="task-save">保存</button></td>
+              </tr>
+              <tr>
+                <td><div class="checkbox"></div></td>
+                <td><strong>4.2 保密性</strong></td>
+                <td><span class="tag tag-primary">管理</span></td>
+                <td><select class="select" style="width:120px;"><option>张三</option></select></td>
+                <td><select class="select" style="width:120px;"><option>王五</option></select></td>
+                <td><select class="select" style="width:120px;"><option>陈主管</option></select></td>
+                <td>2026-10-01</td>
+                <td>2026-11-30</td>
+                <td><span class="tag tag-success">已分配</span></td>
+                <td><select class="select tc-stage" data-code="4.2" style="width:104px;"></select></td>
+                <td class="col-actions"><button class="btn-text" data-action="task-save">保存</button></td>
+              </tr>
+              <tr>
+                <td><div class="checkbox"></div></td>
+                <td><strong>6.4 设备</strong></td>
+                <td><span class="tag tag-warning">技术</span></td>
+                <td><select class="select" style="width:120px;"><option>孙七</option></select></td>
+                <td><select class="select" style="width:120px;"><option>未分配</option></select></td>
+                <td><select class="select" style="width:120px;"><option>陈主管</option></select></td>
+                <td>2026-11-01</td>
+                <td>2026-12-25</td>
+                <td><span class="tag tag-warning">待分配自评人</span></td>
+                <td><select class="select tc-stage" data-code="6.4" style="width:104px;"></select></td>
+                <td class="col-actions"><button class="btn-text" data-action="task-save">保存</button></td>
+              </tr>
+              <tr>
+                <td><div class="checkbox"></div></td>
+                <td><strong>6.5 计量溯源性</strong></td>
+                <td><span class="tag tag-warning">技术</span></td>
+                <td><select class="select" style="width:120px;"><option style="color:var(--error);">请选择</option></select></td>
+                <td><select class="select" style="width:120px;"><option>未分配</option></select></td>
+                <td><select class="select" style="width:120px;"><option>陈主管</option></select></td>
+                <td>2026-11-01</td>
+                <td>2026-12-30</td>
+                <td><span class="tag tag-error">待分配</span></td>
+                <td><select class="select tc-stage" data-code="6.5" style="width:104px;"></select></td>
+                <td class="col-actions"><button class="btn-text" data-action="task-save">保存</button></td>
+              </tr>
+              <tr>
+                <td><div class="checkbox"></div></td>
+                <td><strong>7.2 抽样</strong></td>
+                <td><span class="tag tag-warning">技术</span></td>
+                <td><select class="select" style="width:120px;"><option>未分配</option></select></td>
+                <td><select class="select" style="width:120px;"><option>未分配</option></select></td>
+                <td><select class="select" style="width:120px;"><option>陈主管</option></select></td>
+                <td>2026-11-01</td>
+                <td>2027-01-05</td>
+                <td><span class="tag tag-error">待分配</span></td>
+                <td><select class="select tc-stage" data-code="7.2" style="width:104px;"></select></td>
+                <td class="col-actions"><button class="btn-text" data-action="task-save">保存</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 智能推荐 -->
+      <div class="card" style="margin-top:16px; background:linear-gradient(135deg, #F2F7FF 0%, #FFFFFF 100%); border-color:var(--primary-100);">
+        <div class="card-header">
+          <div class="card-title"><span style="font-size:18px;">💡</span> 智能分配建议</div>
+          <button class="btn btn-sm" data-action="task-adopt">全部采纳</button>
+        </div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.8;">
+          <p style="margin-bottom:8px;">根据历史评审数据与人员专业方向，系统为以下条款推荐负责人：</p>
+          <ul style="margin-left:18px;">
+            <li><strong style="color:var(--primary);">6.5 计量溯源性</strong>：建议由 <strong style="color:var(--text-primary);">孙七</strong> 负责（设备/设施类专家，过去 3 次评审承担同类条款均一次性通过）</li>
+            <li><strong style="color:var(--primary);">7.2 抽样</strong>：建议由 <strong style="color:var(--text-primary);">周八</strong> 负责（分子生物实验方向，参与 8.3 抽样方案制定）</li>
+            <li><strong style="color:var(--primary);">6.4 设备</strong>：建议增加 <strong style="color:var(--text-primary);">郑十</strong> 为自评人（设备管理员，可提供完整校准记录）</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+<script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script>
+/* 任务分配页交互（2026-09-23）：
+   1) 行内「保存」→ 确认弹窗：读该行下拉的当前值，负责人缺失时拦截；
+      确认后按实际填写情况回写行状态标签，并同步概览 KPI。
+   2) 「全部采纳」→ 确认弹窗：三条智能建议可逐条勾掉，确认后写回对应行的
+      下拉与状态标签，KPI（已分配 / 待分配 / 覆盖率）随之更新。
+   本脚本必须放在 app.js 之后：INLINE / MODALS 是 app.js 顶层的 const，
+   后加载的经典脚本可以直接按名访问，但不能提前。 */
+(function () {
+  if (typeof MODALS === 'undefined' || typeof INLINE === 'undefined') return;
+
+  var STATUS = {
+    ok:   { cls: 'tag-success', text: '已分配' },
+    half: { cls: 'tag-warning', text: '待分配自评人' },
+    none: { cls: 'tag-error',   text: '待分配' }
+  };
+  var TOTAL = 30;   // 页面 KPI 口径：全部条款 30 条，表格仅展示 5 行示例
+
+  function unassigned(v) { return !v || v === '请选择' || v === '未分配'; }
+  function valOf(tr, idx) {
+    var s = tr.cells[idx] ? tr.cells[idx].querySelector('select') : null;
+    return s ? s.value.trim() : '';
+  }
+  function rowLevel(tr) {
+    var o = valOf(tr, 3), a = valOf(tr, 4);
+    if (unassigned(o)) return 'none';
+    if (unassigned(a)) return 'half';
+    return 'ok';
+  }
+  function setRowStatus(tr, level) {
+    var tag = tr.cells[8].querySelector('.tag');
+    if (!tag) return;
+    tag.className = 'tag ' + STATUS[level].cls;
+    tag.textContent = STATUS[level].text;
+  }
+  /* KPI 依据「本次有多少行从待分配变成已分配」调整；全表重算会覆盖
+     页面上「即将到期 6」等与分配无关的数字，所以用增量而不是重算。 */
+  function bumpKpi(delta) {
+    if (!delta) return;
+    var doneCard = null, pendCard = null, cards = document.querySelectorAll('.grid-4 .stat');
+    cards.forEach(function (c) {
+      var lb = c.querySelector('.stat-label');
+      if (!lb) return;
+      if (lb.textContent.indexOf('已分配') >= 0) doneCard = c;
+      if (lb.textContent.indexOf('待分配') >= 0) pendCard = c;
+    });
+    if (doneCard) {
+      var v = doneCard.querySelector('.stat-value');
+      var n = parseInt(v.textContent, 10) + delta;
+      v.textContent = n;
+      var meta = doneCard.querySelector('.stat-meta');
+      if (meta) meta.innerHTML = '<span class="pos">' + Math.round(n / TOTAL * 100) + '% 覆盖率</span>';
+    }
+    if (pendCard) {
+      var pv = pendCard.querySelector('.stat-value');
+      var pn = Math.max(0, parseInt(pv.textContent, 10) - delta);
+      /* 用 innerHTML：textContent 不会解析 <span class="stat-unit">，会把标签原样显示出来 */
+      pv.innerHTML = pn + '<span class="stat-unit">条</span>';
+      var pm = pendCard.querySelector('.stat-meta');
+      if (pm) pm.innerHTML = pn ? '<span class="neg">需尽快分配</span>' : '<span class="pos">全部条款已分配</span>';
+    }
+  }
+
+  /* ---------- 行内「保存」 ---------- */
+  INLINE['task-save'] = function (btn) {
+    var tr = btn.closest('tr');
+    if (!tr) return;
+    var code = (tr.cells[1].textContent.trim().split(/\s+/))[0];
+    var name = tr.cells[1].textContent.trim();
+    openModal('task-save', {
+      tr: tr, code: code, name: name,
+      owner: valOf(tr, 3), assessor: valOf(tr, 4), reviewer: valOf(tr, 5),
+      start: tr.cells[6].textContent.trim(), due: tr.cells[7].textContent.trim(),
+      before: rowLevel(tr)
+    });
+  };
+
+  MODALS['task-save'] = function (c) {
+    var missing = unassigned(c.owner);
+    var body =
+      (missing
+        ? '<div class="alert alert-error">✗ 负责人为必填项，当前为「未分配 / 请选择」，请先在行内选择负责人再保存。</div>'
+        : '<div class="alert alert-info">确认后该条款的分配配置即生效，并通知相关人员。</div>') +
+      '<div class="modal-section">' +
+        '<div class="modal-section-title">保存内容确认 — ' + esc(c.name) + '</div>' +
+        '<div class="desc-list">' +
+          desc('负责人', c.owner ? esc(c.owner) : '<span style="color:var(--error)">未分配</span>') +
+          desc('自评人', c.assessor ? esc(c.assessor) : '未分配') +
+          desc('复核人', c.reviewer ? esc(c.reviewer) : '未分配') +
+          desc('开始日期', esc(c.start)) +
+          desc('截止日期', esc(c.due)) +
+        '</div>' +
+      '</div>';
+    var footer = missing
+      ? '<button class="btn" data-modal-close>返回修改</button>'
+      : '<button class="btn" data-modal-close>取消</button>' +
+        '<button class="btn btn-primary" data-tc-confirm>确认保存</button>';
+    return {
+      title: '保存分配配置 — ' + esc(c.code),
+      subtitle: '保存前请核对以下分配信息',
+      size: 'modal-sm',
+      body: body,
+      footer: footer,
+      onMount: function (root) {
+        var btn = root.querySelector('[data-tc-confirm]');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+          var after = rowLevel(c.tr);
+          setRowStatus(c.tr, after);
+          bumpKpi(c.before !== 'ok' && after === 'ok' ? 1 : 0);
+          closeModal();
+          showToast('条款 ' + c.code + ' 的分配配置已保存并通知相关人员', 'success');
+        });
+      }
+    };
+  };
+
+  /* ---------- 全部采纳 ---------- */
+  var SUGGESTS = [
+    { code: '6.5', field: 3, person: '孙七', role: '负责人', why: '设备/设施类专家，过去 3 次评审承担同类条款均一次性通过' },
+    { code: '7.2', field: 3, person: '周八', role: '负责人', why: '分子生物实验方向，参与 8.3 抽样方案制定' },
+    { code: '6.4', field: 4, person: '郑十', role: '自评人', why: '设备管理员，可提供完整校准记录' }
+  ];
+
+  MODALS['task-adopt'] = function () {
+    var body =
+      '<div class="alert alert-info">💡 勾选要采纳的建议（可逐条排除），确认后写回任务清单。</div>' +
+      '<div class="modal-section"><div class="modal-section-title">智能分配建议</div>' +
+      SUGGESTS.map(function (s, i) {
+        return '<div class="check-item tc-sug" data-idx="' + i + '">' +
+          '<div class="checkbox checked"></div>' +
+          '<div class="check-item-text"><strong style="color:var(--primary);">' + s.code +
+          '</strong> 建议' + s.role + '：<strong style="color:var(--text-primary);">' + s.person + '</strong>' +
+          '<div class="check-item-note">' + s.why + '</div></div></div>';
+      }).join('') + '</div>';
+    return {
+      title: '全部采纳智能分配建议',
+      subtitle: '按历史评审数据与人员专业方向生成',
+      size: 'modal-md',
+      body: body,
+      footer: '<button class="btn" data-modal-close>取消</button>' +
+              '<button class="btn btn-primary" data-tc-adopt>确认采纳</button>',
+      onMount: function (root) {
+        var btn = root.querySelector('[data-tc-adopt]');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+          var picks = [];
+          root.querySelectorAll('.tc-sug').forEach(function (item) {
+            var cb = item.querySelector('.checkbox');
+            if (cb && cb.classList.contains('checked')) picks.push(SUGGESTS[+item.getAttribute('data-idx')]);
+          });
+          if (!picks.length) { showToast('请至少勾选一条建议', 'error'); return; }
+          var rows = document.querySelectorAll('.card tbody tr');
+          var delta = 0;
+          picks.forEach(function (s) {
+            rows.forEach(function (tr) {
+              var first = tr.cells[1].textContent.trim();
+              if (first.indexOf(s.code + ' ') !== 0) return;
+              var sel = tr.cells[s.field] ? tr.cells[s.field].querySelector('select') : null;
+              if (!sel) return;
+              var before = rowLevel(tr);
+              /* 示例表格的 select 只带了一个初始 option，直接赋 value 会
+                 静默失败（value 落空）——先补 option 再选中。 */
+              var has = Array.prototype.some.call(sel.options, function (o) { return o.value === s.person; });
+              if (!has) {
+                var opt = document.createElement('option');
+                opt.value = s.person; opt.textContent = s.person;
+                sel.appendChild(opt);
+              }
+              sel.value = s.person;
+              var after = rowLevel(tr);
+              setRowStatus(tr, after);
+              if (before !== 'ok' && after === 'ok') delta++;
+            });
+          });
+          bumpKpi(delta);
+          closeModal();
+          showToast('已采纳 ' + picks.length + ' 条智能分配建议并写回任务清单', 'success');
+        });
+      }
+    };
+  };
+
+  /* ==========================================================
+     任务清单 · 视图增强（2026-09-24）
+     1) 四个分组维度：按条款 / 按部门 / 按人员 / 按截止日期
+     2) 「查看全部」：弹窗展示全部 30 条（含已分配）
+     3) 「批量修改截止日期」：勾选任务 + 选新日期，写回清单与 KPI
+     ========================================================== */
+  var tbody = document.getElementById('tc-tbody');
+  var baseRows = tbody ? Array.prototype.slice.call(tbody.querySelectorAll('tr')) : [];
+  var hintEl = document.getElementById('tc-view-hint');
+  var tabsEl = document.getElementById('tc-tabs');
+
+  /* 部门映射（演示口径：按条款归属的专业条线） */
+  var DEPT_OF = {
+    '4.1': '质量管理部', '4.2': '质量管理部',
+    '6.4': '设备设施部', '6.5': '设备设施部', '7.2': '检测技术部'
+  };
+  function codeOf(tr) { return (tr.cells[1].textContent.trim().split(/\s+/))[0]; }
+  function titleOf(tr) { return tr.cells[1].textContent.trim(); }
+  function dueOf(tr) { return tr.cells[7].textContent.trim(); }
+  function deptOf(tr) { return DEPT_OF[codeOf(tr)] || '综合管理部'; }
+
+  function parseD(s) {
+    var m = /(\d{4})-(\d{2})-(\d{2})/.exec(s || '');
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+  }
+  function daysUntil(s) {
+    var d = parseD(s); if (!d) return null;
+    var t = new Date(); t.setHours(0, 0, 0, 0);
+    return Math.round((d - t) / 86400000);
+  }
+  function catTag(cat) { return cat.indexOf('技术') >= 0 ? 'tag-warning' : 'tag-primary'; }
+
+  var GROUP_CFG = {
+    clause: {
+      ico: '≡', label: '按条款编号',
+      key: codeOf, head: null,
+      sort: function (a, b) { return codeOf(a).localeCompare(codeOf(b), 'zh', { numeric: true }); },
+      hint: '已按<b>条款编号</b>升序排列，逐条配置负责人 / 自评人 / 复核人 / 截止日期。'
+    },
+    dept: {
+      ico: '🏢', label: '按部门', key: deptOf,
+      head: function (k) { return k; },
+      sort: function (a, b) { return deptOf(a).localeCompare(deptOf(b), 'zh'); },
+      hint: '已按<b>部门</b>归组，同部门条款集中显示，便于部门内批量核对。'
+    },
+    person: {
+      ico: '👤', label: '按人员',
+      key: function (tr) { return valOf(tr, 3) || '未分配'; },
+      head: function (k) { return '负责人 · ' + k; },
+      sort: function (a, b) { return (valOf(a, 3) || '未分配').localeCompare(valOf(b, 3) || '未分配', 'zh'); },
+      hint: '已按<b>负责人</b>归组，可直观看到每个人的任务负载。'
+    },
+    due: {
+      ico: '📅', label: '按截止日期', key: dueOf,
+      head: function (k) { return '截止 ' + k; },
+      sort: function (a, b) { var x = parseD(dueOf(a)), y = parseD(dueOf(b)); return (x ? x.getTime() : 0) - (y ? y.getTime() : 0); },
+      hint: '已按<b>截止日期</b>由近及远排序，<span class="tc-due-soon">红色</span>为 7 天内即将到期。'
+    }
+  };
+  function currentMode() {
+    var a = tabsEl ? tabsEl.querySelector('.tab.active') : null;
+    return a ? a.getAttribute('data-tab') : 'clause';
+  }
+
+  function renderGroup(mode) {
+    var cfg = GROUP_CFG[mode] || GROUP_CFG.clause;
+    if (!tbody) return;
+    Array.prototype.slice.call(tbody.querySelectorAll('.tc-group-row')).forEach(function (r) { r.remove(); });
+    var rows = baseRows.slice().sort(cfg.sort);
+    var frag = document.createDocumentFragment();
+    var lastKey = null;
+    rows.forEach(function (tr) {
+      var k = cfg.key(tr);
+      if (cfg.head && k !== lastKey) {
+        lastKey = k;
+        var n = rows.filter(function (r) { return cfg.key(r) === k; }).length;
+        var gtr = document.createElement('tr');
+        gtr.className = 'tc-group-row';
+        gtr.innerHTML = '<td colspan="11"><span class="tc-g-ico">' + cfg.ico + '</span>' +
+          esc(cfg.head(k)) + '<span class="tc-g-count">（' + n + ' 条）</span></td>';
+        frag.appendChild(gtr);
+      }
+      var dueCell = tr.cells[7];
+      dueCell.classList.remove('tc-due-soon');
+      if (mode === 'due') {
+        var d = daysUntil(dueOf(tr));
+        if (d != null && d <= 7) dueCell.classList.add('tc-due-soon');
+      }
+      frag.appendChild(tr);
+    });
+    tbody.appendChild(frag);
+    if (hintEl) hintEl.innerHTML = cfg.ico + ' ' + cfg.hint;
+    if (window.showToast && mode !== 'clause') showToast('已切换为「' + cfg.label + '」视图', 'info');
+  }
+
+  if (tabsEl) {
+    tabsEl.querySelectorAll('.tab').forEach(function (tab) {
+      tab.addEventListener('click', function () { renderGroup(tab.getAttribute('data-tab')); });
+    });
+  }
+  renderGroup('clause');
+
+  /* ---------- 任务阶段（未开始 / 进行中 / 已完成）· 与事件管控中心同源 ---------- */
+  function initStages() {
+    if (!window.TASK_STORE) return;
+    document.querySelectorAll('.tc-stage').forEach(function (sel) {
+      var code = sel.getAttribute('data-code');
+      var t = TASK_STORE.byCode(code);
+      var stage = t ? t.stage : '未开始';
+      sel.innerHTML = TASK_STORE.STAGES.map(function (s) {
+        return '<option' + (s === stage ? ' selected' : '') + '>' + s + '</option>';
+      }).join('');
+    });
+  }
+  initStages();
+  document.querySelectorAll('.tc-stage').forEach(function (sel) {
+    sel.addEventListener('change', function () {
+      var code = sel.getAttribute('data-code');
+      if (window.TASK_STORE) TASK_STORE.setStage(code, sel.value, '任务分配页更新阶段');
+      window.showToast('条款 ' + code + ' 任务阶段已更新为「' + sel.value + '」，事件管控中心已同步', 'success');
+    });
+  });
+  window.addEventListener('taskchange', function () { initStages(); });
+
+  /* ---------- 即将到期 KPI 增量 ---------- */
+  function bumpSoon(delta) {
+    if (!delta) return;
+    document.querySelectorAll('.grid-4 .stat').forEach(function (c) {
+      var lb = c.querySelector('.stat-label');
+      if (!lb || lb.textContent.indexOf('即将到期') < 0) return;
+      var v = c.querySelector('.stat-value');
+      var n = Math.max(0, parseInt(v.textContent, 10) + delta);
+      v.innerHTML = n + '<span class="stat-unit">条</span>';
+    });
+  }
+
+  /* ---------- 查看全部（30 条，含已分配） ---------- */
+  var SYNTH = [
+    ['4.3', '文件控制', '管理', '质量管理部', '张三', '李四', '2026-11-15', 'ok'],
+    ['4.4', '记录控制', '管理', '质量管理部', '张三', '王五', '2026-11-18', 'ok'],
+    ['4.5', '风险与机遇', '管理', '质量管理部', '赵六', '李四', '2026-11-20', 'ok'],
+    ['4.6', '改进', '管理', '质量管理部', '张三', '王五', '2026-11-22', 'ok'],
+    ['5.1', '人员', '管理', '质量管理部', '赵六', '李四', '2026-11-25', 'ok'],
+    ['5.2', '设施与环境', '技术', '设备设施部', '孙七', '郑十', '2026-11-28', 'ok'],
+    ['5.3', '设备', '技术', '设备设施部', '孙七', '郑十', '2026-11-30', 'ok'],
+    ['5.4', '计量溯源性', '技术', '设备设施部', '孙七', '未分配', '2026-12-02', 'half'],
+    ['5.5', '外部提供的产品和服务', '技术', '检测技术部', '周八', '王五', '2026-12-05', 'ok'],
+    ['6.1', '总则', '管理', '质量管理部', '张三', '李四', '2026-12-06', 'ok'],
+    ['6.2', '人员', '管理', '质量管理部', '赵六', '王五', '2026-12-08', 'ok'],
+    ['6.3', '设施和环境条件', '技术', '设备设施部', '孙七', '郑十', '2026-12-10', 'ok'],
+    ['6.6', '合同评审', '管理', '质量管理部', '张三', '李四', '2026-12-12', 'ok'],
+    ['6.7', '采购', '管理', '质量管理部', '赵六', '王五', '2026-12-15', 'ok'],
+    ['7.1', '要求标书合同评审', '管理', '质量管理部', '张三', '李四', '2026-12-16', 'ok'],
+    ['7.3', '样品处置', '技术', '检测技术部', '周八', '郑十', '2026-12-18', 'ok'],
+    ['7.4', '技术记录', '技术', '检测技术部', '周八', '王五', '2026-12-20', 'ok'],
+    ['7.5', '测量不确定度', '技术', '检测技术部', '未分配', '未分配', '2026-12-22', 'none'],
+    ['7.6', '结果有效性', '技术', '检测技术部', '周八', '郑十', '2026-12-24', 'ok'],
+    ['7.7', '报告结果', '技术', '检测技术部', '周八', '王五', '2026-12-26', 'ok'],
+    ['7.8', '结果报告', '技术', '检测技术部', '周八', '郑十', '2026-12-28', 'ok'],
+    ['8.1', '选项', '管理', '质量管理部', '张三', '李四', '2026-12-29', 'ok'],
+    ['8.2', '管理体系文件', '管理', '质量管理部', '赵六', '王五', '2026-12-30', 'ok'],
+    ['8.3', '管理体系更改', '管理', '质量管理部', '张三', '李四', '2027-01-02', 'ok'],
+    ['8.4', '记录控制', '管理', '质量管理部', '赵六', '王五', '2027-01-05', 'ok']
+  ];
+  var STAGE_CLS = { '未开始': 'tag-default', '进行中': 'tag-warning', '已完成': 'tag-success' };
+  function stageOf(code) {
+    var t = window.TASK_STORE ? TASK_STORE.byCode(code) : null;
+    return t ? t.stage : '未开始';
+  }
+  function collectAll() {
+    var out = baseRows.map(function (tr) {
+      return {
+        code: codeOf(tr), name: titleOf(tr).replace(/^\S+\s*/, ''), cat: tr.cells[2].textContent.trim(),
+        dept: deptOf(tr), owner: valOf(tr, 3) || '未分配', assessor: valOf(tr, 4) || '未分配',
+        due: dueOf(tr), level: rowLevel(tr), stage: stageOf(codeOf(tr))
+      };
+    });
+    SYNTH.forEach(function (s) {
+      out.push({ code: s[0], name: s[1], cat: s[2], dept: s[3], owner: s[4], assessor: s[5], due: s[6], level: s[7], stage: stageOf(s[0]) });
+    });
+    return out;
+  }
+
+  INLINE['task-view-all'] = function () { openModal('task-view-all', {}); };
+  MODALS['task-view-all'] = function () {
+    var all = collectAll();
+    var body =
+      '<div class="tc-all-toolbar">' +
+        '<div class="search-box"><input class="input" id="tc-all-search" placeholder="搜索条款 / 负责人 / 部门" /></div>' +
+        '<div class="radio-group" id="tc-all-filter">' +
+          '<div class="radio-pill active" data-pill data-lv="all"><span class="dotmark"></span>全部 ' + all.length + '</div>' +
+          '<div class="radio-pill" data-pill data-lv="ok"><span class="dotmark"></span>已分配</div>' +
+          '<div class="radio-pill" data-pill data-lv="pend"><span class="dotmark"></span>待分配</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="tc-all-wrap"><table class="table"><thead><tr>' +
+        '<th style="width:170px;">条款</th><th style="width:70px;">分类</th><th style="width:110px;">部门</th>' +
+        '<th style="width:88px;">负责人</th><th style="width:88px;">自评人</th><th style="width:112px;">截止日期</th><th style="width:88px;">阶段</th><th style="width:96px;">状态</th>' +
+      '</tr></thead><tbody id="tc-all-tbody"></tbody></table></div>' +
+      '<div class="tc-view-hint" id="tc-all-count"></div>';
+    return {
+      title: '全部任务清单',
+      subtitle: '共 ' + all.length + ' 条 · 含已分配与待分配任务，可筛选查看',
+      size: 'modal-lg',
+      body: body,
+      footer: '<button class="btn" data-modal-close>关闭</button>' +
+              '<button class="btn btn-primary" id="tc-all-export">导出全部清单</button>',
+      onMount: function (root) {
+        var tb = root.querySelector('#tc-all-tbody');
+        var countEl = root.querySelector('#tc-all-count');
+        var search = root.querySelector('#tc-all-search');
+        var lv = 'all';
+        function rowOf(r) {
+          var st = STATUS[r.level];
+          var d = daysUntil(r.due);
+          var soon = (d != null && d <= 7) ? ' class="tc-due-soon"' : '';
+          return '<tr><td><strong>' + esc(r.code) + ' ' + esc(r.name) + '</strong></td>' +
+            '<td><span class="tag ' + catTag(r.cat) + '">' + esc(r.cat) + '</span></td>' +
+            '<td>' + esc(r.dept) + '</td><td>' + esc(r.owner) + '</td><td>' + esc(r.assessor) + '</td>' +
+            '<td' + soon + '>' + esc(r.due) + '</td>' +
+            '<td><span class="tag ' + (STAGE_CLS[r.stage] || 'tag-default') + '">' + esc(r.stage) + '</span></td>' +
+            '<td><span class="tag ' + st.cls + '">' + st.text + '</span></td></tr>';
+        }
+        function paint() {
+          var kw = (search.value || '').trim();
+          var list = all.filter(function (r) {
+            if (lv === 'ok' && r.level !== 'ok') return false;
+            if (lv === 'pend' && r.level === 'ok') return false;
+            if (kw && (r.code + ' ' + r.name + ' ' + r.owner + ' ' + r.dept).indexOf(kw) < 0) return false;
+            return true;
+          });
+          tb.innerHTML = list.length ? list.map(rowOf).join('') :
+            '<tr><td colspan="8"><div style="padding:22px;text-align:center;color:var(--text-tertiary);">没有符合筛选条件的任务</div></td></tr>';
+          if (countEl) countEl.innerHTML = '当前显示 <b>' + list.length + '</b> / ' + all.length + ' 条任务';
+        }
+        root.querySelectorAll('#tc-all-filter [data-pill]').forEach(function (p) {
+          p.addEventListener('click', function () { lv = p.getAttribute('data-lv'); paint(); });
+        });
+        search.addEventListener('input', paint);
+        root.querySelector('#tc-all-export').addEventListener('click', function () {
+          showToast('已导出全部 ' + all.length + ' 条任务清单（CSV）', 'success');
+        });
+        paint();
+      }
+    };
+  };
+
+  /* ---------- 批量修改截止日期 ---------- */
+  INLINE['task-batch-due'] = function () { openModal('task-batch-due', {}); };
+  MODALS['task-batch-due'] = function () {
+    var rows = baseRows;
+    var list = rows.map(function (tr, i) {
+      return '<label class="check-item tc-due-item" data-idx="' + i + '">' +
+        '<div class="checkbox checked"></div>' +
+        '<div class="check-item-text">' + esc(titleOf(tr)) + '</div>' +
+        '<span class="tc-due-cur">当前：' + esc(dueOf(tr)) + '</span></label>';
+    }).join('');
+    var body =
+      '<div class="alert alert-info">📅 选择要调整的任务并设置新的截止日期，确认后立即写回任务清单并通知相关负责人。</div>' +
+      '<div class="modal-section"><div class="modal-section-title">调整范围</div>' +
+        '<div class="radio-group" style="margin-bottom:12px;">' +
+          '<div class="radio-pill active" data-pill data-scope="all"><span class="dotmark"></span>全部任务（' + rows.length + '）</div>' +
+          '<div class="radio-pill" data-pill data-scope="pend"><span class="dotmark"></span>仅待分配</div>' +
+        '</div>' +
+        '<div class="tc-due-list" id="tc-due-list">' + list + '</div>' +
+      '</div>' +
+      '<div class="modal-section"><div class="modal-section-title">新的截止日期</div>' +
+        '<div class="form-row">' + dateInp('统一截止日期', '2026-12-31', true) + '</div>' +
+        '<div class="radio-group">' +
+          '<div class="radio-pill" data-pill data-shift="7"><span class="dotmark"></span>顺延 7 天</div>' +
+          '<div class="radio-pill" data-pill data-shift="14"><span class="dotmark"></span>顺延 14 天</div>' +
+          '<div class="radio-pill" data-pill data-shift="30"><span class="dotmark"></span>顺延 30 天</div>' +
+        '</div>' +
+      '</div>';
+    return {
+      title: '批量修改截止日期',
+      subtitle: '勾选任务并统一设置新的截止日期',
+      size: 'modal-md',
+      body: body,
+      footer: '<button class="btn" data-modal-close>取消</button>' +
+              '<button class="btn btn-primary" data-tc-due-ok>确认修改</button>',
+      onMount: function (root) {
+        var listBox = root.querySelector('#tc-due-list');
+        var dateInput = root.querySelector('input[type="date"]');
+        var items = Array.prototype.slice.call(listBox.querySelectorAll('.tc-due-item'));
+
+        root.querySelectorAll('[data-scope]').forEach(function (p) {
+          p.addEventListener('click', function () {
+            var onlyPend = p.getAttribute('data-scope') === 'pend';
+            items.forEach(function (item) {
+              var tr = rows[+item.getAttribute('data-idx')];
+              var cb = item.querySelector('.checkbox');
+              var isPend = rowLevel(tr) !== 'ok';
+              if (onlyPend) {
+                item.style.display = isPend ? '' : 'none';
+                cb.classList.toggle('checked', isPend);
+              } else {
+                item.style.display = '';
+                cb.classList.add('checked');
+              }
+            });
+          });
+        });
+
+        root.querySelectorAll('[data-shift]').forEach(function (p) {
+          p.addEventListener('click', function () {
+            var base = dateInput.value ? new Date(dateInput.value) : new Date();
+            base.setDate(base.getDate() + (+p.getAttribute('data-shift')));
+            dateInput.value = base.toISOString().slice(0, 10);
+          });
+        });
+
+        root.querySelector('[data-tc-due-ok]').addEventListener('click', function () {
+          var nv = dateInput.value;
+          if (!nv) { showToast('请选择新的截止日期', 'error'); return; }
+          var picks = [];
+          items.forEach(function (item) {
+            if (item.style.display === 'none') return;
+            if (item.querySelector('.checkbox').classList.contains('checked')) picks.push(rows[+item.getAttribute('data-idx')]);
+          });
+          if (!picks.length) { showToast('请至少选择一条任务', 'error'); return; }
+          var delta = 0;
+          picks.forEach(function (tr) {
+            var before = daysUntil(dueOf(tr));
+            tr.cells[7].textContent = nv;
+            var after = daysUntil(nv);
+            if ((before == null || before > 7) && after != null && after <= 7) delta++;
+            if (before != null && before <= 7 && (after == null || after > 7)) delta--;
+          });
+          bumpSoon(delta);
+          renderGroup(currentMode());
+          closeModal();
+          showToast('已更新 ' + picks.length + ' 条任务的截止日期为 ' + nv, 'success');
+        });
+      }
+    };
+  };
+})();
+</script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+</body>
+</html>

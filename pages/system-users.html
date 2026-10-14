@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>用户管理  - 体系管理智能体</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924j" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item active" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>系统管理</span><span class="sep">/</span>
+        <span class="current">用户管理</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">用户管理</div>
+          <div class="page-desc">统一用户管理界面 · 账号创建 / 编辑 / 停用 / 密码重置 —— 每个账号绑定一个 RBAC 角色，权限粒度到功能模块</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" data-pm="user-export">⬇ 导出用户清单</button>
+          <button class="btn btn-primary" id="su-new" data-pm="user-create">＋ 新建用户</button>
+        </div>
+      </div>
+
+      <!-- 账号概览 -->
+      <div class="pm-stat-strip" id="su-kpi" style="margin-bottom:16px;"></div>
+
+      <div class="card">
+        <!-- 检索 -->
+        <div class="pm-toolbar" style="margin-bottom:12px;">
+          <div class="search-box"><input class="input" id="su-search" placeholder="搜索姓名 / 登录账号 / 邮箱" /></div>
+          <select class="select" id="su-role" style="width:150px;height:32px;"><option value="">全部角色</option></select>
+          <select class="select" id="su-dept" style="width:150px;height:32px;"><option value="">全部部门</option></select>
+          <select class="select" id="su-status" style="width:120px;height:32px;">
+            <option value="">全部状态</option>
+            <option value="正常">正常</option>
+            <option value="已停用">已停用</option>
+          </select>
+          <button class="btn" id="su-reset">重置</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width:210px;">姓名 / 登录账号</th>
+                <th style="width:130px;">角色</th>
+                <th style="width:120px;">部门</th>
+                <th>可访问功能模块</th>
+                <th style="width:118px;">手机号</th>
+                <th style="width:140px;">最近登录</th>
+                <th style="width:84px;">状态</th>
+                <th class="col-actions" style="width:196px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="su-users"></tbody>
+          </table>
+        </div>
+        <div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">
+          共 <strong id="su-count">–</strong> 个账号 · 停用后该账号立即失去登录权限，历史操作记录保留；重置密码后由本人首次登录时强制修改。
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+<script>
+/* ===================== 系统管理 · 用户管理 ===================== */
+(function () {
+  var R = window.ROLES;
+  var TONE = ['', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); };
+
+  /* ---------- 通用弹窗 ---------- */
+  function modal(opts) {
+    var root = document.getElementById('su-modal-root');
+    if (!root) { root = document.createElement('div'); root.id = 'su-modal-root'; document.body.appendChild(root); }
+    root.innerHTML =
+      '<div class="modal-overlay show"><div class="modal' + (opts.size ? ' ' + opts.size : '') + '" role="dialog" aria-modal="true">' +
+      '<div class="modal-header"><div><div class="modal-title">' + opts.title + '</div>' +
+      (opts.sub ? '<div class="modal-subtitle">' + opts.sub + '</div>' : '') + '</div>' +
+      '<button class="modal-close" data-su-close aria-label="关闭">×</button></div>' +
+      '<div class="modal-body">' + (opts.html || '') + '</div>' +
+      '<div class="modal-footer">' + (opts.footer || '<button class="btn" data-su-close>取消</button>' +
+      '<button class="btn btn-primary" data-su-ok>' + (opts.ok || '确定') + '</button>') + '</div>' +
+      '</div></div>';
+    var ov = root.querySelector('.modal-overlay');
+    ov.addEventListener('mousedown', function (e) { if (e.target === ov) close(); });
+    root.querySelectorAll('[data-su-close]').forEach(function (b) { b.addEventListener('click', close); });
+    var ok = root.querySelector('[data-su-ok]');
+    if (ok) ok.addEventListener('click', function () {
+      if (typeof opts.onOk === 'function' && opts.onOk(root) === false) return;
+      close();
+      if (opts.done) window.showToast(opts.done, 'success');
+      if (typeof opts.after === 'function') opts.after(root);
+    });
+    if (typeof opts.onMount === 'function') opts.onMount(root);
+    document.addEventListener('keydown', function escKey(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escKey); }
+    });
+    return root;
+  }
+  function close() {
+    var root = document.getElementById('su-modal-root');
+    if (!root) return;
+    var ov = root.querySelector('.modal-overlay');
+    if (!ov) { root.innerHTML = ''; return; }
+    ov.classList.remove('show');
+    setTimeout(function () { root.innerHTML = ''; }, 180);
+  }
+
+  /* ---------- 账号状态：内存副本（含运行时增改停用） ---------- */
+  var USERS = R.ACCOUNTS.map(function (u, i) { return Object.assign({}, u, { id: 'u' + i }); });
+  var seq = USERS.length;
+
+  function roleOptions(sel) {
+    return R.list().map(function (r) {
+      return '<option value="' + r.id + '"' + (sel === r.id ? ' selected' : '') + '>' + r.name + '</option>';
+    }).join('');
+  }
+  function deptList() {
+    var seen = {}, out = [];
+    USERS.forEach(function (u) { if (!seen[u.dept]) { seen[u.dept] = 1; out.push(u.dept); } });
+    return out;
+  }
+
+  function renderKpi() {
+    var el = document.getElementById('su-kpi');
+    if (!el) return;
+    var active = USERS.filter(function (u) { return u.status === '正常'; }).length;
+    var off = USERS.length - active;
+    var roles = R.list().length;
+    function pill(cls, dot, label, n) {
+      return '<span class="pm-stat-pill ' + cls + '"><span class="pm-dot"></span>' + label + ' <i>' + n + '</i></span>';
+    }
+    el.innerHTML =
+      pill('pm-pill-assigned', '', '账号总数', USERS.length) +
+      pill('pm-pill-closed', '', '正常', active) +
+      pill('pm-pill-doing', '', '已停用', off) +
+      pill('pm-pill-open', '', '角色数', roles) +
+      pill('pm-pill-doing', '', '覆盖部门', deptList().length);
+  }
+
+  function renderUsers() {
+    var tb = document.getElementById('su-users');
+    if (!tb) return;
+    var kw = (document.getElementById('su-search').value || '').trim().toLowerCase();
+    var rf = document.getElementById('su-role').value;
+    var df = document.getElementById('su-dept').value;
+    var sf = document.getElementById('su-status').value;
+    var list = USERS.filter(function (u) {
+      if (rf && u.role !== rf) return false;
+      if (df && u.dept !== df) return false;
+      if (sf && u.status !== sf) return false;
+      if (kw && (u.name + ' ' + u.account + ' ' + u.mail).toLowerCase().indexOf(kw) < 0) return false;
+      return true;
+    });
+    tb.innerHTML = list.length ? list.map(function (u) {
+      var r = R.byId(u.role) || { name: u.role, tone: 1, short: '?' };
+      var mods = R.MODULES.filter(function (m) { return R.grants(u.role, m.id).length; });
+      var chips = mods.slice(0, 2).map(function (m) { return '<span class="pm-chip pm-chip-type">' + m.name + '</span>'; }).join('') +
+        (mods.length > 2 ? '<span class="pm-perm-more">+' + (mods.length - 2) + '</span>' : '');
+      var off = u.status === '已停用';
+      return '<tr data-name="' + esc(u.name) + '" data-status="' + u.status + '">' +
+        '<td><div class="pm-user-cell"><div class="pm-avatar ' + (TONE[r.tone] || '') + (off ? ' off' : '') + '">' + esc(u.name.charAt(0)) + '</div>' +
+        '<div><div class="pm-user-name">' + esc(u.name) + '</div><div class="pm-user-mail">' + esc(u.account) + ' · ' + esc(u.mail) + '</div></div></div></td>' +
+        '<td><span class="tag ' + (off ? 'tag-default' : 'tag-primary') + '">' + esc(r.name) + '</span></td>' +
+        '<td>' + esc(u.dept) + '</td>' +
+        '<td><div class="pm-perm-list">' + chips + '</div></td>' +
+        '<td>' + esc(u.phone || '—') + '</td>' +
+        '<td>' + esc(u.last || '—') + '</td>' +
+        '<td><span class="tag ' + (off ? 'tag-default' : 'tag-success') + '">' + u.status + '</span></td>' +
+        '<td class="col-actions">' +
+        '<button class="btn-text" data-pm="user-edit">编辑</button>' +
+        '<button class="btn-text" data-pm="user-reset">重置密码</button>' +
+        '<button class="btn-text" data-pm="user-toggle">' + (off ? '启用' : '停用') + '</button>' +
+        '</td></tr>';
+    }).join('') : '<tr><td colspan="8"><div class="pm-empty"><span class="ico">○</span>没有符合条件的账号</div></td></tr>';
+    var c = document.getElementById('su-count');
+    if (c) c.textContent = list.length;
+  }
+
+  function buildFilters() {
+    var rs = document.getElementById('su-role');
+    rs.innerHTML = '<option value="">全部角色</option>' + R.list().map(function (r) { return '<option value="' + r.id + '">' + r.name + '</option>'; }).join('');
+    var ds = document.getElementById('su-dept');
+    ds.innerHTML = '<option value="">全部部门</option>' + deptList().map(function (d) { return '<option>' + esc(d) + '</option>'; }).join('');
+  }
+
+  /* ---------- 新建用户 ---------- */
+  function newUserModal() {
+    modal({
+      title: '新建用户', sub: '系统管理 · 用户管理 · 创建后由本人首次登录修改初始密码',
+      size: 'modal-lg',
+      html: '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">姓名 <span class="req">*</span></label><input class="input" id="su-f-name" placeholder="请输入姓名" /></div>' +
+        '<div class="form-item"><label class="form-label">登录账号 <span class="req">*</span></label><input class="input" id="su-f-account" placeholder="英文字母 / 数字" /></div>' +
+        '<div class="form-item"><label class="form-label">初始密码</label><input class="input" id="su-f-pwd" value="Biobank@2026" /></div>' +
+        '<div class="form-item"><label class="form-label">所属部门</label><input class="input" id="su-f-dept" list="su-dept-pool" placeholder="如：质量管理部" /></div>' +
+        '<div class="form-item"><label class="form-label">手机号</label><input class="input" id="su-f-phone" placeholder="11 位手机号" /></div>' +
+        '<div class="form-item full"><label class="form-label">邮箱</label><input class="input" id="su-f-mail" placeholder="name@tcmhosp.cn" /></div>' +
+        '<div class="form-item full"><label class="form-label">绑定角色（决定其功能模块权限）<span class="req">*</span></label>' +
+        '<select class="select" id="su-f-role">' + roleOptions('operator') + '</select>' +
+        '<div style="font-size:11.5px;color:var(--text-tertiary);margin-top:6px;">角色决定该账号可访问的功能模块与操作类型（9 模块 × 6 操作）；权限明细见「角色管理」。</div></div>' +
+        '<div class="form-item full"><label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-secondary);cursor:pointer;">' +
+        '<input type="checkbox" id="su-f-force" checked /> 首次登录强制修改密码（推荐）</label></div>' +
+        '</div>',
+      ok: '创建账号',
+      onOk: function (root) {
+        var name = root.querySelector('#su-f-name').value.trim();
+        var acct = root.querySelector('#su-f-account').value.trim();
+        if (!name) { window.showToast('请填写姓名', 'error'); return false; }
+        if (!acct) { window.showToast('请填写登录账号', 'error'); return false; }
+        if (USERS.some(function (u) { return u.account === acct; })) { window.showToast('登录账号已存在', 'error'); return false; }
+        var u = {
+          id: 'u' + (seq++), name: name, account: acct,
+          role: root.querySelector('#su-f-role').value,
+          dept: root.querySelector('#su-f-dept').value.trim() || '未分配',
+          mail: root.querySelector('#su-f-mail').value.trim() || (acct + '@tcmhosp.cn'),
+          phone: root.querySelector('#su-f-phone').value.trim() || '—',
+          last: '—', status: '正常'
+        };
+        USERS.unshift(u);
+        R.addAudit({ actor: R.current(), kind: '新增', detail: '新建账号「' + name + '（' + acct + '）」，角色 ' + (R.byId(u.role) || {}).name });
+        return true;
+      },
+      done: '已创建账号，系统已发送激活邮件',
+      after: function () { buildFilters(); renderUsers(); renderKpi(); }
+    });
+  }
+
+  /* ---------- 编辑用户 ---------- */
+  function editUserModal(u) {
+    modal({
+      title: '编辑用户 · ' + u.name, sub: '系统管理 · 用户管理',
+      html: '<div class="pm-form-grid">' +
+        '<div class="form-item"><label class="form-label">姓名</label><input class="input" id="su-e-name" value="' + esc(u.name) + '" /></div>' +
+        '<div class="form-item"><label class="form-label">所属部门</label><input class="input" id="su-e-dept" value="' + esc(u.dept) + '" /></div>' +
+        '<div class="form-item"><label class="form-label">手机号</label><input class="input" id="su-e-phone" value="' + esc(u.phone || '') + '" /></div>' +
+        '<div class="form-item"><label class="form-label">邮箱</label><input class="input" id="su-e-mail" value="' + esc(u.mail) + '" /></div>' +
+        '<div class="form-item full"><label class="form-label">绑定角色</label><select class="select" id="su-e-role">' + roleOptions(u.role) + '</select></div>' +
+        '</div>',
+      ok: '保存', done: '用户信息已更新',
+      onOk: function (root) {
+        u.name = root.querySelector('#su-e-name').value.trim() || u.name;
+        u.dept = root.querySelector('#su-e-dept').value.trim() || u.dept;
+        u.phone = root.querySelector('#su-e-phone').value.trim() || u.phone;
+        u.mail = root.querySelector('#su-e-mail').value.trim() || u.mail;
+        var nr = root.querySelector('#su-e-role').value;
+        if (nr !== u.role) {
+          R.addAudit({ actor: R.current(), kind: '修改', detail: '「' + u.name + '」角色由 ' + (R.byId(u.role) || {}).name + ' 调整为 ' + (R.byId(nr) || {}).name });
+          u.role = nr;
+        } else {
+          R.addAudit({ actor: R.current(), kind: '修改', detail: '编辑账号「' + u.name + '」的基本信息' });
+        }
+        return true;
+      },
+      after: function () { buildFilters(); renderUsers(); renderKpi(); }
+    });
+  }
+
+  /* ---------- 重置密码 ---------- */
+  function resetPwdModal(u) {
+    modal({
+      title: '重置密码 · ' + u.name, sub: '系统管理 · 用户管理',
+      html: '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">新密码 <span class="req">*</span></label>' +
+        '<div class="input-group"><input class="input" id="su-pwd" type="text" value="Biobank@2026" /><button class="btn btn-sm" id="su-pwd-gen">随机生成</button></div></div>' +
+        '<div class="form-item full"><label class="form-label">确认密码</label><input class="input" id="su-pwd2" type="text" value="Biobank@2026" /></div>' +
+        '</div>' +
+        '<label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12.5px;color:var(--text-secondary);cursor:pointer;">' +
+        '<input type="checkbox" id="su-pwd-force" checked /> 首次登录强制修改密码（推荐）</label>' +
+        '<div class="pm-banner" style="margin-top:14px;margin-bottom:0;background:var(--primary-50);border-color:var(--primary-100);color:var(--primary-dark);">' +
+        '<span class="pm-banner-ico">ℹ</span><div>重置后该账号当前所有登录会话立即失效；重置行为会写入操作日志（操作类型：修改）。</div></div>',
+      ok: '确认重置',
+      onOk: function (root) {
+        var a = root.querySelector('#su-pwd').value.trim(), b = root.querySelector('#su-pwd2').value.trim();
+        if (!a) { window.showToast('请输入新密码', 'error'); return false; }
+        if (a !== b) { window.showToast('两次输入的密码不一致', 'error'); return false; }
+        R.addAudit({ actor: R.current(), kind: '修改', detail: '重置账号「' + u.name + '」的登录密码，原会话已失效' });
+        return true;
+      },
+      done: '已重置「' + u.name + '」的密码，重置链接已发送至注册邮箱',
+      onMount: function (root) {
+        root.querySelector('#su-pwd-gen').addEventListener('click', function () {
+          var pool = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#', s = '';
+          for (var i = 0; i < 12; i++) s += pool.charAt(Math.floor(Math.random() * pool.length));
+          root.querySelector('#su-pwd').value = s; root.querySelector('#su-pwd2').value = s;
+          window.showToast('已生成随机强密码', 'info');
+        });
+      }
+    });
+  }
+
+  /* ---------- 事件 ---------- */
+  document.getElementById('su-new').addEventListener('click', newUserModal);
+  document.getElementById('su-reset').addEventListener('click', function () {
+    document.getElementById('su-search').value = '';
+    document.getElementById('su-role').value = '';
+    document.getElementById('su-dept').value = '';
+    document.getElementById('su-status').value = '';
+    renderUsers();
+  });
+  ['su-search', 'su-role', 'su-dept', 'su-status'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', renderUsers);
+    document.getElementById(id).addEventListener('change', renderUsers);
+  });
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-pm]');
+    if (!el) return;
+    var act = el.getAttribute('data-pm');
+    var tr = el.closest('tr');
+    if (!tr) return;
+    var name = tr.getAttribute('data-name');
+    var u = USERS.filter(function (x) { return x.name === name; })[0];
+    if (!u) return;
+    if (act === 'user-edit') { editUserModal(u); return; }
+    if (act === 'user-reset') { resetPwdModal(u); return; }
+    if (act === 'user-toggle') {
+      u.status = (u.status === '已停用') ? '正常' : '已停用';
+      R.addAudit({ actor: R.current(), kind: u.status === '已停用' ? '修改' : '修改', detail: (u.status === '已停用' ? '停用' : '启用') + '账号「' + u.name + '」的登录权限' });
+      renderUsers(); renderKpi();
+      window.showToast(u.status === '已停用' ? ('已停用「' + u.name + '」的登录权限') : ('已恢复「' + u.name + '」的登录权限'), u.status === '已停用' ? 'info' : 'success');
+      return;
+    }
+  });
+
+  /* ---------- 初始化 ---------- */
+  var dl = document.createElement('datalist');
+  dl.id = 'su-dept-pool';
+  deptList().forEach(function (d) { var o = document.createElement('option'); o.value = d; dl.appendChild(o); });
+  document.body.appendChild(dl);
+
+  buildFilters();
+  renderUsers();
+  renderKpi();
+})();
+</script>
+</body>
+</html>

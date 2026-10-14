@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>规则库  - 体系管理智能体</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924j" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item active" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>平台级模块</span><span class="sep">/</span>
+        <span class="current">规则库</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">规则库</div>
+          <div class="page-desc">规则台账 · 模板与版本 · 触发日志 · 可视化规则编排 —— 改规则不改代码，规则执行全程留痕</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" data-pm="rule-export">⬇ 导出规则清单</button>
+          <a class="btn btn-primary" href="rule-editor.html" data-pm="rule-new">＋ 新建规则</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tabs">
+          <div class="tab active" data-target="pane-list">规则列表</div>
+          <div class="tab" data-target="pane-tpl">规则模板</div>
+          <div class="tab" data-target="pane-version">版本管理</div>
+          <div class="tab" data-target="pane-logs">触发日志</div>
+        </div>
+
+        <!-- ============ 页签 1：规则列表（首要） ============ -->
+        <div data-pane="pane-list">
+          <div class="pm-toolbar" style="margin-bottom:12px;">
+            <div class="search-box"><input class="input" id="rl-rule-search" placeholder="搜索规则名称 / 触发条件" /></div>
+            <select class="select" id="rl-rule-status" style="width:120px;height:32px;">
+              <option value="">全部状态</option>
+              <option value="on">已启用</option>
+              <option value="off">已禁用</option>
+            </select>
+            <button class="btn" id="rl-rule-reset">重置</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:186px;">规则名称</th>
+                  <th style="width:72px;">版本</th>
+                  <th style="width:164px;">触发方式</th>
+                  <th>触发条件 → 执行动作</th>
+                  <th style="width:80px;">状态</th>
+                  <th style="width:84px;">执行次数</th>
+                  <th style="width:118px;">最后执行</th>
+                  <th class="col-actions" style="width:184px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="rl-rules"></tbody>
+            </table>
+          </div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">
+            共 <strong id="rl-rule-count">0</strong> 条规则 · 停用仅停止自动执行，历史执行记录保留；每次保存自动生成新版本。
+            可视化编排在「新建规则」页完成，规则列表只做台账与启停 / 模板 / 版本入口。
+          </div>
+        </div>
+
+        <!-- ============ 页签 2：规则模板（17.3-4） ============ -->
+        <div data-pane="pane-tpl" style="display:none;">
+          <div class="pm-toolbar">
+            <div class="search-box"><input class="input" id="rl-tpl-search" placeholder="搜索模板名称 / 适用场景" /></div>
+            <select class="select" id="rl-tpl-cat" style="width:132px;height:32px;">
+              <option value="">全部分类</option>
+              <option value="设备">设备类</option>
+              <option value="样本">样本类</option>
+              <option value="质量">质量类</option>
+              <option value="容量">容量类</option>
+            </select>
+            <button class="btn" id="rl-tpl-export">⬇ 导出全部模板</button>
+            <button class="btn btn-primary" id="rl-tpl-import">⬆ 导入模板</button>
+          </div>
+          <div class="pm-tpl-grid" id="rl-tpl-grid"></div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px;">
+            共 <strong id="rl-tpl-count">6</strong> 个模板 · 模板支持导入 / 导出（JSON 格式）与跨环境复用，套用后生成新规则并可在「新建规则」页继续可视化调整
+          </div>
+        </div>
+
+        <!-- ============ 页签 3：版本管理（17.3-3） ============ -->
+        <div data-pane="pane-version" style="display:none;">
+          <div class="pm-ver-bar">
+            <span class="pm-matrix-label">规则</span>
+            <select class="select" id="rl-ver-rule" style="width:220px;height:30px;"></select>
+            <span class="pm-ver-cur">当前生效版本 <span class="pm-chip pm-chip-type" id="rl-ver-cur">v3.2</span></span>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:88px;">版本</th>
+                  <th style="width:150px;">生效时间</th>
+                  <th style="width:100px;">变更人</th>
+                  <th style="width:100px;">变更类型</th>
+                  <th>变更摘要</th>
+                  <th class="col-actions" style="width:170px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="rl-ver-body"></tbody>
+            </table>
+          </div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">
+            共 <strong id="rl-ver-count">6</strong> 个版本 · 每次保存规则自动生成新版本 · 任意两个版本可差异对比 · 回滚后已回滚版本仍保留在历史中可再次对比
+          </div>
+        </div>
+
+        <!-- ============ 页签 4：触发日志（17.3-5） ============ -->
+        <div data-pane="pane-logs" style="display:none;">
+          <div class="pm-toolbar">
+            <div class="search-box"><input class="input" id="rl-log-rule" placeholder="规则名称" /></div>
+            <select class="select" id="rl-log-res" style="width:120px;height:32px;">
+              <option value="">全部结果</option>
+              <option value="触发">触发</option>
+              <option value="无触发">无触发</option>
+              <option value="失败">失败</option>
+            </select>
+            <select class="select" id="rl-log-range" style="width:132px;height:32px;">
+              <option value="">全部时间</option>
+              <option value="1">今日</option>
+              <option value="7">近 7 天</option>
+              <option value="30">近 30 天</option>
+            </select>
+            <button class="btn btn-primary" id="rl-log-search">检索</button>
+            <button class="btn" id="rl-log-reset">重置</button>
+            <button class="btn" id="rl-log-export" style="margin-left:auto;">⬇ 导出检索结果</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:140px;">触发时间</th>
+                  <th style="width:180px;">规则名称</th>
+                  <th style="width:220px;">触发条件</th>
+                  <th style="width:88px;">执行结果</th>
+                  <th style="width:78px;">执行耗时</th>
+                  <th>执行详情</th>
+                </tr>
+              </thead>
+              <tbody id="rl-log-body"></tbody>
+            </table>
+          </div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">
+            命中 <strong id="rl-log-count">0</strong> 条 · 日志按时间倒序保留 12 个月 · 每条规则执行与否都留痕，评审时可作为「体系在运行」的客观证据。
+            （用户级操作行为审计见「系统管理 · 操作日志」）
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+<script src="../assets/rule-store.js?v=20260924j"></script>
+<script>
+/* ===================== 规则库 · 页面交互 ===================== */
+(function () {
+  var R = window.ROLES;
+  var STORE = window.RULE_STORE;
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); };
+
+  /* --- 通用弹窗 --- */
+  function modal(opts) {
+    var root = document.getElementById('pm-modal-root');
+    if (!root) { root = document.createElement('div'); root.id = 'pm-modal-root'; document.body.appendChild(root); }
+    root.innerHTML =
+      '<div class="modal-overlay show"><div class="modal' + (opts.size ? ' ' + opts.size : '') + '" role="dialog" aria-modal="true">' +
+      '<div class="modal-header"><div><div class="modal-title">' + opts.title + '</div>' +
+      (opts.sub ? '<div class="modal-subtitle">' + opts.sub + '</div>' : '') + '</div>' +
+      '<button class="modal-close" data-pm-close aria-label="关闭">×</button></div>' +
+      '<div class="modal-body">' + (opts.html || '') + '</div>' +
+      '<div class="modal-footer">' + (opts.footer || '<button class="btn" data-pm-close>取消</button>' +
+      '<button class="btn btn-primary" data-pm-ok>' + (opts.ok || '确定') + '</button>') + '</div>' +
+      '</div></div>';
+    var ov = root.querySelector('.modal-overlay');
+    ov.addEventListener('mousedown', function (e) { if (e.target === ov) close(); });
+    root.querySelectorAll('[data-pm-close]').forEach(function (b) { b.addEventListener('click', close); });
+    var ok = root.querySelector('[data-pm-ok]');
+    if (ok) ok.addEventListener('click', function () {
+      if (typeof opts.onOk === 'function' && opts.onOk(root) === false) return;
+      close();
+      if (opts.done) window.showToast(opts.done, 'success');
+      if (typeof opts.after === 'function') opts.after(root);
+    });
+    if (typeof opts.onMount === 'function') opts.onMount(root);
+    document.addEventListener('keydown', function escKey(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escKey); }
+    });
+    return root;
+  }
+  function close() {
+    var root = document.getElementById('pm-modal-root');
+    if (!root) return;
+    var ov = root.querySelector('.modal-overlay');
+    if (!ov) { root.innerHTML = ''; return; }
+    ov.classList.remove('show');
+    setTimeout(function () { root.innerHTML = ''; }, 180);
+  }
+
+  document.querySelector('[data-pm="rule-export"]').addEventListener('click', function () {
+    window.showToast('已导出规则清单 ' + (STORE ? STORE.all().length : 0) + ' 条（CSV）', 'success');
+  });
+
+  /* ==========================================================
+     规则列表（首要）
+     ========================================================== */
+  var ruleBody = document.getElementById('rl-rules');
+
+  function rowHtml(r) {
+    return '<tr data-id="' + esc(r.id) + '">' +
+      '<td><span class="pm-rule-title">' + esc(r.name) + '</span></td>' +
+      '<td><span class="pm-chip pm-chip-type" data-ver>' + esc(r.ver) + '</span></td>' +
+      '<td>' + esc(r.trigger || '—') + '</td>' +
+      '<td><span class="pm-expr" title="' + esc(r.expr) + '">' + esc(r.expr) + '</span></td>' +
+      '<td><span class="tag ' + (r.on ? 'tag-success' : 'tag-default') + '">' + (r.on ? '已启用' : '已禁用') + '</span></td>' +
+      '<td>' + esc(r.freq || '0 次') + '</td>' +
+      '<td>' + esc(r.last || '—') + '</td>' +
+      '<td class="col-actions">' +
+      '<button class="pm-icon-btn" data-pm="rule-toggle" title="启用 / 停用">⏻</button>' +
+      '<button class="pm-icon-btn" data-pm="rule-view" title="查看执行记录">👁</button>' +
+      '<button class="pm-icon-btn" data-pm="rule-tpl" title="存为模板">📋</button>' +
+      '<a class="pm-icon-btn" data-pm="rule-edit" href="rule-editor.html?rule=' + encodeURIComponent(r.id) + '" title="编辑规则">✎</a>' +
+      '<button class="pm-icon-btn" data-pm="rule-delete" title="删除规则">🗑</button>' +
+      '</td></tr>';
+  }
+  function renderRules() {
+    if (!ruleBody) return;
+    var kw = (document.getElementById('rl-rule-search').value || '').trim();
+    var st = document.getElementById('rl-rule-status').value;
+    var list = (STORE ? STORE.all() : []).filter(function (r) {
+      if (kw && (r.name + ' ' + r.expr).indexOf(kw) < 0) return false;
+      if (st === 'on' && !r.on) return false;
+      if (st === 'off' && r.on) return false;
+      return true;
+    });
+    ruleBody.innerHTML = list.length ? list.map(rowHtml).join('') :
+      '<tr><td colspan="8"><div class="pm-empty"><span class="ico">○</span>没有符合条件的规则，点右上角「＋ 新建规则」开始编排</div></td></tr>';
+    var c = document.getElementById('rl-rule-count');
+    if (c) c.textContent = list.length;
+  }
+
+  document.getElementById('rl-rule-search').addEventListener('input', renderRules);
+  document.getElementById('rl-rule-status').addEventListener('change', renderRules);
+  document.getElementById('rl-rule-reset').addEventListener('click', function () {
+    document.getElementById('rl-rule-search').value = '';
+    document.getElementById('rl-rule-status').value = '';
+    renderRules();
+  });
+
+  ruleBody.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-pm]');
+    if (!el) return;
+    var act = el.getAttribute('data-pm');
+    if (act === 'rule-edit') return;   // 链接：交给浏览器与权限守卫
+    var tr = el.closest('tr');
+    var id = tr.getAttribute('data-id');
+    var rule = STORE.byId(id);
+    if (!rule) return;
+
+    if (act === 'rule-toggle') {
+      var next = STORE.toggle(id);
+      renderRules();
+      window.showToast((next ? '已启用' : '已禁用') + '规则「' + rule.name + '」', next ? 'success' : 'info');
+      return;
+    }
+    if (act === 'rule-delete') {
+      window.showConfirm ? window.showConfirm({
+        title: '删除规则 · ' + rule.name,
+        desc: '删除后该规则不再执行，历史触发日志保留。此操作会写入操作日志。',
+        okLabel: '确认删除', cancelLabel: '取消',
+        onOk: function () {
+          STORE.remove(id); renderRules();
+          if (R) R.addAudit({ actor: R.current(), kind: '删除', detail: '删除规则「' + rule.name + '」' });
+          window.showToast('已删除规则「' + rule.name + '」', 'success');
+        }
+      }) : (STORE.remove(id), renderRules(), window.showToast('已删除规则「' + rule.name + '」', 'success'));
+      return;
+    }
+    if (act === 'rule-view') {
+      var disabled = !rule.on;
+      modal({
+        title: '执行记录 · ' + rule.name,
+        sub: '最近 5 次执行 · 完整日志见「触发日志」页签',
+        footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" data-pm-close id="rl-view-export">⬇ 导出执行记录</button>',
+        html: (disabled ? '<div class="pm-banner"><span class="pm-banner-ico">⚠</span><div>该规则当前已禁用，以下为历史执行记录，仅供参考。</div></div>' : '') +
+          '<div class="table-wrap"><table class="table"><thead><tr><th>执行时间</th><th>结果</th><th>耗时</th><th>说明</th></tr></thead><tbody>' +
+          [['12-01 08:00', '触发', '0.8s', '生成预警工单 WO-20241201-03'], ['11-30 08:00', '无触发', '0.2s', '当前无设备即将到期'],
+           ['11-29 08:00', '无触发', '0.2s', '当前无设备即将到期'], ['11-28 08:00', '触发', '0.9s', '设备 EQ-021 将到期，已通知'],
+           ['11-27 08:00', '无触发', '0.2s', '当前无设备即将到期']]
+            .map(function (r) { return '<tr><td>' + r[0] + '</td><td><span class="tag ' + (r[1] === '触发' ? 'tag-warning' : 'tag-default') + '">' + r[1] + '</span></td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>'; }).join('') +
+          '</tbody></table></div>',
+        onMount: function (root) {
+          var ex = root.querySelector('#rl-view-export');
+          if (ex) ex.addEventListener('click', function () { window.showToast('已导出该规则最近 5 次执行记录', 'success'); });
+        }
+      });
+      return;
+    }
+    if (act === 'rule-tpl') {
+      modal({
+        title: '存为模板 · ' + rule.name,
+        sub: '把当前规则抽象为可复用模板（数值以占位符表示）',
+        requireFirst: false,
+        html: '<div class="pm-form-grid">' +
+          '<div class="form-item full"><label class="form-label">模板名称 <span class="req">*</span></label><input class="input" id="rl-tpl-name" value="' + esc(rule.name) + '模板" /></div>' +
+          '<div class="form-item full"><label class="form-label">适用场景</label><input class="input" id="rl-tpl-scene" value="由已配置规则抽象，可跨环境复用" /></div>' +
+          '<div class="form-item full"><label class="form-label">参数占位符（自动识别）</label>' +
+          '<div class="pm-tpl-params"><span class="pm-tpl-param">{提前天数}</span><span class="pm-tpl-param">{通知对象}</span><span class="pm-tpl-param">{通知方式}</span></div></div>' +
+          '</div>',
+        ok: '存为模板', done: '已加入模板库',
+        after: function (root) {
+          var nm = (root.querySelector('#rl-tpl-name') || {}).value || (rule.name + '模板');
+          TEMPLATES.push({ name: nm, cat: '质量', scene: '由已配置规则抽象，可跨环境复用', params: [{ k: '{提前天数}', v: '30' }, { k: '{通知对象}', v: '设备负责人' }, { k: '{通知方式}', v: '邮件' }], use: 0, rule: rule.name });
+          renderTpl();
+        }
+      });
+      return;
+    }
+  });
+
+  /* ==========================================================
+     规则模板（17.3-4）
+     ========================================================== */
+  var TEMPLATES = [
+    { name: '设备校准到期预警', cat: '设备', scene: '计量设备到期前提前通知负责人，避免超期使用', params: [{ k: '{提前天数}', v: '30' }, { k: '{通知对象}', v: '设备负责人' }, { k: '{通知方式}', v: '邮件' }], use: 12, rule: '设备校准到期预警' },
+    { name: '样本温度超限拦截', cat: '样本', scene: '入库时校验储存温度，超限直接阻断并通知采集方', params: [{ k: '{温度下限}', v: '-80' }, { k: '{温度上限}', v: '-60' }, { k: '{处理动作}', v: '拒绝入库' }], use: 31, rule: '样本温度超限拦截' },
+    { name: '不符合项超期升级', cat: '质量', scene: 'NCR 整改超期自动升级通知质量负责人并提升优先级', params: [{ k: '{超期天数}', v: '1' }, { k: '{升级对象}', v: '质量负责人' }], use: 8, rule: '不符合项超期升级' },
+    { name: '库存容量预警', cat: '容量', scene: '库存使用率超过阈值时提醒扩容并生成工单', params: [{ k: '{使用率阈值}', v: '85' }, { k: '{通知方式}', v: '邮件 + 系统通知' }], use: 5, rule: '库存容量预警' },
+    { name: '文件版本废止通知', cat: '质量', scene: '文件审批通过后自动废止旧版并通知持有人', params: [{ k: '{通知范围}', v: '文件持有人' }], use: 19, rule: '文件版本废止通知' },
+    { name: '知情同意缺失拦截', cat: '样本', scene: '供者知情同意字段缺失时阻断入库并生成整改工单', params: [{ k: '{校验字段}', v: '知情同意书编号' }], use: 3, rule: '知情同意缺失拦截' }
+  ];
+  var tplGrid = document.getElementById('rl-tpl-grid');
+
+  function renderTpl() {
+    var kw = (document.getElementById('rl-tpl-search').value || '').trim();
+    var cat = document.getElementById('rl-tpl-cat').value;
+    var list = TEMPLATES.filter(function (t) {
+      if (cat && t.cat !== cat) return false;
+      if (kw && t.name.indexOf(kw) === -1 && t.scene.indexOf(kw) === -1) return false;
+      return true;
+    });
+    tplGrid.innerHTML = list.length ? list.map(function (t, i) {
+      return '<div class="pm-tpl-card" data-tpl="' + esc(t.name) + '">' +
+        '<div class="pm-tpl-head"><strong>' + esc(t.name) + '</strong><span class="pm-tpl-use">已使用 ' + t.use + ' 次</span></div>' +
+        '<div class="pm-tpl-desc">' + esc(t.scene) + '</div>' +
+        '<div class="pm-tpl-params">' + t.params.map(function (p) { return '<span class="pm-tpl-param">' + esc(p.k) + '</span>'; }).join('') + '</div>' +
+        '<div class="pm-tpl-foot"><span class="pm-chip pm-chip-type">' + esc(t.cat) + '类</span>' +
+        '<button class="btn btn-sm" data-tpl-export="' + i + '">导出</button>' +
+        '<button class="btn btn-primary btn-sm" data-tpl-use="' + i + '">套用</button></div>' +
+        '</div>';
+    }).join('') : '<div class="pm-empty" style="grid-column:1/-1;border:1px dashed var(--border);border-radius:8px;"><span class="ico">○</span>没有匹配的模板</div>';
+    var c = document.getElementById('rl-tpl-count');
+    if (c) c.textContent = list.length;
+  }
+  document.getElementById('rl-tpl-search').addEventListener('input', renderTpl);
+  document.getElementById('rl-tpl-cat').addEventListener('change', renderTpl);
+  document.getElementById('rl-tpl-export').addEventListener('click', function () { window.showToast('已导出 ' + TEMPLATES.length + ' 个规则模板（JSON）', 'success'); });
+  document.getElementById('rl-tpl-import').addEventListener('click', function () {
+    modal({
+      title: '导入规则模板', sub: '支持 JSON / Excel 模板包，导入后可跨环境复用', requireFirst: false,
+      html: '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">模板文件</label>' +
+        '<div class="input-group"><input class="input" value="rule-templates-v3.json" readonly /><button class="btn btn-sm" id="rl-tpl-pick">选择文件</button></div>' +
+        '<div style="font-size:11.5px;color:var(--text-tertiary);margin-top:6px;">已识别 4 个模板：设备校准到期预警 / 库存容量预警 / 文件版本废止通知 / 知情同意缺失拦截</div></div>' +
+        '<div class="form-item"><label class="form-label">同名模板处理</label><select class="select"><option>跳过（保留现有）</option><option>覆盖</option><option>另存为新模板</option></select></div>' +
+        '<div class="form-item"><label class="form-label">导入后状态</label><select class="select"><option>仅入库不启用</option><option>自动启用</option></select></div>' +
+        '</div>',
+      ok: '开始导入', done: '已导入模板，可在模板库中套用',
+      onMount: function (root) { root.querySelector('#rl-tpl-pick').addEventListener('click', function () { window.showToast('已选择文件 rule-templates-v3.json', 'info'); }); },
+      after: function () { TEMPLATES.push({ name: '批量导入 · 温度均值漂移检测', cat: '质量', scene: '同一批次温度均值漂移超过阈值时告警', params: [{ k: '{漂移阈值}', v: '1.5' }], use: 0, rule: '温度均值漂移检测' }); renderTpl(); }
+    });
+  });
+  tplGrid.addEventListener('click', function (e) {
+    var useBtn = e.target.closest('[data-tpl-use]');
+    var expBtn = e.target.closest('[data-tpl-export]');
+    if (expBtn) { window.showToast('已导出模板「' + TEMPLATES[+expBtn.getAttribute('data-tpl-export')].name + '」', 'success'); return; }
+    if (!useBtn) return;
+    var t = TEMPLATES[+useBtn.getAttribute('data-tpl-use')];
+    modal({
+      title: '套用模板 · ' + t.name, sub: '填写模板参数后生成新规则', requireFirst: false,
+      html: '<div class="pm-form-grid">' + t.params.map(function (p) {
+        return '<div class="form-item"><label class="form-label">' + esc(p.k) + '</label><input class="input" value="' + esc(p.v) + '" /></div>';
+      }).join('') + '</div>' +
+      '<div class="pm-banner" style="margin-top:14px;margin-bottom:0;background:var(--primary-50);border-color:var(--primary-100);color:var(--primary-dark);">' +
+      '<span class="pm-banner-ico">ℹ</span><div>套用后会生成一条新规则（初始 v1.0，默认启用），可在规则列表点「✎」继续可视化调整。</div></div>',
+      ok: '生成规则', done: '已基于模板「' + t.name + '」生成规则',
+      after: function (root) {
+        var vals = Array.prototype.map.call(root.querySelectorAll('.pm-form-grid .input'), function (i) { return i.value; });
+        var conds = t.params.map(function (p, i) { return { field: p.k.replace(/[{}]/g, ''), op: '≤', val: vals[i] || p.v, join: 'AND' }; });
+        STORE.add({
+          id: 'tpl_' + Date.now() + '_' + Math.floor(Math.random() * 1000), name: t.rule || t.name, ver: 'v1.0', on: true,
+          trigger: '模板套用生成', freq: '0 次', last: '—', conds: conds,
+          acts: [{ act: '发送通知', who: '质量负责人', how: '邮件' }],
+          expr: 'IF ' + conds.map(function (c) { return c.field + ' ' + c.op + ' ' + c.val; }).join(' / ') + ' → 按模板「' + t.name + '」执行'
+        });
+        t.use++;
+        renderTpl(); renderRules();
+      }
+    });
+  });
+
+  /* ==========================================================
+     版本管理（17.3-3）
+     ========================================================== */
+  var VERSIONS = [
+    { v: 'v3.2', date: '2024-11-28 16:40', by: '刘梅', type: '修改阈值', sum: '校准提前预警天数 15 天 → 30 天；新增「生成预警工单」动作' },
+    { v: 'v3.1', date: '2024-10-12 09:20', by: '王志强', type: '新增条件', sum: '新增条件「设备状态 = 在用」，排除停用设备' },
+    { v: 'v3.0', date: '2024-08-30 14:05', by: '刘梅', type: '结构调整', sum: '触发方式由手动改为定时（每日 08:00）' },
+    { v: 'v2.2', date: '2024-06-18 11:12', by: '陈磊', type: '修改阈值', sum: '校准提前预警天数 30 天 → 15 天' },
+    { v: 'v2.1', date: '2024-04-02 10:33', by: '刘梅', type: '新增动作', sum: '新增「发送邮件通知设备负责人」动作' },
+    { v: 'v2.0', date: '2024-03-15 09:00', by: '系统管理员', type: '初始创建', sum: '规则首次创建并启用' }
+  ];
+  var DIFFS = {
+    'v3.2': [['mod', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 30天'], ['add', '', '→ 生成预警工单（事件管控中心 · 待分派）'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
+    'v3.1': [['add', '', 'AND 设备状态 = 在用'], ['keep', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 15天'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
+    'v3.0': [['mod', '触发方式：手动触发', '触发方式：定时触发（每日 08:00）'], ['keep', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 15天'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
+    'v2.2': [['mod', 'IF 设备校准到期日 ≤ 30天', 'IF 设备校准到期日 ≤ 15天']],
+    'v2.1': [['add', '', '→ 发送邮件通知设备负责人'], ['keep', 'IF 设备校准到期日 ≤ 30天 AND 采集时间 有效', 'IF 设备校准到期日 ≤ 30天 AND 采集时间 有效']],
+    'v2.0': [['add', '', 'IF 设备校准到期日 ≤ 30天 AND 采集时间 有效'], ['add', '', '→ 记录执行日志']]
+  };
+  var curVer = 'v3.2';
+  var verBody = document.getElementById('rl-ver-body');
+
+  function buildVerRuleSelect() {
+    var sel = document.getElementById('rl-ver-rule');
+    if (!sel) return;
+    sel.innerHTML = (STORE ? STORE.all() : []).map(function (r) { return '<option value="' + esc(r.id) + '">' + esc(r.name) + '</option>'; }).join('');
+  }
+  function renderVersions() {
+    verBody.innerHTML = VERSIONS.map(function (x) {
+      var isCur = x.v === curVer;
+      return '<tr data-ver="' + x.v + '">' +
+        '<td><strong>' + x.v + '</strong>' + (isCur ? ' <span class="tag tag-success">当前</span>' : '') + '</td>' +
+        '<td>' + x.date + '</td><td>' + x.by + '</td>' +
+        '<td><span class="pm-chip pm-chip-type">' + x.type + '</span></td>' +
+        '<td>' + esc(x.sum) + '</td>' +
+        '<td class="col-actions">' +
+        '<button class="btn-text" data-ver-diff="' + x.v + '">对比</button>' +
+        (isCur ? '' : '<button class="btn-text" data-ver-rollback="' + x.v + '">回滚</button>') +
+        '</td></tr>';
+    }).join('');
+    document.getElementById('rl-ver-cur').textContent = curVer;
+    var c = document.getElementById('rl-ver-count');
+    if (c) c.textContent = VERSIONS.length;
+  }
+  function applyRollback(v) {
+    curVer = v; renderVersions();
+    var rid = document.getElementById('rl-ver-rule').value;
+    if (rid && STORE) STORE.update(rid, { ver: v });
+    renderRules();
+    window.showToast('已回滚至 ' + v + '，当前生效版本 ' + v, 'success');
+  }
+  verBody.addEventListener('click', function (e) {
+    var d = e.target.closest('[data-ver-diff]');
+    var rb = e.target.closest('[data-ver-rollback]');
+    if (rb) {
+      var v = rb.getAttribute('data-ver-rollback');
+      modal({
+        title: '回滚规则版本 · ' + v, sub: '回滚后当前生效版本将变更为 ' + v, requireFirst: false,
+        html: '<div class="pm-banner"><span class="pm-banner-ico">⚠</span><div>回滚会立即用 ' + v + ' 的内容覆盖当前生效版本 ' + curVer + '；原版本不会被删除，仍保留在历史中可再次对比或回滚。</div></div>' +
+          '<div class="pm-desc-list" style="margin-top:6px;">' +
+          '<div class="pm-desc-row"><span class="k">目标版本</span><span class="v">' + v + '</span></div>' +
+          '<div class="pm-desc-row"><span class="k">当前版本</span><span class="v">' + curVer + '</span></div></div>',
+        ok: '确认回滚', done: '',
+        onOk: function () { applyRollback(v); return true; }
+      });
+      return;
+    }
+    if (!d) return;
+    var ver = d.getAttribute('data-ver-diff');
+    var rows = DIFFS[ver] || [];
+    var meta = VERSIONS.filter(function (x) { return x.v === ver; })[0];
+    var prev = VERSIONS[VERSIONS.indexOf(meta) + 1];
+    modal({
+      title: '版本差异对比 · ' + ver, sub: ver + '（' + meta.date + ' · ' + meta.by + '） 对比 ' + (prev ? prev.v : '—'),
+      requireFirst: false, size: 'modal-lg',
+      html: '<div class="pm-diff"><div class="pm-diff-head"><span>' + (prev ? prev.v : '—') + '（旧）</span><span>' + ver + '（新）</span></div>' +
+        '<div class="pm-diff-body">' + rows.map(function (r) {
+          var sign = { add: '+', del: '-', mod: '±', keep: ' ' }[r[0]];
+          return '<div class="pm-diff-row ' + r[0] + '">' +
+            '<div><span class="pm-diff-sign">' + (r[0] === 'add' ? ' ' : sign) + '</span>' + esc(r[1]) + '</div>' +
+            '<div><span class="pm-diff-sign">' + (r[0] === 'del' ? ' ' : sign) + '</span>' + esc(r[2]) + '</div></div>';
+        }).join('') + '</div></div>' +
+        '<div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">绿色为新增 / 变更后内容，红色为删除 / 变更前内容，灰色为未变更行。</div>',
+      footer: '<button class="btn" data-pm-close>关闭</button><button class="btn" data-pm-close id="rl-diff-export">⬇ 导出对比结果</button>' +
+        (ver === curVer ? '' : '<button class="btn btn-primary" data-pm-close id="rl-diff-rollback">回滚至该版本</button>'),
+      onMount: function (root) {
+        var ex = root.querySelector('#rl-diff-export');
+        if (ex) ex.addEventListener('click', function () { window.showToast('对比结果已导出', 'success'); });
+        var rbv = root.querySelector('#rl-diff-rollback');
+        if (rbv) rbv.addEventListener('click', function () { applyRollback(ver); });
+      }
+    });
+  });
+  document.getElementById('rl-ver-rule').addEventListener('change', function () {
+    window.showToast('已加载「' + this.options[this.selectedIndex].text + '」的版本历史', 'info');
+  });
+
+  /* ==========================================================
+     触发日志（17.3-5）
+     ========================================================== */
+  var LOGS = [
+    { t: '2024-12-01 11:32', rule: '样本入库质量检查', cond: '温度超出 -80℃±2℃', res: '触发', cost: '0.8s', det: '样本 S-20241201-042 温度偏高（-65℃），已拒绝入库' },
+    { t: '2024-12-01 09:00', rule: '不符合项超期告警', cond: 'NCR 截止日已过期且未关闭', res: '触发', cost: '1.2s', det: 'NCR-2024-001 整改截止日超期 1 天，已升级通知质量负责人' },
+    { t: '2024-12-01 08:00', rule: '设备校准到期预警', cond: '校准到期日 ≤ 30天', res: '触发', cost: '0.9s', det: '设备 EQ-021 校准将于 2025-01-01 到期，已通知王志强' },
+    { t: '2024-11-30 08:00', rule: '设备校准到期预警', cond: '校准到期日 ≤ 30天', res: '无触发', cost: '0.2s', det: '当前无设备即将到期' },
+    { t: '2024-11-28 16:15', rule: '文件版本自动归档', cond: '文件状态 = 已审批', res: '触发', cost: '0.6s', det: 'SOP-007 v4.0 审批完成，v3.2 已标记废止' },
+    { t: '2024-11-27 03:14', rule: '液氮液位低告警', cond: '液氮液位 < 30%', res: '失败', cost: '5.0s', det: '短信网关超时，已自动重试并降级为邮件通知' },
+    { t: '2024-11-25 09:00', rule: '不符合项超期告警', cond: 'NCR 截止日已过期且未关闭', res: '无触发', cost: '0.3s', det: '当前无超期不符合项' },
+    { t: '2024-11-20 10:22', rule: '样本入库质量检查', cond: '标识信息不完整', res: '触发', cost: '0.7s', det: '样本 S-20241120-018 缺供者编号，已拒绝入库' }
+  ];
+  var logBody = document.getElementById('rl-log-body');
+  function dayOf(mmdd) { var p = /(\d+)-(\d+)/.exec(mmdd.slice(5)); return (p ? (+p[1]) * 31 + (+p[2]) : 0); }
+  var TODAY = dayOf('2024-12-01');
+  function renderLogs() {
+    var kw = document.getElementById('rl-log-rule').value.trim();
+    var res = document.getElementById('rl-log-res').value;
+    var range = document.getElementById('rl-log-range').value;
+    var list = LOGS.filter(function (l) {
+      if (kw && l.rule.indexOf(kw) === -1) return false;
+      if (res && l.res !== res) return false;
+      if (range && TODAY - dayOf(l.t) > +range) return false;
+      return true;
+    });
+    logBody.innerHTML = list.length ? list.map(function (l) {
+      var cls = l.res === '触发' ? 'tag-warning' : (l.res === '失败' ? 'tag-error' : 'tag-default');
+      return '<tr><td>' + l.t + '</td><td><strong>' + esc(l.rule) + '</strong></td>' +
+        '<td><span class="pm-expr" style="font-size:11.5px;">' + esc(l.cond) + '</span></td>' +
+        '<td><span class="tag ' + cls + '">' + l.res + '</span></td><td>' + l.cost + '</td><td>' + esc(l.det) + '</td></tr>';
+    }).join('') : '<tr><td colspan="6"><div class="pm-empty">没有符合检索条件的日志，请调整规则名称、执行结果或时间范围</div></td></tr>';
+    document.getElementById('rl-log-count').textContent = list.length;
+  }
+  document.getElementById('rl-log-search').addEventListener('click', function () { renderLogs(); window.showToast('检索完成，命中 ' + document.getElementById('rl-log-count').textContent + ' 条', 'info'); });
+  document.getElementById('rl-log-rule').addEventListener('keydown', function (e) { if (e.key === 'Enter') renderLogs(); });
+  document.getElementById('rl-log-res').addEventListener('change', renderLogs);
+  document.getElementById('rl-log-range').addEventListener('change', renderLogs);
+  document.getElementById('rl-log-reset').addEventListener('click', function () {
+    document.getElementById('rl-log-rule').value = ''; document.getElementById('rl-log-res').value = ''; document.getElementById('rl-log-range').value = '';
+    renderLogs(); window.showToast('检索条件已重置', 'info');
+  });
+  document.getElementById('rl-log-export').addEventListener('click', function () { window.showToast('已导出检索结果 ' + document.getElementById('rl-log-count').textContent + ' 条（CSV）', 'success'); });
+
+  /* ---------- 初始化 ---------- */
+  buildVerRuleSelect();
+  renderRules();
+  renderTpl();
+  renderVersions();
+  renderLogs();
+})();
+</script>
+</body>
+</html>

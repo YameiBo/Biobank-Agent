@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>角色管理  - 体系管理智能体</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924j" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item active" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>系统管理</span><span class="sep">/</span>
+        <span class="current">角色管理</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">角色管理</div>
+          <div class="page-desc">基于角色的访问控制（RBAC）· 6 角色 × 9 功能模块 × 6 操作 = 54 权限点 · 权限粒度到功能模块 · 变更须经样本库主任签发</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" data-pm="role-export">⬇ 导出角色权限</button>
+          <button class="btn btn-primary" id="sr-new" data-pm="role-new">＋ 新建角色</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="sr-pending-bar" style="display:none;margin-bottom:14px;"></div>
+
+        <!-- 角色卡 -->
+        <div class="pm-grid-role" id="sr-role-cards"></div>
+
+        <!-- 权限矩阵 -->
+        <div style="margin-top:18px;">
+          <div class="pm-matrix-bar">
+            <span class="pm-matrix-label">权限矩阵 · 当前角色</span>
+            <select class="select" id="sr-matrix-role" style="width:180px;height:30px;"></select>
+            <span class="pm-matrix-label">勾选该角色在每个功能模块上的操作权限，未勾选即不可见不可操作</span>
+            <span class="tag tag-default" id="sr-matrix-ro" style="display:none;">只读</span>
+            <button class="btn btn-sm" id="sr-matrix-default">重置为默认</button>
+            <button class="btn btn-primary btn-sm" id="sr-matrix-save">保存变更</button>
+          </div>
+          <div class="table-wrap">
+            <table class="pm-matrix">
+              <thead>
+                <tr>
+                  <th style="width:250px;">功能模块</th>
+                  <th class="pm-matrix-op">查看</th>
+                  <th class="pm-matrix-op">新增</th>
+                  <th class="pm-matrix-op">修改</th>
+                  <th class="pm-matrix-op">删除</th>
+                  <th class="pm-matrix-op">审批</th>
+                  <th class="pm-matrix-op">导出</th>
+                </tr>
+              </thead>
+              <tbody id="sr-matrix-body"></tbody>
+            </table>
+          </div>
+          <div class="pm-matrix-legend" style="margin-top:12px;font-size:12px;color:var(--text-tertiary);">
+            <span>🟢 已授权</span><span>⚪ 未授权</span><span>⚠ 「删除」为高危操作</span><span>「查看」为其它操作的前置权限，取消后整个模块不可见</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">
+            共 <strong id="sr-stat-roles">6</strong> 个角色 · <strong id="sr-stat-points">54</strong> 个权限点（9 个功能模块 × 6 类操作） ·
+            当前勾选 <strong id="sr-stat-on">0</strong> 个 · <strong id="sr-stat-approver">样本库主任</strong> 为唯一签发人
+          </div>
+        </div>
+      </div>
+
+      <!-- 全站动作 → 权限点映射 -->
+      <div class="card" style="margin-top:16px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="font-size:14px;font-weight:600;">全站动作 → 权限点映射</div>
+          <span class="tag tag-default">ACTION_MAP</span>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th style="width:240px;">页面动作（data-action / data-pm）</th><th style="width:120px;">所属模块</th><th style="width:110px;">操作类型</th><th>业务含义</th></tr></thead>
+            <tbody id="sr-actionmap"></tbody>
+          </table>
+        </div>
+        <div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">共 <strong id="sr-actionmap-count">0</strong> 个已登记动作</div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+<script>
+/* ===================== 系统管理 · 角色管理（RBAC） ===================== */
+(function () {
+  var R = window.ROLES;
+  var TONE = ['', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
+
+  function modal(opts) {
+    var root = document.getElementById('sr-modal-root');
+    if (!root) { root = document.createElement('div'); root.id = 'sr-modal-root'; document.body.appendChild(root); }
+    root.innerHTML =
+      '<div class="modal-overlay show"><div class="modal' + (opts.size ? ' ' + opts.size : '') + '" role="dialog" aria-modal="true">' +
+      '<div class="modal-header"><div><div class="modal-title">' + opts.title + '</div>' +
+      (opts.sub ? '<div class="modal-subtitle">' + opts.sub + '</div>' : '') + '</div>' +
+      '<button class="modal-close" data-sr-close aria-label="关闭">×</button></div>' +
+      '<div class="modal-body">' + (opts.html || '') + '</div>' +
+      '<div class="modal-footer">' + (opts.footer || '<button class="btn" data-sr-close>取消</button>' +
+      '<button class="btn btn-primary" data-sr-ok>' + (opts.ok || '确定') + '</button>') + '</div>' +
+      '</div></div>';
+    var ov = root.querySelector('.modal-overlay');
+    ov.addEventListener('mousedown', function (e) { if (e.target === ov) close(); });
+    root.querySelectorAll('[data-sr-close]').forEach(function (b) { b.addEventListener('click', close); });
+    var ok = root.querySelector('[data-sr-ok]');
+    if (ok) ok.addEventListener('click', function () {
+      if (typeof opts.onOk === 'function' && opts.onOk(root) === false) return;
+      close();
+      if (opts.done) window.showToast(opts.done, 'success');
+      if (typeof opts.after === 'function') opts.after(root);
+    });
+    if (typeof opts.onMount === 'function') opts.onMount(root);
+    document.addEventListener('keydown', function escKey(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escKey); }
+    });
+    return root;
+  }
+  function close() {
+    var root = document.getElementById('sr-modal-root');
+    if (!root) return;
+    var ov = root.querySelector('.modal-overlay');
+    if (!ov) { root.innerHTML = ''; return; }
+    ov.classList.remove('show');
+    setTimeout(function () { root.innerHTML = ''; }, 180);
+  }
+
+  var MODULES = R.MODULES.map(function (m) { return { key: m.id, m: m.name, d: m.desc, page: m.pages.join(' / ') }; });
+
+  /* ---------- 角色卡 ---------- */
+  function renderRoleCards() {
+    var host = document.getElementById('sr-role-cards');
+    if (!host) return;
+    host.innerHTML = R.list().map(function (r) {
+      var people = R.ACCOUNTS.filter(function (a) { return a.role === r.id; }).length;
+      var s = R.stats(r.id);
+      var mods = R.MODULES.filter(function (m) { return R.can(r.id, m.id, 'view'); });
+      return '<div class="pm-role-card" data-role-card="' + r.id + '">' +
+        '<div class="pm-role-head"><span class="pm-avatar ' + (TONE[r.tone] || '') + '" style="width:24px;height:24px;font-size:11px;">' + r.short + '</span>' +
+        '<strong>' + r.name + '</strong><span class="pm-role-count">' + people + ' 人</span>' +
+        '<span class="pm-role-count">' + r.level + '</span>' +
+        '<button class="btn-text" data-role-edit="' + r.id + '">编辑权限</button>' +
+        '<button class="btn-text" data-role-view="' + r.id + '">详情</button></div>' +
+        '<div class="pm-role-duty">' + r.duty + '</div>' +
+        '<div class="pm-perm-list">' + mods.map(function (m) { return '<span class="pm-chip pm-chip-type">' + m.name + '</span>'; }).join('') + '</div>' +
+        '<div class="pm-role-foot">可见 ' + s.visible + '/' + R.MODULES.length + ' 模块 · 权限点 ' + s.points + '/' + s.total +
+        (s.app ? ' · 可审批 ' + s.app + ' 个模块' : ' · 无审批权') +
+        (s.del ? ' · 可删除 ' + s.del + ' 个模块' : '') + '</div></div>';
+    }).join('');
+    host.querySelectorAll('[data-role-edit]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        selectRole(b.getAttribute('data-role-edit'));
+        window.showToast('已定位到「' + R.byId(b.getAttribute('data-role-edit')).name + '」的权限矩阵', 'info');
+        var bar = document.querySelector('.pm-matrix-bar');
+        if (bar && bar.scrollIntoView) bar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+    host.querySelectorAll('[data-role-view]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (window.openRoleDetail) window.openRoleDetail(b.getAttribute('data-role-view'));
+      });
+    });
+  }
+
+  /* ---------- 权限矩阵 ---------- */
+  var matrixRole = R.current();
+  var matrixState = {};
+  var matrixBody = document.getElementById('sr-matrix-body');
+
+  function buildRoleSelect() {
+    var sel = document.getElementById('sr-matrix-role');
+    if (!sel) return;
+    sel.innerHTML = R.list().map(function (r) {
+      var people = R.ACCOUNTS.filter(function (a) { return a.role === r.id; }).length;
+      return '<option value="' + r.id + '">' + r.name + '（' + people + ' 人）</option>';
+    }).join('');
+    sel.value = matrixRole;
+  }
+  function loadState() {
+    matrixState = {};
+    R.MODULES.forEach(function (m) { matrixState[m.id] = R.grants(matrixRole, m.id).slice(); });
+  }
+  function selectRole(id) {
+    matrixRole = id; loadState();
+    var sel = document.getElementById('sr-matrix-role');
+    if (sel) sel.value = id;
+    renderMatrix();
+  }
+  function renderMatrix() {
+    if (!matrixBody) return;
+    matrixBody.innerHTML = MODULES.map(function (mod) {
+      var on = matrixState[mod.key] || [];
+      return '<tr data-mod="' + mod.key + '">' +
+        '<td class="pm-matrix-mod">' + mod.m + '<small>' + mod.d + '<br/>' + mod.page + '</small></td>' +
+        R.OPS.map(function (o) {
+          var isOn = on.indexOf(o.id) > -1;
+          return '<td class="pm-matrix-op"><button class="pm-matrix-cell' + (isOn ? ' on' : '') +
+            (o.risk ? ' risk' : '') + '" data-op="' + o.id + '" aria-pressed="' + isOn + '" title="' + mod.m + ' · ' + o.name + '">✓</button></td>';
+        }).join('') + '</tr>';
+    }).join('');
+    updateStat();
+    applyEditability();
+  }
+  function countOn() {
+    var n = 0; R.MODULES.forEach(function (m) { n += (matrixState[m.id] || []).length; }); return n;
+  }
+  function updateStat() {
+    var el = document.getElementById('sr-stat-on');
+    if (el) el.textContent = countOn();
+  }
+  function canEditMatrix() {
+    var cur = R.current();
+    return R.can(cur, 'system', 'edit') || R.can(cur, 'system', 'create');
+  }
+  function applyEditability() {
+    var ro = document.getElementById('sr-matrix-ro');
+    var save = document.getElementById('sr-matrix-save');
+    var def = document.getElementById('sr-matrix-default');
+    var editable = canEditMatrix();
+    if (ro) ro.style.display = editable ? 'none' : '';
+    if (save) {
+      save.classList.toggle('perm-denied', !editable);
+      save.title = editable ? (R.current() === R.APPROVER ? '直接生效（本人为签发人）' : '提交后需样本库主任审批生效') : '当前身份无「系统管理 · 修改」权限';
+    }
+    if (def) def.classList.toggle('perm-denied', !editable);
+    if (matrixBody) matrixBody.querySelectorAll('[data-op]').forEach(function (b) {
+      if (!editable) b.setAttribute('disabled', 'disabled'); else b.removeAttribute('disabled');
+    });
+  }
+
+  matrixBody && matrixBody.addEventListener('click', function (e) {
+    if (!canEditMatrix()) { window.showToast('当前身份无「系统管理 · 修改」权限，矩阵为只读', 'error'); return; }
+    var cell = e.target.closest('[data-op]');
+    if (!cell) return;
+    var key = cell.closest('tr').getAttribute('data-mod');
+    var op = cell.getAttribute('data-op');
+    var arr = matrixState[key] || (matrixState[key] = []);
+    var at = arr.indexOf(op);
+    if (at > -1) arr.splice(at, 1); else arr.push(op);
+    if (op === 'view' && at > -1) { matrixState[key] = []; }
+    if (op !== 'view' && at === -1 && arr.indexOf('view') < 0) arr.push('view');
+    renderMatrix(); applyEditability();
+  });
+
+  document.getElementById('sr-matrix-role').addEventListener('change', function () {
+    selectRole(this.value); applyEditability();
+    window.showToast('已切换到角色「' + R.byId(this.value).name + '」的权限矩阵', 'info');
+  });
+  document.getElementById('sr-matrix-default').addEventListener('click', function () {
+    if (!canEditMatrix()) { window.showToast('当前身份无权限重置矩阵', 'error'); return; }
+    selectRole(matrixRole); applyEditability();
+    window.showToast('已还原「' + R.byId(matrixRole).name + '」的默认权限基线（共 ' + countOn() + ' 个权限点）', 'success');
+  });
+  document.getElementById('sr-matrix-save').addEventListener('click', function () {
+    if (!canEditMatrix()) { window.showToast('当前身份无「系统管理 · 修改」权限，无法保存变更', 'error'); return; }
+    var res = R.saveMatrix(matrixRole, matrixState, R.current());
+    var who = R.byId(matrixRole).name;
+    var cnt = (res.changes || []).length;
+    renderPendingBar();
+    if (res.empty) { window.showToast('权限未发生变化，无需保存', 'info'); return; }
+    if (res.pending) {
+      window.showToast('变更已提交：' + who + ' 共 ' + cnt + ' 项，需样本库主任审批后生效', 'info');
+      if (window.showConfirm) {
+        window.showConfirm({
+          title: '权限变更已提交审批',
+          desc: '依据《授权管理程序》，<strong>' + who + '</strong> 的 ' + cnt +
+            ' 项权限变更已提交，需<strong>样本库主任</strong>签发后才会生效。' +
+            '<div class="alert alert-warning" style="margin-top:10px;">可点击右上角「演示身份」切换为样本库主任，回到本页审批。</div>',
+          okLabel: '明白了', cancelLabel: '继续编辑'
+        });
+      }
+    } else {
+      window.showToast(who + ' 权限已签发生效（' + cnt + ' 项变更），全站功能即时更新', 'success');
+      try { document.dispatchEvent(new CustomEvent('rolechange', { detail: { role: R.current() } })); } catch (err) { }
+    }
+    renderRoleCards(); applyEditability();
+  });
+
+  /* ---------- 待审批变更条 ---------- */
+  function renderPendingBar() {
+    var bar = document.getElementById('sr-pending-bar');
+    if (!bar) return;
+    var p = R.pending();
+    if (!p) { bar.style.display = 'none'; bar.innerHTML = ''; return; }
+    var changes = (p.changes || []).map(function (c) {
+      return '<span class="pm-chip ' + (c.kind === 'grant' ? 'pm-chip-type' : 'pm-chip-off') + '">' +
+        c.mod + ' · ' + c.op + (c.kind === 'grant' ? ' ＋' : ' －') + '</span>';
+    }).join('');
+    bar.style.display = '';
+    bar.innerHTML = '<div class="alert alert-warning" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">' +
+      '<div style="flex:1;min-width:260px;"><strong>⏳ 待签发的权限变更</strong>　' +
+      R.byId(p.by).name + ' 于 ' + p.time + ' 提交了「' + R.byId(p.roleId).name + '」的 ' + (p.changes || []).length + ' 项权限变更，等待样本库主任签发。' +
+      '<div style="margin-top:6px;">' + changes + '</div></div>' +
+      (R.current() === R.APPROVER
+        ? '<button class="btn btn-sm" id="sr-pend-reject">驳回</button><button class="btn btn-primary btn-sm" id="sr-pend-ok">签发并生效</button>'
+        : '<span class="tag tag-default">需样本库主任签发</span>') + '</div>';
+    var ok = document.getElementById('sr-pend-ok'), no = document.getElementById('sr-pend-reject');
+    if (ok) ok.addEventListener('click', function () {
+      var r = R.approvePending();
+      selectRole(matrixRole); renderPendingBar(); renderRoleCards(); applyEditability();
+      try { document.dispatchEvent(new CustomEvent('rolechange', { detail: { role: R.current() } })); } catch (err) { }
+      window.showToast('已签发：' + R.byId(r.roleId).name + ' 的权限变更即时生效，全站功能更新', 'success');
+    });
+    if (no) no.addEventListener('click', function () {
+      R.rejectPending(); renderPendingBar(); applyEditability();
+      window.showToast('已驳回该权限变更申请，维持原权限', 'success');
+    });
+  }
+
+  /* ---------- 全站动作 → 权限点映射 ---------- */
+  function renderActionMap() {
+    var tb = document.getElementById('sr-actionmap');
+    if (!tb) return;
+    var keys = Object.keys(R.ACTION_MAP);
+    tb.innerHTML = keys.map(function (k) {
+      var p = R.actionPerm(k);
+      return '<tr><td><span class="pm-chip pm-chip-type" style="font-family:ui-monospace,Menlo,monospace;">' + k + '</span></td>' +
+        '<td>' + p.modName + '</td><td>' + p.opName + '</td><td>' + p.label + '</td></tr>';
+    }).join('');
+    var c = document.getElementById('sr-actionmap-count');
+    if (c) c.textContent = keys.length;
+  }
+
+  /* ---------- 新建角色（治理式） ---------- */
+  document.getElementById('sr-new').addEventListener('click', function () {
+    modal({
+      title: '新建角色', sub: '系统管理 · 角色管理 · 新角色须由样本库主任签发后生效',
+      html: '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">角色名称 <span class="req">*</span></label><input class="input" id="sr-f-name" placeholder="如：技术主管" /></div>' +
+        '<div class="form-item"><label class="form-label">基础权限模板</label><select class="select" id="sr-f-base">' + R.list().map(function (r) { return '<option value="' + r.id + '">' + r.name + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">数据可见范围</label><select class="select"><option>仅本人操作范围</option><option>本部门</option><option>全部数据</option></select></div>' +
+        '</div>' +
+        '<div class="pm-banner" style="margin-top:14px;margin-bottom:0;background:var(--primary-50);border-color:var(--primary-100);color:var(--primary-dark);">' +
+        '<span class="pm-banner-ico">ℹ</span><div>新角色基于所选模板复制权限，提交后进入「待签发」队列；样本库主任签发后，方可在「用户管理」中分配给账号。</div></div>',
+      ok: '提交新建申请',
+      onOk: function (root) {
+        var name = root.querySelector('#sr-f-name').value.trim();
+        if (!name) { window.showToast('请填写角色名称', 'error'); return false; }
+        R.addAudit({ actor: R.current(), kind: '待审批', detail: '提交新建角色「' + name + '」（基础模板：' + (R.byId(root.querySelector('#sr-f-base').value) || {}).name + '），等待样本库主任签发' });
+        return true;
+      },
+      done: '已提交角色新建申请，等待样本库主任签发'
+    });
+  });
+
+  /* ---------- 初始化 ---------- */
+  buildRoleSelect();
+  loadState();
+  renderMatrix();
+  renderRoleCards();
+  renderPendingBar();
+  applyEditability();
+  renderActionMap();
+
+  /* 顶栏「演示身份」切换后，即时刷新待签发条与矩阵可编辑态 */
+  document.addEventListener('rolechange', function () {
+    renderPendingBar(); renderRoleCards(); applyEditability();
+  });
+})();
+</script>
+</body>
+</html>

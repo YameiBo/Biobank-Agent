@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="GCTfwxn6Xvnj8CdH1GHNmb">
+<head data-page-node-id="DP7U2vKtwcgVoHExWS8ch9">
+<meta charset="UTF-8" data-page-node-id="9o8qLefoQHtXxuGGpBscMK" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="jrdV404dRdBjABEMncqUxH" />
+<title>迎检总览 - CNAS 迎检 - 体系管理智能体</title>
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="assets/styles.css?v=20260924j" data-page-node-id="l4y3bt4aSKFXBO1lIWu3jF" />
+<link rel="stylesheet" href="assets/agent-widget.css?v=20260924j" />
+</head>
+<body data-page-node-id="Xa1LMHPSsGSMdJvgo4MET9">
+<div class="layout" data-page-node-id="eGHZsxJPw04SgCn9K9w0KM">
+  <!-- ====================== 侧边栏 ====================== -->
+  <aside class="sidebar" data-page-node-id="yamy3y2B3I1HnoeeDHsu7N">
+    <div class="sidebar-header" data-page-node-id="G2W3aDIW33W9d22dgb0KL9">
+      <div class="sidebar-logo" data-page-node-id="UKTwqjj0Q19ajSg8TMQDxu">◈</div>
+      <div class="sidebar-title" data-page-node-id="Qj7dA6u8Y8I953kRnHoHst">体系管理智能体</div>
+      <div class="sidebar-collapse-btn" data-page-node-id="vidp4QscYBoFixGe7mJJKo">⤢</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item active" href="index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="pages/task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="pages/checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="pages/clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="pages/self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="pages/archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="pages/version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="pages/report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="pages/history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="pages/rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="pages/event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="pages/data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="pages/system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="pages/system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="pages/system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ====================== 主区域 ====================== -->
+  <div class="main" data-page-node-id="RjlL1EMNrlrpyyAXPwShQp">
+    <header class="topbar" data-page-node-id="hw1Cu6nUaHkPWNNoXVlIqO">
+      <div class="breadcrumb" data-page-node-id="meqlyONkjGRCkUPCTetCj8">
+        <span data-page-node-id="qzL0DhuGEKfuJHbcRWW76V">CNAS 迎检</span>
+        <span class="sep" data-page-node-id="bmiSyeycVcDPT1NsEKlDn3">/</span>
+        <span class="current" data-page-node-id="ikD3lH8Jk1JGooJvDB4iLw">迎检总览</span>
+      </div>
+      <div class="topbar-right" data-page-node-id="Qd9qQngMCrHkdnbcfD6hO0">
+        <div class="topbar-icon-btn tooltip" data-tip="搜索" data-page-node-id="FJOn501GeOWqmDTdJKPrmO">🔍</div>
+        <div class="topbar-icon-btn tooltip" data-tip="通知" data-page-node-id="KMWEEWKr4gMGDZZSYKwqCQ">🔔</div>
+        <div class="user-chip" data-page-node-id="bKVMqdgCQA8J6SB1oiWxrs">
+          <div class="user-avatar" data-page-node-id="d9WHbOGPZ0Hg1MifWRGJzg">质</div>
+          <span data-page-node-id="CLjCX2tTPgD3aSEaqkzyAv">质量管理员</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="content" data-page-node-id="GxDz32J3Czrr8h7w2U5wJB">
+      <div class="page-header" data-page-node-id="CeuDwFLHpHLnhjjpJQHs0G">
+        <div data-page-node-id="XmBVcf4JlV2utYbWqSPJJc">
+          <div class="page-title" data-page-node-id="K1ZEzBDxGW3spgXFRmaCbe">迎检总览</div>
+          <div class="page-desc" data-page-node-id="o1fI0tsag4litfromzApz1">ISO 20387 生物样本库质量与能力要求 · 当前评审周期 2026-Q4</div>
+        </div>
+        <div class="page-actions" data-page-node-id="wHTlDYXbWyEBfmVAHNnIeF">
+          <button class="btn" data-page-node-id="amR6PdrF8BpYJzCsmlDaBO" data-action="cycle-setting">📅 评审周期</button>
+          <button class="btn" data-page-node-id="GzlF4B0tRWoJ7xDa8lTGGR" data-action="system-setting">⚙ 设置</button>
+          <button class="btn btn-primary" data-page-node-id="mh5SEPpOslj8lQ7CyZMgu1" data-action="selfassess-new">＋ 新建自评任务</button>
+        </div>
+      </div>
+
+      <!-- ====================== 进度总览 ====================== -->
+      <div class="card" style="margin-bottom:16px;" data-page-node-id="p8bEJfMDXdXeC1WQpR0qND">
+        <div class="card-header" data-page-node-id="7IkR4xywsgA36iySh7T04a">
+          <div class="card-title" data-page-node-id="xFS4V3hGnueEycEsSzJGHz">整体迎检进度</div>
+          <span class="tag tag-primary" data-page-node-id="Jbw5Z23ow2uRI5VdWzRjsL">21/30 已启动</span>
+        </div>
+
+        <div class="grid grid-4" style="margin-bottom:18px;" data-page-node-id="ueletRO5HKoEpuI3907py3">
+          <div class="stat" data-page-node-id="tLi6gScZpngDRkBO5NQenE">
+            <div class="stat-label" data-page-node-id="p23QsiIathTpYOMu4sHbEO">📋 条款总数</div>
+            <div class="stat-value" data-page-node-id="PrRYSZ1DL7M9lBJ8OxAwnb">30</div>
+            <div class="stat-meta" data-page-node-id="OPEmS0EZVzv0gbejIHHpnd">ISO 20387 全部条款</div>
+          </div>
+          <div class="stat" data-page-node-id="DWkx91TJTEoCQBsF0RLyKH">
+            <div class="stat-label" data-page-node-id="JgTWYHrVtrXVo6JdHi5EDt">✓ 已完成</div>
+            <div class="stat-value" data-page-node-id="xCrDh5iy6Z46ZsnDYLGzWC">11<span class="stat-unit" data-page-node-id="e6u1WeQ9rO9kw3tS4mbPiY">条</span></div>
+            <div class="stat-meta" data-page-node-id="kRAAU54kugMn20FwRiNoVv"><span class="pos" data-page-node-id="MoBzREavAeToGZmYAZDUBP">占比 37%</span></div>
+          </div>
+          <div class="stat" data-page-node-id="bCtVASuKZBLFzm5LJAZHtr">
+            <div class="stat-label" data-page-node-id="BSjCZ7eHMIiAmZGIeGQvvg">⏵ 进行中</div>
+            <div class="stat-value" data-page-node-id="MF19f79sh7uSc474H4v3G1">10<span class="stat-unit" data-page-node-id="wdTJGbfRwe7E5vlHPHX8Kn">条</span></div>
+            <div class="stat-meta" data-page-node-id="rmThuC4vSFOnOMBE1bip30">待继续推进</div>
+          </div>
+          <div class="stat" data-page-node-id="tfhjxyRR9by1VL3uci7Hoo">
+            <div class="stat-label" data-page-node-id="QMzFaiUQlwuVCGffPa5MNR">⚠ 不符合项</div>
+            <div class="stat-value" data-page-node-id="BEAtBsI0BzUhvkEDSzjCYH">1<span class="stat-unit" data-page-node-id="ludkTuNkdGs6wB6ZndGCtG">条</span></div>
+            <div class="stat-meta" data-page-node-id="ewm2O35JAt473tNzCo8MBU"><span class="neg" data-page-node-id="vmK9IPGZDC9TEWW7Vrm0pD">需整改</span></div>
+          </div>
+        </div>
+
+        <div class="progress" style="height:10px;" data-page-node-id="1IudVW1QLU7WdioUfcpbJn">
+          <div class="progress-bar" data-w="70" style="width:0%;" data-page-node-id="MQe8aje5ijx7m8W59siIy7"></div>
+        </div>
+        <div style="display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--text-tertiary);" data-page-node-id="KDTJvAecLSRuOwWU7FGTxu">
+          <span data-page-node-id="IBCmU449CedOIGiDARGROq"><span class="dot dot-success" data-page-node-id="kaf0spJwAGsIub2qqzMrwf"></span>已完成 11</span>
+          <span data-page-node-id="xTM3taq9d6j10hi1xjxneU"><span class="dot dot-warning" data-page-node-id="wdtW6jir3Zv2z0QcGcETxz"></span>进行中 10</span>
+          <span data-page-node-id="o3hQ0Hw5KuPtbiKxIgz431"><span class="dot dot-default" data-page-node-id="GnfhPtgGdHnGrjBaq9T5k7"></span>未开始 8</span>
+          <span data-page-node-id="EcAXaFBoDAgnyawhZxcxhK"><span class="dot dot-error" data-page-node-id="EGU4uGgLoEwp6OPlgfAxEr"></span>不符合 1</span>
+        </div>
+      </div>
+
+      <!-- ====================== 条款分类进度 ====================== -->
+      <div class="grid grid-2" data-page-node-id="avgnBlkJnuBPuZMmFoa9i0">
+        <div class="card" data-page-node-id="1eMS4CicK4vqNGyrtG76Pj">
+          <div class="card-header" data-page-node-id="7oHc38jWUKPLADvSHpajkH">
+            <div class="card-title" data-page-node-id="dz0FIQJKI2g44eCbOt72Ke">📐 管理要求 <span class="tag tag-primary" data-page-node-id="cLeAJomWwgRysDjCatFAvY">7/13 完成</span></div>
+            <a class="card-extra" href="pages/clause-library.html" data-page-node-id="Rdypevb1u3WOYHHi1Q67D2">查看全部 13 条 →</a>
+          </div>
+          <div data-page-node-id="3El2vdhoLBImpDj7fJqhTp">
+            <div class="clause-row" data-page-node-id="LbDY0UiWP03hsZJ9H7AiXx">
+              <span class="clause-code" data-page-node-id="oioaPoiPsqRtz25uVjjCtP">4.1</span>
+              <span class="clause-name" data-page-node-id="pYJXyNyqXP1Ty9jpoLVAoZ">公正性 <span class="tag tag-success" style="margin-left:6px;" data-page-node-id="kcPkf4nZF1pCkmDB2rZ95K">符合</span></span>
+              <span class="tag tag-success" data-page-node-id="qFGv41Da9yx3vRyxlvBhwq">已完成</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="j7lsSHHfHfxwZXkxJ0dDUZ" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="LCtcUMQguY1ysP3iCIc8De">
+              <span class="clause-code" data-page-node-id="DEO9OS0YosNp3SY5Vg6GBg">4.2</span>
+              <span class="clause-name" data-page-node-id="W1Td2bfyN4ozgehpY3SevF">保密性 <span class="tag tag-success" style="margin-left:6px;" data-page-node-id="9Rel6Gk0RR6JwXe3sLbdZY">符合</span></span>
+              <span class="tag tag-success" data-page-node-id="1BYtoedKJcPsoOx1om1BgX">已完成</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="E0WWThN6MdezSNIjQPfqqF" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="ZKeJS6n4rdeEUJkSxGw8sT">
+              <span class="clause-code" data-page-node-id="xPFJDb51xY68XT7jK1wgTC">5.1</span>
+              <span class="clause-name" data-page-node-id="UaJ0jI2EoNiqEm5tHCa0us">法律实体 <span class="tag tag-success" style="margin-left:6px;" data-page-node-id="F8BJn9sJgLPXk2GPSCwKI5">符合</span></span>
+              <span class="tag tag-success" data-page-node-id="pCgqjeA7bX6NQcCV2zwU2X">已完成</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="kXWqKYDmrGEGEOxgQSscBY" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="WjfZC35HelstbB1ai2w4co">
+              <span class="clause-code" data-page-node-id="PRlnN9x9TRPNzdJHpFsHvz">5.2</span>
+              <span class="clause-name" data-page-node-id="KFEMmPMsPC7UQ78rRbTSjP">生物样本库结构 <span class="tag tag-warning" style="margin-left:6px;" data-page-node-id="bgjvfKRdlcZgswL7VoboEu">部分符合</span></span>
+              <span class="tag tag-warning" data-page-node-id="HrEMAImUZu5X8fKAs1Ycv3">进行中</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="Bk777eSEGr5DsdzNlGPvKx" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="FTCrfoTT0LWtLmBRZ0U78R">
+              <span class="clause-code" data-page-node-id="mYqqqoja6gcIfv7BP8tg7X">8.1</span>
+              <span class="clause-name" data-page-node-id="EIf8nJcFAGhMgkqBBttSuU">方式选择 <span class="tag tag-success" style="margin-left:6px;" data-page-node-id="1vsR7oIagzGoUz0edoPISI">符合</span></span>
+              <span class="tag tag-success" data-page-node-id="zE7UEQKaTiXbe13ziE84kn">已完成</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="8mVZXnNAtBTaJiZRkQOBZE" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="fursH1XIRJLbUBgDFWQRhj">
+              <span class="clause-code" data-page-node-id="j0KbADqKqeO1qCDA3jDxvq">8.2</span>
+              <span class="clause-name" data-page-node-id="IJCG7kQyN0d80V67iA7seD">管理体系文件 <span class="tag tag-success" style="margin-left:6px;" data-page-node-id="MhmFjLhTgIDoXBEupKWq3I">符合</span></span>
+              <span class="tag tag-success" data-page-node-id="DT3gtISJEqn0xqoxODkdZQ">已完成</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="iBXymr9KoWM5hf02wFIX2s" data-action="clause-detail">查看</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-page-node-id="4esAXSqen0CAcmGH8w5AI4">
+          <div class="card-header" data-page-node-id="8qY11MiiG0DE6vyz57LEQR">
+            <div class="card-title" data-page-node-id="DF2GD7HqZPzKgxHvNYBfDT">🔬 技术要求 <span class="tag tag-primary" data-page-node-id="EeBqVzs8FbnkCs33nPpesZ">4/17 完成</span></div>
+            <a class="card-extra" href="pages/clause-library.html" data-page-node-id="ob8ffuRf4H6fV85GmJerkF">查看全部 17 条 →</a>
+          </div>
+          <div data-page-node-id="07tXqg31GcFRBcz1Odl9uO">
+            <div class="clause-row" data-page-node-id="AACLEmxbBJZMPubxnMoAGB">
+              <span class="clause-code" data-page-node-id="p2zQpcORE97dPwEp4S36W8">6.1</span>
+              <span class="clause-name" data-page-node-id="So59nambPWf92PdGhBsexu">总则（资源） <span class="tag tag-success" style="margin-left:6px;" data-page-node-id="1pRSp5lSxt7XfUtc69TA20">符合</span></span>
+              <span class="tag tag-success" data-page-node-id="OWpo0mBXWGa41CHwxBCrCX">已完成</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="b5ujvWf7rHhzIIk9Rk3DoF" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="FZyCHjDRE9GDvj0vydYVEp">
+              <span class="clause-code" data-page-node-id="imSfNrG9tlzUkVgm62lArL">6.2</span>
+              <span class="clause-name" data-page-node-id="jBm3bzpXJ0u5Y7YJRdxcC4">人员 <span class="tag tag-warning" style="margin-left:6px;" data-page-node-id="6qMwDYWICXsBgSxSvMszAb">部分符合</span></span>
+              <span class="tag tag-warning" data-page-node-id="1CrDvkY8YUpui1UnhA8ZCA">进行中</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="4w9zQQnSAnhvx7THSROt1n" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="C8AYfcb9LfMNojqOL0zkSM">
+              <span class="clause-code" data-page-node-id="oNcsw33ZS3fmIHbMepdeXC">6.3</span>
+              <span class="clause-name" data-page-node-id="Ro4g2Mmh7KtjPKyiazf5rk">设施和环境条件 <span class="tag tag-warning" style="margin-left:6px;" data-page-node-id="P29TFMRrvRq0HgFH8zqsVd">部分符合</span></span>
+              <span class="tag tag-warning" data-page-node-id="KxSHjWAYTRyBVaX9DKbn9w">进行中</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="psclZnAaAsfB3IpAF4RRcj" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="QvSLBzd912Lp4fXoyMFsbV">
+              <span class="clause-code" data-page-node-id="zfoeON8wLDg7FYNM9kYxTR">6.4</span>
+              <span class="clause-name" data-page-node-id="v9341DGj7lNKAad6Ovgwu7">设备</span>
+              <span class="tag tag-default" data-page-node-id="HZ9uBWWizPGdEaPAodLeYK">未开始</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="zYH5F0ALYFedEvkiEGxHLu" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="T97F4j3fpZlBHlVGhrY9yN">
+              <span class="clause-code" data-page-node-id="p5eMUFtjM2duTlWQUEtObm">6.5</span>
+              <span class="clause-name" data-page-node-id="SVpfERemZM7T59eanIdPBa">计量溯源性</span>
+              <span class="tag tag-default" data-page-node-id="yOuv9OqOG0o9Z2bpAAvo0A">未开始</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="M5cxnCjNYdmZoCKnMeXcdE" data-action="clause-detail">查看</button>
+            </div>
+            <div class="clause-row" data-page-node-id="YwrJAFbg2AoTcVWXx43biv">
+              <span class="clause-code" data-page-node-id="tFciUnWRyuMfDHDKJ5zPF9">6.6</span>
+              <span class="clause-name" data-page-node-id="SezBMykIDVspVYk9GhXV2U">外部提供的产品和服务</span>
+              <span class="tag tag-default" data-page-node-id="EARliG06Udi0sTa0KJb5qL">未开始</span>
+              <button class="btn btn-text btn-sm" data-page-node-id="rV5xzdyZIG1TR2JljBIxf4" data-action="clause-detail">查看</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================== 6 个功能入口 ====================== -->
+      <div class="section-title" data-page-node-id="HTmvXcriFKwZamqFRXcIVj">功能入口</div>
+      <div class="grid grid-3" data-page-node-id="2TDCPgPNDnWaH1LZ3PFp77">
+        <a class="card" href="pages/clause-library.html" style="display:block; transition:transform .15s, box-shadow .15s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" data-page-node-id="qZsSrUamvCIOjk9mGVxk7c">
+          <div style="font-size:32px; margin-bottom:12px;" data-page-node-id="1BaWDT9dSuBMZCGq1CxaAj">📚</div>
+          <div style="font-size:15px; font-weight:600; margin-bottom:4px;" data-page-node-id="tcV1yUBSPUzmf8D56txL63">CNAS 条款库</div>
+          <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="uSzUIMAo0aUwcrLBXGpcnm">评审标准内置与维护</div>
+        </a>
+        <a class="card" href="pages/archive.html" style="display:block; transition:transform .15s, box-shadow .15s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" data-page-node-id="nkRiIiLBkIBPxpDqvHnroD">
+          <div style="font-size:32px; margin-bottom:12px;" data-page-node-id="Mm0W4AaDCP8VVXAbIjgClj">🗂️</div>
+          <div style="font-size:15px; font-weight:600; margin-bottom:4px;" data-page-node-id="AUnq5JZ92iYvuIog7f2kaQ">材料智能归档</div>
+          <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="nljLhhZhAFBNAg0rvZRDjB">按要素分类归档</div>
+        </a>
+        <a class="card" href="pages/checklist.html" style="display:block; transition:transform .15s, box-shadow .15s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" data-page-node-id="wL5UoTAjsB08bSCAklXj2l">
+          <div style="font-size:32px; margin-bottom:12px;" data-page-node-id="CDhGCHBalGuGDo64ewkym5">✅</div>
+          <div style="font-size:15px; font-weight:600; margin-bottom:4px;" data-page-node-id="oNy1B7YRYFfg7wrjvdewVO">检查清单</div>
+          <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="QXlUHD4SD0rY4A5NVv9Ku9">自动生成全面检查表</div>
+        </a>
+        <a class="card" href="pages/history.html" style="display:block; transition:transform .15s, box-shadow .15s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" data-page-node-id="OSF0RoQesrHp16gknjRhE7">
+          <div style="font-size:32px; margin-bottom:12px;" data-page-node-id="KwzMtVHICeH8xJhH6du77e">📜</div>
+          <div style="font-size:15px; font-weight:600; margin-bottom:4px;" data-page-node-id="iLSPx8u2iPp44TuImfJPHV">历史评审记录</div>
+          <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="k39smEn0l6EGDGPRQuEMBj">查阅历次评审档案</div>
+        </a>
+        <a class="card" href="pages/version.html" style="display:block; transition:transform .15s, box-shadow .15s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" data-page-node-id="cSQKCu2J1WH0jDSxbm1yJ5">
+          <div style="font-size:32px; margin-bottom:12px;" data-page-node-id="appZgddtjLKMFlJ39Xc8C9">🔄</div>
+          <div style="font-size:15px; font-weight:600; margin-bottom:4px;" data-page-node-id="nJ6JTZ8meyKEFqkHsVjk8m">版本管理</div>
+          <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="JFmBdbAvIDhDvvkS6T6Ey5">文件版本变更追踪</div>
+        </a>
+        <a class="card" href="pages/report.html" style="display:block; transition:transform .15s, box-shadow .15s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" data-page-node-id="EjFFBESxt1viHfHviCLdUf">
+          <div style="font-size:32px; margin-bottom:12px;" data-page-node-id="bs2gaFXNe6aWsedXJNBjHV">📊</div>
+          <div style="font-size:15px; font-weight:600; margin-bottom:4px;" data-page-node-id="DuXS1SIFKhGjIcjBedI21U">智能报告</div>
+          <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="VcxFTaXzGbrhmMWlCwa6ex">标准化报告模板导出</div>
+        </a>
+      </div>
+
+      <!-- ====================== 近期自评任务 ====================== -->
+      <div class="card" style="margin-top:16px;" data-page-node-id="AjH6EmnkkIjsBnHNOgxArr">
+        <div class="card-header" data-page-node-id="SKLTngnqax3pezqfXfmVAm">
+          <div class="card-title" data-page-node-id="R8fWuAJxkA9tGFhfv8G1Vy">近期自评任务</div>
+          <a class="card-extra" href="pages/self-assessment.html" data-page-node-id="HDFwCplilB9sBjfLTDkOGB">查看全部 →</a>
+        </div>
+        <div class="table-wrap" data-page-node-id="ubQ8gFrrdYoB3YgcJnBECh">
+          <table class="table" data-page-node-id="Xsqn6MF0yfA8kTH4uFgbmL">
+            <thead data-page-node-id="mg95u5uDzCF6p64BE8HbBn">
+              <tr data-page-node-id="4CXgTCxEbEcuiISLHQdeFO">
+                <th data-page-node-id="Ekk8jZcuqLkNsNeIc7HCfR">条款</th>
+                <th data-page-node-id="AACbqJKiwv5H2ZB37Ddb4B">负责人</th>
+                <th data-page-node-id="zsRaEU3nJPjgh7SFXXJmKF">自评人</th>
+                <th data-page-node-id="dhH0lDBBcGlbXKZ2va8ZMZ">截止日期</th>
+                <th data-page-node-id="idMp5PnHmG8FG6pXJEssXY">自评结果</th>
+                <th data-page-node-id="z3wAiRR1XXRHPo7Nod8HR5">状态</th>
+                <th class="col-actions" data-page-node-id="NgjnPmiCPpXqA9KpBHBzdm">操作</th>
+              </tr>
+            </thead>
+            <tbody data-page-node-id="qY3SwodKi7mIVRrjrKl4mG">
+              <tr data-page-node-id="emyd9AwjKsCqql0NzJCbq1">
+                <td data-page-node-id="IAZJxH6cnEKOzi70dFJHnr"><strong data-page-node-id="2JfVOetT8ZsTZqCWyz3y7G">4.1 公正性</strong></td>
+                <td data-page-node-id="91cr3buDpCFF7b4tAm8D5Z">张三</td>
+                <td data-page-node-id="QBbX4RFwZYlhebR2JUHS5h">李四</td>
+                <td data-page-node-id="HB1tPgRYbe87XmPvcpVKd7">2026-11-30</td>
+                <td data-page-node-id="al3MWuzuJq70VcTf1MUBLu"><span class="tag tag-success" data-page-node-id="BKhAG439oPrm5spALnIEme">符合</span></td>
+                <td data-page-node-id="Fo23sCSVQhsq56b1Q8agI7"><span class="tag tag-success" data-page-node-id="HKP6KHq4V49wno0LKgB4YS">已完成</span></td>
+                <td class="col-actions" data-page-node-id="GtdoSbnIUxw0JTK8L2CGHr"><button class="btn-text" data-page-node-id="qPADl9zQ674rDZWSig6lA8" data-action="selfassess-detail">查看</button> · <button class="btn-text" data-page-node-id="xJFjUB3YVhOML1QzhMmiqG" data-action="archive-file">归档</button></td>
+              </tr>
+              <tr data-page-node-id="RH8tOybqUd1QGG7hNS7fb8">
+                <td data-page-node-id="79lcAX6OzVwMbcd3QN42Sk"><strong data-page-node-id="dYoiyPYdCHdmdo9HRp8oD6">4.2 保密性</strong></td>
+                <td data-page-node-id="ilhRcWgDBec70Tz7IQCNT3">张三</td>
+                <td data-page-node-id="jSZnjgDnvTtv4JZAQzQoDU">王五</td>
+                <td data-page-node-id="d4MRdG0B0LFQ0h0Q5qNl4o">2026-11-30</td>
+                <td data-page-node-id="Av1fIAMfjpzgE9aGmm5Ewi"><span class="tag tag-success" data-page-node-id="mCdqUlM2rSWSDN28se6COR">符合</span></td>
+                <td data-page-node-id="9iRrxdHGxV2Ye8cqxmkH32"><span class="tag tag-success" data-page-node-id="AqdI2kBGt8D7LHDX7idlKz">已完成</span></td>
+                <td class="col-actions" data-page-node-id="NyLbX5UaY5lpa9eXkSBSDr"><button class="btn-text" data-page-node-id="v71LzI6VwcLOR8WC4cWX9r" data-action="selfassess-detail">查看</button> · <button class="btn-text" data-page-node-id="cX5TXv0HvqGY21rAV0DxaW" data-action="archive-file">归档</button></td>
+              </tr>
+              <tr data-page-node-id="vliEYZTvGHyHtNfNjDPDt6">
+                <td data-page-node-id="AX0PRYrWW0A431BDotuK5T"><strong data-page-node-id="OEl3ad69eDGSmMpekhsym3">5.1 法律实体</strong></td>
+                <td data-page-node-id="XCKMIwStbdDRdDgALRsNa6">张三</td>
+                <td data-page-node-id="ezr7Wm3B3jMgGf9EMtQN8F">李四</td>
+                <td data-page-node-id="qH77sJyBNqPlMGsLZH5StE">2026-11-15</td>
+                <td data-page-node-id="Lkxcx5asfvVC82Ahyg8cBY"><span class="tag tag-success" data-page-node-id="roVS9tYRMNCkLMdG9C8vBU">符合</span></td>
+                <td data-page-node-id="mRon23WUImO6lNdaGp6Q6R"><span class="tag tag-success" data-page-node-id="oOLXPMIr9x8mqu9FLTrg1k">已完成</span></td>
+                <td class="col-actions" data-page-node-id="a219kcgukvxz2wt2c8qx6G"><button class="btn-text" data-page-node-id="6XpgLqOnpq2U7YM2Ebpx0m" data-action="selfassess-detail">查看</button> · <button class="btn-text" data-page-node-id="86bQBeu6xYB2zP7U4Y6bEB" data-action="archive-file">归档</button></td>
+              </tr>
+              <tr data-page-node-id="cllHGoMcGhZHGnk3u8WKdL">
+                <td data-page-node-id="qKxVdWEpUaSN5BvxvUTBnR"><strong data-page-node-id="obriDZ6EFLDlBqAFhbvetf">5.2 生物样本库结构</strong></td>
+                <td data-page-node-id="4FqMz3tSvhjcUHiy6LDzvw">张三</td>
+                <td data-page-node-id="zPstf9Jn1zqHsblBKObkOK">赵六</td>
+                <td data-page-node-id="zl4b3oocJBuoK3spdvc5Rt">2026-12-15</td>
+                <td data-page-node-id="tEsrMKqHCLLjq1GoXwrpGH"><span class="tag tag-warning" data-page-node-id="CjCJNS0Z9bKFxceKnpglAy">部分符合</span></td>
+                <td data-page-node-id="Qd2A6XjXaHEh2VDjdDscod"><span class="tag tag-warning" data-page-node-id="EVBlQORViSdCf0OdVh8SgE">进行中</span></td>
+                <td class="col-actions" data-page-node-id="MP8dIf7Oca8xAP8Ack3xCF"><button class="btn-text" data-page-node-id="7SYAsYU0yvJ10HkCTVu93W" data-action="selfassess-detail">查看</button> · <button class="btn-text" data-page-node-id="i9oPkNh7n4KHfaUiVSf5e4" data-action="selfassess-edit">编辑</button></td>
+              </tr>
+              <tr data-page-node-id="Q3WOGdZZVv4XsYkONAwKoB">
+                <td data-page-node-id="3AeTiCRdu0mZgeM8ag9pAM"><strong data-page-node-id="aBFrCZFNNDnmu7QMq4yAAy">6.1 总则（资源）</strong></td>
+                <td data-page-node-id="S5KYaU6ApjkA4fJBTS56uM">孙七</td>
+                <td data-page-node-id="niRyUIgLRoCR2OHXo2Vtbk">周八</td>
+                <td data-page-node-id="yarbz38MWsVUISZ30P7I7M">2026-11-30</td>
+                <td data-page-node-id="wveAkvXo3VExOCiENzgAam"><span class="tag tag-success" data-page-node-id="qPGY79stbDTEVGVBGSq7to">符合</span></td>
+                <td data-page-node-id="Us0GswgskGBery6DTpwpZn"><span class="tag tag-success" data-page-node-id="Gnwfw1CV1nBi6lXLfBPW2v">已完成</span></td>
+                <td class="col-actions" data-page-node-id="5xmXvfxiwgcbUkG1ND2cKC"><button class="btn-text" data-page-node-id="B3cE7c5LXirx2sv3JYoV1P" data-action="selfassess-detail">查看</button> · <button class="btn-text" data-page-node-id="oxRXAtTL3OHFap4AIW8grV" data-action="archive-file">归档</button></td>
+              </tr>
+              <tr data-page-node-id="WeBGRpE8BygB4UFRAEEPpw">
+                <td data-page-node-id="D6mqfbbCKIH8X3ngMgrIz4"><strong data-page-node-id="mTyBvDHXhSeB0aNAkvciLC">6.2 人员</strong></td>
+                <td data-page-node-id="1JTuDBhS3l7xZCAPTE3qE2">孙七</td>
+                <td data-page-node-id="CyVzOr2SZ1XSqHwrAH1jgv">吴九</td>
+                <td data-page-node-id="9huuZkl91cte0dNHp7Qkxj">2026-12-15</td>
+                <td data-page-node-id="eHW5HIicGIcmFz3qSzIzGD"><span class="tag tag-warning" data-page-node-id="IWUzMGOtqWQuiprutEVt9F">部分符合</span></td>
+                <td data-page-node-id="1d2jIMGjOLBVnQmfNBv4yd"><span class="tag tag-warning" data-page-node-id="es6uyL4sr5Y4kguCbCGUEa">进行中</span></td>
+                <td class="col-actions" data-page-node-id="rYp4v3YSbPPfLSkpyvbYCE"><button class="btn-text" data-page-node-id="Oq6LRfq0JA9XwBRMAGwPCZ" data-action="selfassess-detail">查看</button> · <button class="btn-text" data-page-node-id="rduqu6Z98fi5HX5nMT0pjf" data-action="selfassess-edit">编辑</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="assets/roles.js?v=20260924j"></script>
+<script src="assets/task-store.js?v=20260924j"></script>
+  <script src="assets/app.js?v=20260924j"></script>
+<script src="assets/role-guard.js?v=20260924j"></script>
+<script src="assets/agent-widget.js?v=20260924j"></script>
+</body>
+</html>

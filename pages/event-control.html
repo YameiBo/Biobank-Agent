@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>事件管控中心  - 体系管理智能体</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924j" />
+<style>
+  /* 维度视图（按条款 / 按人员）· 与任务分配打通（2026-09-24） */
+  .ec-dim-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ec-dim-toolbar .search-box { flex: 1; min-width: 220px; }
+  .ec-dim-summary { font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px; }
+  .ec-dim-summary b { color: var(--text-secondary); }
+  /* 按人员：一人一行，可折叠 */
+  .ec-person-grid { display: flex; flex-direction: column; gap: 10px; }
+  .ec-person-card { border: 1px solid var(--border-light); border-radius: var(--radius-lg); background: #fff; padding: 12px 16px; transition: box-shadow .15s, border-color .15s; }
+  .ec-person-card:hover { border-color: var(--primary-200); box-shadow: var(--shadow-sm); }
+  .ec-person-head { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .ec-person-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .ec-person-counts { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .ec-person-arrow { margin-left: 6px; font-size: 12px; color: var(--text-tertiary); transition: transform .2s; }
+  .ec-person-card.collapsed .ec-person-arrow { transform: rotate(-90deg); }
+  .ec-person-body { margin-top: 8px; padding-top: 4px; border-top: 1px dashed var(--border-light); }
+  .ec-person-card.collapsed .ec-person-body { display: none; }
+  .ec-mini-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--border-light); font-size: 12.5px; }
+  .ec-mini-item:first-of-type { border-top: none; }
+  .ec-mini-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); }
+  .ec-mini-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; color: var(--text-tertiary); min-width: 56px; }
+  .ec-mini-item .tag { flex-shrink: 0; }
+  .ec-stage-sel { width: 96px; }
+  .ec-dim-empty { padding: 40px; text-align: center; color: var(--text-tertiary); }
+  .ec-dim-toggle-all { margin-left: auto; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item active" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>平台级模块</span><span class="sep">/</span>
+        <span class="current">事件管控中心</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">事件管控中心</div>
+          <div class="page-desc">事件全生命周期管理 · 实时监控 · 溯源审计</div>
+        </div>
+        <div class="page-actions">
+          <div class="pm-seg" id="ec-dim">
+            <button class="pm-seg-btn active" data-dim="stream">🧭 事件流</button>
+            <button class="pm-seg-btn" data-dim="item">📋 按条款</button>
+            <button class="pm-seg-btn" data-dim="person">👤 按人员</button>
+          </div>
+          <div class="pm-seg" id="ec-seg">
+            <button class="pm-seg-btn active" data-view="kanban">▦ 看板</button>
+            <button class="pm-seg-btn" data-view="list">☰ 列表</button>
+          </div>
+          <button class="btn btn-primary" id="ec-new">＋ 新建事件</button>
+        </div>
+      </div>
+
+      <!-- 实时预警条（17.4-2） -->
+      <div class="pm-alarm-bar" id="ec-alarm" style="display:none;"></div>
+
+      <div class="pm-stat-strip" id="ec-strip" style="margin-bottom:16px;"></div>
+
+      <!-- 我的待办事项（默认事件流页，2026-10-07） -->
+      <div class="card" id="ec-todo-card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div class="card-title">我的待办事项 <span class="muted" style="font-size:12px; font-weight:400;">按当前用户汇总其待完成 / 进行中 / 已完成事项</span></div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span style="font-size:12px; color:var(--text-tertiary);">当前用户</span>
+            <select class="select" id="ec-todo-user" style="width:130px; height:30px;"></select>
+          </div>
+        </div>
+        <div id="ec-todo-body"></div>
+      </div>
+
+      <div class="pm-split" id="ec-stream">
+        <div>
+          <!-- 看板 -->
+          <div class="card" id="ec-kanban-card">
+            <div class="pm-kanban" id="ec-kanban"></div>
+          </div>
+          <!-- 列表 -->
+          <div class="card" id="ec-list-card" style="display:none;">
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width:82px;">事件ID</th>
+                    <th>标题</th>
+                    <th style="width:96px;">类型</th>
+                    <th style="width:78px;">优先级</th>
+                    <th style="width:86px;">负责人</th>
+                    <th style="width:112px;">截止</th>
+                    <th style="width:150px;">进度</th>
+                    <th style="width:84px;">状态</th>
+                    <th class="col-actions" style="width:124px;">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="ec-list-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧栏：趋势 / 指标 / 事件详情 -->
+        <aside class="pm-rail" id="ec-rail"></aside>
+      </div>
+
+      <!-- 维度视图：按条款 / 按人员（与「任务分配」同源，2026-09-24） -->
+      <div class="card" id="ec-dim-card" style="display:none;">
+        <div class="ec-dim-toolbar">
+          <div class="search-box"><input class="input" id="ec-dim-search" placeholder="搜索事项 / 编号 / 负责人 / 条款" /></div>
+          <div class="radio-group" id="ec-dim-stage">
+            <div class="radio-pill active" data-pill data-stage=""><span class="dotmark"></span>全部阶段</div>
+            <div class="radio-pill" data-pill data-stage="未开始"><span class="dotmark"></span>未开始</div>
+            <div class="radio-pill" data-pill data-stage="进行中"><span class="dotmark"></span>进行中</div>
+            <div class="radio-pill" data-pill data-stage="已完成"><span class="dotmark"></span>已完成</div>
+          </div>
+          <div class="radio-group" id="ec-dim-src">
+            <div class="radio-pill active" data-pill data-src=""><span class="dotmark"></span>全部来源</div>
+            <div class="radio-pill" data-pill data-src="task"><span class="dotmark"></span>迎检任务</div>
+            <div class="radio-pill" data-pill data-src="event"><span class="dotmark"></span>管控事件</div>
+          </div>
+        </div>
+        <div class="ec-dim-summary" id="ec-dim-summary"></div>
+        <div id="ec-dim-body"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+<script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+<script>
+/* ===================== 事件管控中心 · 页面交互 ===================== */
+(function () {
+  /* ---------- 数据 ---------- */
+  var EVENTS = [
+    { id: 'EV004', title: '液氮罐LN-002液位低告警', type: '设备异常', pri: '高',   owner: '—',      due: '12-01 16:00', progress: 0,   status: 'open',
+      desc: 'LN-002 液氮罐液位降至 28%，低于 30% 阈值，需及时补液。', clause: '7.6', created: '2024-12-01 14:10' },
+    { id: 'EV002', title: 'NCR-2024-001整改超期提醒', type: '整改追踪', pri: '高',   owner: '孙伟',   due: '12-05 17:00', progress: 30,  status: 'assigned',
+      desc: 'NCR-2024-001 整改截止日超期 1 天，状态仍未关闭，已升级通知质量负责人。', clause: '8.3.2', created: '2024-12-01 09:00' },
+    { id: 'EV005', title: '设备EQ-021校准到期（30天）', type: '设备维护', pri: '中',   owner: '王志强', due: '12-31 17:00', progress: 10,  status: 'assigned',
+      desc: 'EQ-021 校准将于 2025-01-01 到期，需在到期前完成送检并更新计量溯源记录。', clause: '6.4', created: '2024-12-01 08:00' },
+    { id: 'EV001', title: '超低温冰箱温度报警（ULT-03）', type: '设备异常', pri: '紧急', owner: '王志强', due: '12-01 06:00', progress: 60,  status: 'doing',
+      desc: 'ULT-03 温度连续 3 次采样高于 -60℃ 上限，已启动备用冰箱转移流程。', clause: '6.3', created: '2024-12-01 02:14' },
+    { id: 'EV006', title: '内审计划Q4启动', type: '质量管理', pri: '中',   owner: '张红',   due: '12-20 17:00', progress: 45,  status: 'doing',
+      desc: '2026 Q4 内部审核计划启动，需在 12-20 前完成 5 个部门的现场审核排期。', clause: '8.6', created: '2024-11-28 10:00' },
+    { id: 'EV003', title: '样本S-20241201-042质量异常', type: '样本质量', pri: '中',   owner: '孙伟',   due: '11-30 17:00', progress: 100, status: 'closed',
+      desc: '样本 S-20241201-042 温度偏高（-65℃），已拒绝入库并通知采集方。', clause: '7.2', created: '2024-11-30 11:32' }
+  ];
+
+  var COLS = [
+    { key: 'open',     label: '待分派', cls: 'pm-col-open' },
+    { key: 'assigned', label: '已分派', cls: 'pm-col-assigned' },
+    { key: 'doing',    label: '处理中', cls: 'pm-col-doing' },
+    { key: 'closed',   label: '已关闭', cls: 'pm-col-closed' }
+  ];
+  var STATUS_TAG = { open: ['tag-default', '待分派'], assigned: ['tag-primary', '已分派'], doing: ['tag-warning', '处理中'], closed: ['tag-success', '已关闭'] };
+  var PRI_CLS = { '紧急': 'pri-urgent', '高': 'pri-high', '中': 'pri-mid', '低': 'pri-low' };
+  var PRI_CHIP = { '紧急': 'pm-chip-pri-urgent', '高': 'pm-chip-pri-high', '中': 'pm-chip-pri-mid', '低': 'pm-chip-pri-low' };
+  var TREND = {
+    days: ['11-25', '11-26', '11-27', '11-28', '11-29', '11-30', '12-01'],
+    created: [1, 0, 2, 2, 3, 2, 4],
+    closed:  [0, 1, 1, 2, 0, 1, 0]
+  };
+  var filter = null;
+  var view = 'kanban';
+  var activeId = null;
+  var seq = 7;
+
+  var elKanban = document.getElementById('ec-kanban');
+  var elListBody = document.getElementById('ec-list-body');
+  var elRail = document.getElementById('ec-rail');
+  var elStrip = document.getElementById('ec-strip');
+  var elAlarm = document.getElementById('ec-alarm');
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+  function byStatus(k) { return EVENTS.filter(function (e) { return e.status === k; }); }
+
+  /* ---------- 时限（SLA）判定：以演示时钟 2024-12-01 15:20 为“现在” ---------- */
+  var NOW = (12 * 31 + 1) * 24 * 60 + 15 * 60 + 20;
+  function dueMin(d) {
+    var m = /(\d+)-(\d+)\s+(\d+):(\d+)/.exec(String(d));
+    if (!m) return Infinity;
+    return ((+m[1]) * 31 + (+m[2])) * 24 * 60 + (+m[3]) * 60 + (+m[4]);
+  }
+  function isOverdue(e) { return e.status !== 'closed' && dueMin(e.due) < NOW; }
+  function overdueList() { return EVENTS.filter(isOverdue); }
+  function matchFilter(e) {
+    if (!filter) return true;
+    if (filter === 'overdue') return isOverdue(e);
+    return e.status === filter;
+  }
+
+  /* ---------- 实时预警条 ---------- */
+  function renderAlarm() {
+    var od = overdueList();
+    if (!od.length) {
+      elAlarm.className = 'pm-alarm-bar calm';
+      elAlarm.style.display = '';
+      elAlarm.innerHTML = '<span class="pm-alarm-ico">✓</span><div>当前无超期事件，' +
+        '共 <strong>' + EVENTS.filter(function (e) { return e.status !== 'closed'; }).length + '</strong> 条事件在时限内处理中</div>';
+      return;
+    }
+    elAlarm.className = 'pm-alarm-bar';
+    elAlarm.style.display = '';
+    elAlarm.innerHTML = '<span class="pm-alarm-ico">⚠</span><div><strong>' + od.length + ' 条事件已超期</strong>：' +
+      od.slice(0, 2).map(function (e) { return e.id + ' ' + esc(e.title); }).join('；') +
+      (od.length > 2 ? ' 等 ' + od.length + ' 条' : '') + '</div>' +
+      '<button class="btn btn-sm" data-filter="overdue">' + (filter === 'overdue' ? '取消超期筛选' : '只看超期事件') + '</button>';
+  }
+
+  /* ---------- 顶部计数胶囊 ---------- */
+  function renderStrip() {
+    var cls = { open: 'pm-pill-open', assigned: 'pm-pill-assigned', doing: 'pm-pill-doing', closed: 'pm-pill-closed' };
+    var html = COLS.map(function (c) {
+      var n = byStatus(c.key).length;
+      return '<button class="pm-stat-pill ' + cls[c.key] + (filter === c.key ? '" style="box-shadow:0 0 0 2px rgba(43,127,255,.28);"' : '"') +
+        ' data-filter="' + c.key + '"><span class="pm-dot"></span>' + c.label + ' <i>' + n + '</i></button>';
+    }).join('');
+    var od = overdueList().length;
+    if (od) {
+      html += '<button class="pm-stat-pill" data-filter="overdue"' + (filter === 'overdue'
+        ? ' style="background:var(--error);color:#fff;border-color:var(--error);box-shadow:0 0 0 2px rgba(245,63,63,.24);"'
+        : ' style="background:var(--error-bg);color:var(--error);border-color:#FFC9BE;"') + '>' +
+        '<span class="pm-dot" style="background:currentColor;"></span>已超期 <i>' + od + '</i></button>';
+    }
+    elStrip.innerHTML = html;
+  }
+
+  /* ---------- 看板 ---------- */
+  function renderKanban() {
+    elKanban.innerHTML = COLS.map(function (c) {
+      var items = byStatus(c.key);
+      var dim = filter && filter !== c.key && filter !== 'overdue';
+      return '<div class="pm-col ' + c.cls + '" data-col="' + c.key + '"' + (dim ? ' style="opacity:.32;"' : '') + '>' +
+        '<div class="pm-col-head">' + c.label + '<span class="pm-col-count">' + items.length + '</span></div>' +
+        (items.length ? items.map(function (e) {
+          var od = isOverdue(e);
+          var cdim = filter === 'overdue' && !od;
+          return '<div class="pm-card ' + PRI_CLS[e.pri] + (activeId === e.id ? ' active' : '') + '" data-id="' + e.id + '"' +
+            (cdim ? ' style="opacity:.28;"' : '') + '>' +
+            '<div class="pm-card-title">' + esc(e.title) + '</div>' +
+            '<div class="pm-card-meta"><span class="pm-chip ' + PRI_CHIP[e.pri] + '">' + e.pri + '</span>' +
+            '<span class="pm-chip pm-chip-type">' + e.type + '</span><span>·</span><span>' + (e.owner === '—' ? '未分派' : e.owner) + '</span></div>' +
+            '<div class="pm-card-foot"><span class="pm-due' + (od ? ' overdue' : '') + '">' + (od ? '超期 ' : '截止 ') + e.due + '</span>' +
+            '<span class="pm-progress-cell"><span class="pm-progress-mini' + (e.progress >= 100 ? ' ok' : '') + '"><span style="width:' + e.progress + '%"></span></span></span>' +
+            '</div></div>';
+        }).join('') : '<div class="pm-empty"><span class="ico">○</span>暂无事件</div>') +
+        '</div>';
+    }).join('');
+  }
+
+  /* ---------- 列表 ---------- */
+  function renderList() {
+    var rows = EVENTS.filter(matchFilter);
+    elListBody.innerHTML = rows.length ? rows.map(function (e) {
+      var st = STATUS_TAG[e.status];
+      var od = isOverdue(e);
+      return '<tr data-id="' + e.id + '">' +
+        '<td><strong>' + e.id + '</strong></td>' +
+        '<td>' + esc(e.title) + (od ? ' <span class="tag tag-error">超期</span>' : '') + '</td>' +
+        '<td>' + e.type + '</td>' +
+        '<td><span class="pm-chip ' + PRI_CHIP[e.pri] + '">' + e.pri + '</span></td>' +
+        '<td>' + (e.owner === '—' ? '未分派' : e.owner) + '</td>' +
+        '<td' + (od ? ' style="color:var(--error);font-weight:600;"' : '') + '>' + e.due + '</td>' +
+        '<td><div class="pm-progress-cell"><span class="pm-progress-mini' + (e.progress >= 100 ? ' ok' : (e.progress < 30 ? ' warn' : '')) + '"><span style="width:' + e.progress + '%"></span></span><em>' + e.progress + '%</em></div></td>' +
+        '<td><span class="tag ' + st[0] + '">' + st[1] + '</span></td>' +
+        '<td class="col-actions">' +
+        (e.status === 'closed' ? '' : '<button class="btn-text" data-assign="' + e.id + '">' + (e.status === 'open' ? '分派' : '转派') + '</button>') +
+        '<button class="btn-text" data-detail="' + e.id + '">详情</button></td>' +
+        '</tr>';
+    }).join('') : '<tr><td colspan="9"><div class="pm-empty">当前筛选条件下没有事件</div></td></tr>';
+  }
+
+  /* ---------- 趋势图 ---------- */
+  function trendSvg() {
+    var W = 276, H = 132, PL = 22, PR = 20, PT = 10, PB = 20;
+    var iw = W - PL - PR, ih = H - PT - PB, max = 4;
+    function x(i) { return PL + iw * i / (TREND.days.length - 1); }
+    function y(v) { return PT + ih - ih * v / max; }
+    function path(arr) { return arr.map(function (v, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1); }).join(' '); }
+    var grid = [0, 1, 2, 3, 4].map(function (v) {
+      return '<line class="pm-grid-line" x1="' + PL + '" y1="' + y(v) + '" x2="' + (W - PR) + '" y2="' + y(v) + '"/>' +
+        '<text class="pm-axis-text" x="' + (PL - 6) + '" y="' + (y(v) + 3.5) + '" text-anchor="end">' + v + '</text>';
+    }).join('');
+    var xl = [0, 2, 4, 6].map(function (i) {
+      return '<text class="pm-axis-text" x="' + x(i) + '" y="' + (H - 5) + '" text-anchor="middle">' + TREND.days[i] + '</text>';
+    }).join('');
+    var dots = TREND.created.map(function (v, i) { return '<circle class="pm-trend-dot" cx="' + x(i) + '" cy="' + y(v) + '" r="2.6" fill="#FF7D00"/>'; }).join('');
+    return '<svg class="pm-chart-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet">' + grid + xl +
+      '<path class="pm-trend-line" d="' + path(TREND.created) + '" stroke="#FF7D00"/>' +
+      '<path class="pm-trend-line" d="' + path(TREND.closed) + '" stroke="#00B42A"/>' +
+      dots + '</svg>';
+  }
+
+  /* ---------- 处理轨迹（含操作人 / 时间 / 说明，仅追加不可修改） ---------- */
+  function buildSteps(ev) {
+    var steps = [
+      { t: '事件创建', who: '监控系统', time: ev.created, note: '监控阈值触发，系统自动创建', done: true },
+      {
+        t: ev.reassigned ? '转派处理人' : '分派处理人',
+        who: ev.asgBy || (ev.status === 'open' ? '—' : '王明（质量管理员）'),
+        time: ev.asgTime || (ev.status === 'open' ? '' : '2024-12-01 14:20'),
+        note: ev.asgNote || '',
+        done: ev.status !== 'open'
+      },
+      {
+        t: '开始处理',
+        who: ev.owner === '—' ? '—' : ev.owner,
+        time: ev.startTime || (ev.status === 'doing' || ev.status === 'closed' ? '2024-12-01 15:02' : ''),
+        note: ev.startNote || '',
+        done: ev.status === 'doing' || ev.status === 'closed'
+      },
+      {
+        t: '事件关闭',
+        who: ev.closedBy || (ev.status === 'closed' ? '王明（质量管理员）' : '—'),
+        time: ev.closeTime || (ev.status === 'closed' ? '2024-11-30 17:40' : ''),
+        note: ev.closeNote || '',
+        done: ev.status === 'closed'
+      }
+    ];
+    (ev.log || []).forEach(function (l) { steps.push({ t: l.t, who: l.who, time: l.time, note: l.note, done: true, extra: true }); });
+    return steps;
+  }
+
+  /* ---------- 右栏 ---------- */
+  function clock() {
+    var d = new Date();
+    var p = function (n) { return n < 10 ? '0' + n : '' + n; };
+    return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+  }
+
+  var SLA = { v: 96.4, avg: 4.2 };
+
+  function renderRail() {
+    var ev = activeId ? EVENTS.filter(function (e) { return e.id === activeId; })[0] : null;
+    if (!ev) {
+      var pending = byStatus('open').length;
+      var high = EVENTS.filter(function (e) { return e.pri === '紧急' || e.pri === '高'; }).length;
+      elRail.innerHTML =
+        '<div class="pm-rail-title">事件趋势（近 7 天）</div>' + trendSvg() +
+        '<div class="pm-legend"><span><i style="background:#FF7D00;"></i>新建</span><span><i style="background:#00B42A;"></i>关闭</span></div>' +
+        '<div class="pm-metrics"><div class="pm-rail-title">实时监控指标' +
+        '<span class="pm-live"><i></i>实时</span>' +
+        '<button class="pm-icon-btn" id="ec-refresh-btn" title="立即刷新">⟳</button>' +
+        '<span class="pm-refresh-time" id="ec-refresh">' + clock() + ' 刷新</span></div>' +
+        '<div class="pm-metric-line"><span>当前待处理</span><b>' + pending + '</b></div>' +
+        '<div class="pm-metric-line hot"><span>高优先级事件</span><b>' + high + '</b></div>' +
+        '<div class="pm-metric-line"><span>超期未关闭</span><b' + (overdueList().length ? ' style="color:var(--error);"' : '') + '>' + overdueList().length + '</b></div>' +
+        '<div class="pm-metric-line"><span>SLA 时限达成率</span><b id="ec-m-sla">' + SLA.v.toFixed(1) + '<em>%</em></b></div>' +
+        '<div class="pm-metric-line"><span>平均处理时长</span><b id="ec-m-avg">' + SLA.avg.toFixed(1) + '<em>h</em></b></div>' +
+        '<div class="pm-metric-line"><span>本月已关闭</span><b>' + byStatus('closed').length + '</b></div></div>' +
+        '<div class="pm-rail-hint">点击事件卡片查看详情</div>';
+      return;
+    }
+    var st = STATUS_TAG[ev.status];
+    var steps = buildSteps(ev);
+    var cur = steps.filter(function (s) { return s.done; }).length;
+    elRail.innerHTML =
+      '<div class="pm-detail-head"><span class="pm-detail-id">' + ev.id + '</span>' +
+      '<span class="pm-chip ' + PRI_CHIP[ev.pri] + '">' + ev.pri + '</span>' +
+      '<span class="tag ' + st[0] + '">' + st[1] + '</span>' +
+      '<button class="pm-detail-close" id="ec-rail-close" aria-label="返回">✕</button></div>' +
+      '<div class="pm-detail-title">' + esc(ev.title) + '</div>' +
+      '<div class="pm-detail-desc">' + esc(ev.desc) + '</div>' +
+      '<div class="pm-desc-list">' +
+      row('类型', ev.type) + row('关联条款', ev.clause) + row('负责人', ev.owner === '—' ? '未分派' : ev.owner) +
+      row('创建时间', ev.created) + row('截止时间', ev.due) + row('处理进度', ev.progress + '%') +
+      '</div>' +
+      '<div class="pm-rail-title" style="margin:14px 0 2px;">处理轨迹 · 审计追溯</div>' +
+      '<div style="font-size:11.5px;color:var(--text-tertiary);margin-bottom:2px;">含操作人 / 时间 / 说明，仅追加不可修改</div>' +
+      '<div class="pm-timeline">' + steps.map(function (s, i) {
+        var cls = s.done ? (i === cur - 1 && ev.status !== 'closed' ? 'current' : 'done') : 'todo';
+        return '<div class="pm-tl-item ' + cls + '"><div class="pm-tl-title">' + s.t + '</div>' +
+          '<div class="pm-tl-time">' + (s.who || '—') + (s.time ? ' · ' + s.time : '') + '</div>' +
+          (s.note ? '<div class="pm-tl-note">' + esc(s.note) + '</div>' : '') +
+          '</div>';
+      }).join('') + '</div>' +
+      '<div class="pm-detail-actions">' +
+      '<button class="btn btn-sm" id="ec-assign"' + (ev.status === 'closed' ? ' disabled style="opacity:.5;"' : '') + '>' + (ev.status === 'open' ? '分派' : '转派') + '</button>' +
+      '<button class="btn btn-primary btn-sm" id="ec-progress"' + (ev.status === 'closed' ? ' disabled style="opacity:.5;"' : '') + '>更新进度</button>' +
+      '<button class="btn btn-sm" id="ec-close"' + (ev.status === 'closed' ? ' disabled style="opacity:.5;"' : '') + '>关闭事件</button>' +
+      '</div>' +
+      '<button class="btn-text" id="ec-export-trace" style="width:100%;margin-top:8px;font-size:12px;">⬇ 导出审计轨迹（含操作人 / 时间 / 说明）</button>';
+  }
+
+  function row(k, v) { return '<div class="pm-desc-row"><span class="k">' + k + '</span><span class="v">' + esc(v) + '</span></div>'; }
+
+  /* ---------- 渲染入口 ---------- */
+  function render() {
+    renderAlarm();
+    renderStrip();
+    renderTodo();
+    if (view === 'kanban') renderKanban(); else renderList();
+    renderRail();
+  }
+
+  /* ---------- 交互 ---------- */
+  document.getElementById('ec-seg').addEventListener('click', function (e) {
+    var b = e.target.closest('.pm-seg-btn');
+    if (!b) return;
+    view = b.getAttribute('data-view');
+    document.querySelectorAll('#ec-seg .pm-seg-btn').forEach(function (x) { x.classList.toggle('active', x === b); });
+    document.getElementById('ec-kanban-card').style.display = view === 'kanban' ? '' : 'none';
+    document.getElementById('ec-list-card').style.display = view === 'list' ? '' : 'none';
+    render();
+    window.showToast('已切换到「' + b.textContent.replace(/^[▦☰]\s*/, '') + '」视图', 'info');
+  });
+
+  var FILTER_LABEL = { open: '待分派', assigned: '已分派', doing: '处理中', closed: '已关闭', overdue: '已超期' };
+  function applyFilter(k) {
+    filter = (filter === k) ? null : k;
+    render();
+    window.showToast(filter ? ('已筛选：' + FILTER_LABEL[filter]) : '已取消筛选', 'info');
+  }
+
+  elStrip.addEventListener('click', function (e) {
+    var p = e.target.closest('[data-filter]');
+    if (!p) return;
+    applyFilter(p.getAttribute('data-filter'));
+  });
+
+  elAlarm.addEventListener('click', function (e) {
+    var p = e.target.closest('[data-filter]');
+    if (!p) return;
+    applyFilter(p.getAttribute('data-filter'));
+  });
+
+  elKanban.addEventListener('click', function (e) {
+    var c = e.target.closest('.pm-card');
+    if (!c) return;
+    openDetail(c.getAttribute('data-id'));
+  });
+
+  elListBody.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-assign]');
+    if (a) { openDetail(a.getAttribute('data-assign')); assignModal(); return; }
+    var b = e.target.closest('[data-detail]');
+    var tr = e.target.closest('tr');
+    if (b) { openDetail(b.getAttribute('data-detail')); return; }
+    if (tr && tr.getAttribute('data-id')) openDetail(tr.getAttribute('data-id'));
+  });
+
+  function openDetail(id) {
+    activeId = id;
+    render();
+    if (window.innerWidth < 1280) elRail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  elRail.addEventListener('click', function (e) {
+    if (e.target.closest('#ec-rail-close')) { activeId = null; render(); return; }
+    if (e.target.closest('#ec-progress')) { progressModal(); return; }
+    if (e.target.closest('#ec-close')) { closeModalConfirm(); return; }
+    if (e.target.closest('#ec-assign')) { assignModal(); return; }
+    if (e.target.closest('#ec-export-trace')) {
+      var ev = EVENTS.filter(function (x) { return x.id === activeId; })[0];
+      if (!ev) return;
+      window.showToast('已导出 ' + ev.id + ' 的审计轨迹（' + buildSteps(ev).length + ' 条，含操作人与时间）', 'success');
+      return;
+    }
+    if (e.target.closest('#ec-refresh-btn')) { tickMetrics(true); return; }
+  });
+
+  /* ---------- 实时指标刷新（17.4-2） ---------- */
+  function tickMetrics(manual) {
+    if (activeId) { if (manual) window.showToast('请先返回监控视图再刷新指标', 'info'); return; }
+    SLA.v = Math.min(99.6, 95.6 + Math.random() * 3.4);
+    SLA.avg = 3.6 + Math.random() * 1.4;
+    var a = document.getElementById('ec-m-sla');
+    var b = document.getElementById('ec-m-avg');
+    if (a) a.innerHTML = SLA.v.toFixed(1) + '<em>%</em>';
+    if (b) b.innerHTML = SLA.avg.toFixed(1) + '<em>h</em>';
+    var rt = document.getElementById('ec-refresh');
+    if (rt) rt.textContent = clock() + ' 刷新';
+    if (manual) window.showToast('实时指标已刷新：SLA 达成率 ' + SLA.v.toFixed(1) + '%，平均处理时长 ' + SLA.avg.toFixed(1) + 'h', 'success');
+  }
+  setInterval(function () { tickMetrics(false); }, 15000);
+
+  /* ---------- 弹窗 ---------- */
+  function modal(opts) {
+    var root = document.getElementById('pm-modal-root');
+    if (!root) { root = document.createElement('div'); root.id = 'pm-modal-root'; document.body.appendChild(root); }
+    root.innerHTML =
+      '<div class="modal-overlay show"><div class="modal" role="dialog" aria-modal="true">' +
+      '<div class="modal-header"><div><div class="modal-title">' + opts.title + '</div>' +
+      (opts.sub ? '<div class="modal-subtitle">' + opts.sub + '</div>' : '') + '</div>' +
+      '<button class="modal-close" data-pm-close aria-label="关闭">×</button></div>' +
+      '<div class="modal-body">' + opts.body + '</div>' +
+      '<div class="modal-footer">' + (opts.okOnly ? '' : '<button class="btn" data-pm-close>取消</button>') +
+      '<button class="btn btn-primary" data-pm-ok>' + (opts.ok || '确定') + '</button></div></div></div>';
+    var ov = root.querySelector('.modal-overlay');
+    ov.addEventListener('mousedown', function (e) { if (e.target === ov) close(); });
+    root.querySelectorAll('[data-pm-close]').forEach(function (b) { b.addEventListener('click', close); });
+    var ok = root.querySelector('[data-pm-ok]');
+    if (ok) ok.addEventListener('click', function () { if (opts.onOk(root) !== false) close(); });
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
+    });
+  }
+  function close() {
+    var root = document.getElementById('pm-modal-root');
+    if (!root) return;
+    var ov = root.querySelector('.modal-overlay');
+    if (!ov) { root.innerHTML = ''; return; }
+    ov.classList.remove('show');
+    setTimeout(function () { root.innerHTML = ''; }, 180);
+  }
+
+  var NOW_STR = '2024-12-01 15:20';
+  var OPERATOR = '当前用户（质量管理员）';
+
+  function progressModal() {
+    var ev = EVENTS.filter(function (e) { return e.id === activeId; })[0];
+    if (!ev) return;
+    modal({
+      title: '更新进度 · ' + ev.id, sub: '事件管控中心 · 提交后写入审计轨迹',
+      body: '<div class="form-item"><label class="form-label">处理进度</label>' +
+        '<input type="range" id="ec-range" min="0" max="100" step="5" value="' + ev.progress + '" style="width:100%;" />' +
+        '<div style="font-size:12px;color:var(--text-tertiary);margin-top:6px;">当前：<b id="ec-range-val" style="color:var(--primary);font-size:13px;">' + ev.progress + '%</b></div></div>' +
+        '<div class="form-item" style="margin-top:12px;"><label class="form-label">处理说明</label>' +
+        '<textarea class="input" id="ec-note" rows="3" style="height:auto;padding:8px 12px;" placeholder="例如：已转入备用冰箱 ULT-05，原设备停机检修"></textarea></div>' +
+        '<div style="font-size:11.5px;color:var(--text-tertiary);margin-top:10px;">提交后处理轨迹追加一条记录，包含操作人、时间与本次变更前后值，且不可修改。</div>',
+      ok: '提交更新',
+      onOk: function (root) {
+        var v = parseInt(root.querySelector('#ec-range').value, 10);
+        var note = root.querySelector('#ec-note').value.trim();
+        var before = ev.progress, beforeSt = ev.status;
+        ev.progress = v;
+        var stChanged = '';
+        if (v > 0 && ev.status === 'open') {
+          ev.status = 'assigned';
+          ev.owner = ev.owner === '—' ? '孙伟' : ev.owner;
+          ev.asgBy = '王明（质量管理员）'; ev.asgTime = NOW_STR; ev.asgNote = '处理人首轮跟进时自动确认分派';
+        }
+        if (v > 0 && ev.status === 'assigned') { ev.status = 'doing'; ev.startTime = NOW_STR; ev.startNote = note || '开始处理'; }
+        if (beforeSt !== ev.status) stChanged = '，状态 ' + FILTER_LABEL[beforeSt] + ' → ' + FILTER_LABEL[ev.status];
+        ev.log = ev.log || [];
+        ev.log.push({ t: '更新处理进度', who: OPERATOR, time: NOW_STR, note: '进度 ' + before + '% → ' + v + '%' + stChanged + (note ? '；' + note : '') });
+        render();
+        window.showToast(note ? '进度已更新为 ' + v + '%，处理说明已写入审计轨迹' : '进度已更新为 ' + v + '%', 'success');
+        return true;
+      }
+    });
+    var r = document.getElementById('ec-range'), val = document.getElementById('ec-range-val');
+    r.addEventListener('input', function () { val.textContent = r.value + '%'; });
+  }
+
+  /* ---------- 分派 / 转派（17.4-1：事件全生命周期） ---------- */
+  function assignModal() {
+    var ev = EVENTS.filter(function (e) { return e.id === activeId; })[0];
+    if (!ev) return;
+    var isOpen = ev.status === 'open';
+    var PEOPLE = ['孙伟（样本库操作员）', '李慧（质量负责人）', '王明（质量管理员）', '吴敏（样本库操作员）'];
+    modal({
+      title: (isOpen ? '分派事件 · ' : '转派事件 · ') + ev.id,
+      sub: isOpen ? '分派后事件由「待分派」进入「已分派」，处理轨迹追加一条分派记录'
+                  : '转派后当前负责人变更为新处理人，原处理记录保留',
+      body: '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">' + (isOpen ? '处理人' : '新处理人') + ' <span class="req">*</span></label>' +
+        '<select class="select" id="ec-a-owner">' + PEOPLE.map(function (p) {
+          return '<option' + (p.indexOf(ev.owner) === 0 ? ' selected' : '') + '>' + p + '</option>';
+        }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">处理时限</label><input class="input" id="ec-a-due" value="' + ev.due + '" /></div>' +
+        '<div class="form-item"><label class="form-label">优先级</label><select class="select" id="ec-a-pri">' +
+        ['紧急', '高', '中', '低'].map(function (o) { return '<option' + (o === ev.pri ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
+        '</select></div>' +
+        '<div class="form-item full"><label class="form-label">分派说明 <span class="req">*</span></label>' +
+        '<textarea class="input" id="ec-a-note" rows="2" style="height:auto;padding:8px 12px;" placeholder="例如：请于今日 18:00 前完成补液并回传液位照片">' +
+        (isOpen ? '' : '转派原因：原处理人临时调整') + '</textarea></div>' +
+        '<div class="form-item full"><label class="form-label">抄送</label><select class="select" id="ec-a-cc">' +
+        ['—', '质量管理员 王明', '质量负责人 李慧', '质量管理员 王明、质量负责人 李慧'].map(function (o) { return '<option>' + o + '</option>'; }).join('') +
+        '</select></div>' +
+        '</div>',
+      ok: isOpen ? '确认分派' : '确认转派',
+      onOk: function (root) {
+        var owner = root.querySelector('#ec-a-owner').value.replace(/（.*?）/, '');
+        var note = root.querySelector('#ec-a-note').value.trim();
+        if (!note) { window.showToast('请填写分派说明', 'error'); return false; }
+        var old = ev.owner;
+        ev.owner = owner;
+        ev.due = root.querySelector('#ec-a-due').value || ev.due;
+        ev.pri = root.querySelector('#ec-a-pri').value;
+        if (isOpen) {
+          ev.status = 'assigned';
+          ev.asgBy = '王明（质量管理员）'; ev.asgTime = NOW_STR; ev.asgNote = note;
+        } else {
+          ev.reassigned = true;
+          ev.asgBy = '王明（质量管理员）'; ev.asgTime = NOW_STR; ev.asgNote = note;
+        }
+        ev.log = ev.log || [];
+        ev.log.push({
+          t: isOpen ? '分派处理人' : '转派处理人',
+          who: '王明（质量管理员）',
+          time: NOW_STR,
+          note: (isOpen ? '分派给 ' + owner : '由 ' + (old === '—' ? '未分派' : old) + ' 转派给 ' + owner) +
+                '；时限 ' + ev.due + '；' + note
+        });
+        render();
+        window.showToast((isOpen ? '事件 ' + ev.id + ' 已分派给 ' : '事件 ' + ev.id + ' 已转派给 ') + owner + '，审计轨迹已记录', 'success');
+        return true;
+      }
+    });
+  }
+
+  function closeModalConfirm() {
+    var ev = EVENTS.filter(function (e) { return e.id === activeId; })[0];
+    if (!ev) return;
+    modal({
+      title: '关闭事件 · ' + ev.id, sub: '关闭后该事件归档至「已关闭」，仍可追溯',
+      body: '<div class="pm-detail-desc" style="margin:0;">' + esc(ev.title) + '<br/><span style="color:var(--text-tertiary);">关闭后卡片将移入「已关闭」列，处理轨迹保留，可随时回溯。</span></div>' +
+        '<div class="form-item" style="margin-top:12px;"><label class="form-label">关闭说明</label>' +
+        '<textarea class="input" id="ec-close-note" rows="2" style="height:auto;padding:8px 12px;" placeholder="例如：已完成补液并复核液位，异常解除"></textarea></div>' +
+        '<div style="font-size:11.5px;color:var(--text-tertiary);margin-top:10px;">关闭后处理轨迹追加一条关闭记录（含操作人 / 时间 / 说明），该事件全生命周期审计可追溯。</div>',
+      ok: '确认关闭',
+      onOk: function (root) {
+        var note = root.querySelector('#ec-close-note').value.trim();
+        if (!note) { window.showToast('请填写关闭说明', 'error'); return false; }
+        ev.status = 'closed'; ev.progress = 100;
+        ev.closedBy = OPERATOR; ev.closeTime = NOW_STR; ev.closeNote = note;
+        ev.log = ev.log || [];
+        ev.log.push({ t: '关闭事件', who: OPERATOR, time: NOW_STR, note: note });
+        activeId = null;
+        render();
+        window.showToast('事件 ' + ev.id + ' 已关闭并归档，审计轨迹已封存', 'success');
+        return true;
+      }
+    });
+  }
+
+  document.getElementById('ec-new').addEventListener('click', function () {
+    modal({
+      title: '新建事件', sub: '事件管控中心 · 新建后进入「待分派」',
+      body: '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">事件标题 <span class="req">*</span></label><input class="input" id="ec-f-title" placeholder="例如：液氮罐LN-003液位低告警" /></div>' +
+        '<div class="form-item"><label class="form-label">事件类型</label><select class="select" id="ec-f-type">' + ['设备异常', '设备维护', '样本质量', '整改追踪', '质量管理'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">优先级</label><select class="select" id="ec-f-pri">' + ['紧急', '高', '中', '低'].map(function (o) { return '<option' + (o === '中' ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">负责人</label><select class="select" id="ec-f-owner">' + ['—', '孙伟', '王志强', '张红'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">截止时间</label><input class="input" id="ec-f-due" value="12-05 17:00" /></div>' +
+        '<div class="form-item full"><label class="form-label">事件描述</label><textarea class="input" id="ec-f-desc" rows="2" style="height:auto;padding:8px 12px;" placeholder="简要描述触发原因与现场情况"></textarea></div>' +
+        '</div>',
+      ok: '创建事件',
+      onOk: function (root) {
+        var title = root.querySelector('#ec-f-title').value.trim();
+        if (!title) { window.showToast('请填写事件标题', 'error'); return false; }
+        var id = 'EV' + String(seq++).padStart(3, '0');
+        EVENTS.unshift({
+          id: id, title: title,
+          type: root.querySelector('#ec-f-type').value,
+          pri: root.querySelector('#ec-f-pri').value,
+          owner: root.querySelector('#ec-f-owner').value,
+          due: root.querySelector('#ec-f-due').value || '12-05 17:00',
+          progress: 0, status: 'open',
+          desc: root.querySelector('#ec-f-desc').value.trim() || '（未填写事件描述）',
+          clause: '—', created: NOW_STR,
+          log: [{ t: '事件创建', who: OPERATOR, time: NOW_STR, note: '人工创建事件' }]
+        });
+        render();
+        window.showToast('事件 ' + id + ' 已创建，等待分派', 'success');
+        return true;
+      }
+    });
+  });
+
+  /* ==========================================================
+     维度视图：按条款 / 按人员（与「任务分配」任务阶段打通，2026-09-24）
+     事项 = 迎检任务（TASK_STORE）+ 管控事件（EVENTS）
+     ========================================================== */
+  var elDimCard = document.getElementById('ec-dim-card');
+  var elDimBody = document.getElementById('ec-dim-body');
+  var elDimSearch = document.getElementById('ec-dim-search');
+  var elDimSummary = document.getElementById('ec-dim-summary');
+  var elDimStage = document.getElementById('ec-dim-stage');
+  var elDimSrc = document.getElementById('ec-dim-src');
+  var dim = 'stream', dimStage = '', dimSrc = '', dimKw = '';
+  var EV_STAGE = { open: '未开始', assigned: '未开始', doing: '进行中', closed: '已完成' };
+  var STAGE_CLS = { '未开始': 'tag-default', '进行中': 'tag-warning', '已完成': 'tag-success' };
+
+  function unassignedName(v) { return (!v || v === '—' || v === '未分配' || v === '请选择') ? '未分配' : v; }
+
+  function allItems() {
+    var out = [];
+    if (window.TASK_STORE) {
+      TASK_STORE.all().forEach(function (t) {
+        out.push({
+          kind: 'task', code: t.code, name: t.name, title: t.code + ' ' + t.name,
+          owner: unassignedName(t.owner), dept: t.dept, clause: t.clause || t.code,
+          due: t.due, stage: t.stage, progress: t.progress, cat: t.cat
+        });
+      });
+    }
+    EVENTS.forEach(function (e) {
+      out.push({
+        kind: 'event', code: e.id, name: e.title, title: e.title,
+        owner: unassignedName(e.owner), dept: '事件管控', clause: e.clause || '—',
+        due: e.due, stage: EV_STAGE[e.status] || '未开始', progress: e.progress, cat: e.type
+      });
+    });
+    return out;
+  }
+  function matchItem(it) {
+    if (dimStage && it.stage !== dimStage) return false;
+    if (dimSrc && it.kind !== dimSrc) return false;
+    if (dimKw && (it.code + ' ' + it.title + ' ' + it.owner + ' ' + it.clause + ' ' + it.dept).indexOf(dimKw) < 0) return false;
+    return true;
+  }
+  function stageOptions(cur) {
+    var list = (window.TASK_STORE ? TASK_STORE.STAGES : ['未开始', '进行中', '已完成']);
+    return list.map(function (s) { return '<option' + (s === cur ? ' selected' : '') + '>' + s + '</option>'; }).join('');
+  }
+  function clauseKey(c) { return (c === '—' || !c) ? '9999' : c; }
+  /* 条款号逐段数值比较：'10.2' 必须排在 '6.5' 之后（纯字符串比较会排反） */
+  function clauseCmp(a, b) {
+    var ka = clauseKey(a).split('.'), kb = clauseKey(b).split('.');
+    for (var i = 0; i < Math.max(ka.length, kb.length); i++) {
+      var x = parseInt(ka[i] || '0', 10) || 0, y = parseInt(kb[i] || '0', 10) || 0;
+      if (x !== y) return x - y;
+    }
+    return 0;
+  }
+  function renderClauseView(items) {
+    /* 按条款为维度：条款升序（无条款的排最后），条款列紧跟编号，
+       便于评审时对着 CNAS 条款号逐条核对事项。 */
+    items = items.slice().sort(function (a, b) { return clauseCmp(a.clause, b.clause); });
+    var rows = items.map(function (it) {
+      return '<tr data-kind="' + it.kind + '" data-code="' + esc(it.code) + '">' +
+        '<td><span class="ec-mini-code">' + esc(it.code) + '</span></td>' +
+        '<td><span class="tag tag-primary">' + esc(it.clause || '—') + '</span></td>' +
+        '<td><strong>' + esc(it.name) + '</strong>' + (it.kind === 'event' ? ' <span class="tag tag-primary">事件</span>' : '') + '</td>' +
+        '<td>' + (it.kind === 'task' ? '迎检任务' : '管控事件') + '</td>' +
+        '<td>' + esc(it.owner) + '</td>' +
+        '<td>' + esc(it.due) + '</td>' +
+        '<td><span class="tag ' + (STAGE_CLS[it.stage] || 'tag-default') + '">' + esc(it.stage) + '</span></td>' +
+        '<td><select class="select ec-stage-sel" data-stage-for="' + it.kind + ':' + esc(it.code) + '">' + stageOptions(it.stage) + '</select></td>' +
+        '<td class="col-actions"><button class="btn-text" data-dim-open="' + it.kind + ':' + esc(it.code) + '">详情</button></td>' +
+        '</tr>';
+    }).join('');
+    return '<div class="table-wrap"><table class="table"><thead><tr>' +
+      '<th style="width:92px;">编号</th><th style="width:88px;">条款</th><th>事项</th><th style="width:96px;">来源</th><th style="width:88px;">负责人</th>' +
+      '<th style="width:120px;">截止</th><th style="width:88px;">阶段</th><th style="width:120px;">更新阶段</th><th class="col-actions" style="width:88px;">操作</th>' +
+      '</tr></thead><tbody>' + (rows || '<tr><td colspan="9"><div class="ec-dim-empty">没有符合条件的事项</div></td></tr>') + '</tbody></table></div>';
+  }
+  /* 截止提醒：统一到「演示时钟 2024-12-01 15:20」的相对天数，跨「任务 / 事件」可比较 */
+  var DEMO_NOW = new Date(2024, 11, 1, 15, 20);
+  function dueDate(d) {
+    var s = String(d || ''), dt = null;
+    var m = /(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);           // 任务：2026-11-30
+    if (m) dt = new Date(2024, (+m[2]) - 1, +m[3], 17, 0);
+    else {
+      var m2 = /(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{2})/.exec(s); // 事件：12-01 16:00
+      if (m2) dt = new Date(2024, (+m2[1]) - 1, +m2[2], +m2[3], +m2[4]);
+    }
+    /* 统一到「最近一次」的该月日：早于演示前 180 天的顺延一年，
+       避免 2027-01 之类被算成 2024-01 的「逾期 300+ 天」。 */
+    if (dt) { while (dt - DEMO_NOW < -180 * 86400000) dt.setFullYear(dt.getFullYear() + 1); }
+    return dt;
+  }
+  function relDays(d) { var dt = dueDate(d); return dt ? Math.round((dt - DEMO_NOW) / 86400000) : null; }
+  /* ==========================================================
+     我的待办事项（事件流页，2026-10-07）
+     汇总「当前用户」在任务 + 事件中的全部待办：待完成 / 进行中 / 已完成
+     ========================================================== */
+  function todoUsers() {
+    var set = {};
+    if (window.TASK_STORE) TASK_STORE.all().forEach(function (t) { var o = unassignedName(t.owner); if (o !== '未分配') set[o] = 1; });
+    EVENTS.forEach(function (e) { var o = unassignedName(e.owner); if (o !== '未分配') set[o] = 1; });
+    return Object.keys(set);
+  }
+  function todoItems(owner) {
+    var out = [];
+    if (window.TASK_STORE) TASK_STORE.all().forEach(function (t) {
+      if (unassignedName(t.owner) !== owner) return;
+      out.push({ kind: 'task', code: t.code, name: t.name, title: t.code + ' ' + t.name, due: t.due, stage: t.stage });
+    });
+    EVENTS.forEach(function (e) {
+      if (unassignedName(e.owner) !== owner) return;
+      out.push({ kind: 'event', code: e.id, name: e.title, title: e.title, due: e.due, stage: (EV_STAGE[e.status] || '未开始') });
+    });
+    return out;
+  }
+  function renderTodo() {
+    var sel = document.getElementById('ec-todo-user');
+    var body = document.getElementById('ec-todo-body');
+    if (!sel || !body) return;
+    var users = todoUsers();
+    if (!users.length) { body.innerHTML = '<div class="ec-dim-empty">暂无待办事项</div>'; return; }
+    if (!sel.options.length) {
+      sel.innerHTML = users.map(function (u) { return '<option>' + esc(u) + '</option>'; }).join('');
+      sel.value = users.indexOf('张三') >= 0 ? '张三' : users[0];
+    }
+    var owner = sel.value, items = todoItems(owner);
+    var groups = { '未开始': [], '进行中': [], '已完成': [] };
+    items.forEach(function (it) {
+      var g = it.stage === '已完成' ? '已完成' : (it.stage === '进行中' ? '进行中' : '未开始');
+      groups[g].push(it);
+    });
+    var od = items.filter(function (it) { var r = relDays(it.due); return it.stage !== '已完成' && r != null && r < 0; }).length;
+    function groupHtml(title, list) {
+      if (!list.length) return '';
+      list.sort(function (a, b) { var ra = relDays(a.due), rb = relDays(b.due); return (ra == null ? 9999 : ra) - (rb == null ? 9999 : rb); });
+      return '<div style="flex:1; min-width:240px;">' +
+        '<div style="font-size:12.5px; color:var(--text-secondary); font-weight:600; margin-bottom:6px;">' + title +
+        ' <span style="color:var(--text-tertiary); font-weight:400;">' + list.length + '</span></div>' +
+        list.map(function (it) {
+          return '<div class="ec-mini-item"><span class="ec-mini-code">' + esc(it.code) + '</span>' +
+            '<span class="ec-mini-title" title="' + esc(it.title) + ' · 截止 ' + esc(it.due) + '">' + esc(it.name) + '</span>' +
+            dueBadge(it) +
+            '<button class="btn-text" data-dim-open="' + it.kind + ':' + esc(it.code) + '">详情</button></div>';
+        }).join('') + '</div>';
+    }
+    body.innerHTML =
+      '<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">' +
+      '<span style="font-size:12.5px; color:var(--text-secondary);"><b style="font-size:16px; color:var(--primary);">' + items.length + '</b> 项待办（' + esc(owner) + '）' +
+      (od ? ' · <span class="tag tag-error">逾期 ' + od + '</span>' : '') + '</span>' +
+      '<span class="tag tag-default">未开始 ' + groups['未开始'].length + '</span>' +
+      '<span class="tag tag-warning">进行中 ' + groups['进行中'].length + '</span>' +
+      '<span class="tag tag-success">已完成 ' + groups['已完成'].length + '</span>' +
+      '</div>' +
+      '<div style="display:flex; gap:18px; flex-wrap:wrap;">' +
+      groupHtml('待完成（未开始）', groups['未开始']) +
+      groupHtml('进行中', groups['进行中']) +
+      groupHtml('已完成', groups['已完成']) +
+      '</div>';
+  }
+  (function initTodo() {
+    var sel = document.getElementById('ec-todo-user');
+    var body = document.getElementById('ec-todo-body');
+    if (sel) sel.addEventListener('change', renderTodo);
+    if (body) body.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-dim-open]');
+      if (!b) return;
+      var p = b.getAttribute('data-dim-open').split(':');
+      openDimDetail(p[0], p.slice(1).join(':'));
+    });
+  })();
+
+  function dueBadge(it) {
+    if (it.stage === '已完成') return '<span class="tag tag-success">已完成</span>';
+    var r = relDays(it.due);
+    if (r == null) return '<span class="tag tag-default">截止 ' + esc(it.due) + '</span>';
+    if (r < 0) return '<span class="tag tag-error">逾期 ' + (-r) + ' 天</span>';
+    if (r === 0) return '<span class="tag tag-warning">今天到期</span>';
+    if (r <= 7) return '<span class="tag tag-warning">' + r + ' 天后到期</span>';
+    return '<span class="tag tag-default">截止 ' + esc(it.due) + '</span>';
+  }
+  function renderPersonView(items) {
+    var groups = {};
+    items.forEach(function (it) { (groups[it.owner] = groups[it.owner] || []).push(it); });
+    var names = Object.keys(groups).sort(function (a, b) {
+      if (a === '未分配') return 1;
+      if (b === '未分配') return -1;
+      return groups[b].length - groups[a].length;
+    });
+    if (!names.length) return '<div class="ec-dim-empty">没有符合条件的人员事项</div>';
+    return '<div style="display:flex; align-items:center; margin-bottom:10px;">' +
+        '<span style="font-size:12px; color:var(--text-tertiary);">共 <b style="color:var(--text-secondary);">' + names.length + '</b> 名负责人 · 点击姓名行展开 / 收起清单</span>' +
+        '<button class="btn-text ec-dim-toggle-all" data-ec-toggle-all="1">展开全部</button></div>' +
+      '<div class="ec-person-grid">' + names.map(function (n, idx) {
+      /* 每人清单按截止时间由近及远排序（逾期在前） */
+      var list = groups[n].slice().sort(function (a, b) {
+        var ra = relDays(a.due), rb = relDays(b.due);
+        return (ra == null ? 9999 : ra) - (rb == null ? 9999 : rb);
+      });
+      var c = { '未开始': 0, '进行中': 0, '已完成': 0 }, od = 0, soon = 0;
+      list.forEach(function (it) {
+        c[it.stage]++;
+        if (it.stage !== '已完成') {
+          var r = relDays(it.due);
+          if (r != null && r < 0) od++;
+          else if (r != null && r <= 7) soon++;
+        }
+      });
+      return '<div class="ec-person-card' + (idx === 0 ? '' : ' collapsed') + '" data-ec-person="' + esc(n) + '">' +
+        '<div class="ec-person-head" data-ec-person-toggle="1">' +
+        '<span class="pm-avatar" style="width:28px;height:28px;font-size:12px;">' + esc(n.slice(0, 1)) + '</span>' +
+        '<span class="ec-person-name">' + esc(n) + '</span>' +
+        '<span class="ec-person-counts">' +
+        (od ? '<span class="tag tag-error">逾期 ' + od + '</span>' : '') +
+        (soon ? '<span class="tag tag-warning">即将到期 ' + soon + '</span>' : '') +
+        '<span class="tag tag-default">未开始 ' + c['未开始'] + '</span>' +
+        '<span class="tag tag-warning">进行中 ' + c['进行中'] + '</span>' +
+        '<span class="tag tag-success">已完成 ' + c['已完成'] + '</span>' +
+        '<span class="tag" style="background:var(--bg-page); color:var(--text-tertiary);">共 ' + list.length + '</span></span>' +
+        '<span class="ec-person-arrow">▾</span>' +
+        '</div>' +
+        '<div class="ec-person-body">' + list.map(function (it) {
+          return '<div class="ec-mini-item"><span class="ec-mini-code">' + esc(it.code) + '</span>' +
+            '<span class="ec-mini-title" title="' + esc(it.title) + ' · 截止 ' + esc(it.due) + '">' + esc(it.name) + '</span>' +
+            dueBadge(it) +
+            '<button class="btn-text" data-dim-open="' + it.kind + ':' + esc(it.code) + '">详情</button></div>';
+        }).join('') + '</div>' +
+        '</div>';
+    }).join('') + '</div>';
+  }
+  function renderDim() {
+    if (dim === 'stream') return;
+    var items = allItems().filter(matchItem);
+    var c = { '未开始': 0, '进行中': 0, '已完成': 0 };
+    items.forEach(function (it) { c[it.stage]++; });
+    var people = Object.keys(items.reduce(function (m, it) { m[it.owner] = 1; return m; }, {})).length;
+    var clauses = Object.keys(items.reduce(function (m, it) { m[it.clause || '—'] = 1; return m; }, {})).length;
+    elDimSummary.innerHTML = dim === 'item'
+      ? '按<b>条款</b>为维度：共 <b>' + items.length + '</b> 项事项，覆盖 <b>' + clauses + '</b> 条条款（未开始 ' + c['未开始'] + ' · 进行中 ' + c['进行中'] + ' · 已完成 ' + c['已完成'] + '），可直接在此更新阶段，实时同步至「任务分配」'
+      : '按<b>人员</b>为维度：共 <b>' + items.length + '</b> 项事项，覆盖 <b>' + people + '</b> 名负责人（未开始 ' + c['未开始'] + ' · 进行中 ' + c['进行中'] + ' · 已完成 ' + c['已完成'] + '）；各人清单按<b>截止时间</b>由近及远排列，并标注<b>逾期 / 到期</b>提醒';
+    elDimBody.innerHTML = dim === 'item' ? renderClauseView(items) : renderPersonView(items);
+  }
+  function switchDim(d) {
+    dim = d;
+    var isStream = d === 'stream';
+    document.querySelectorAll('#ec-dim .pm-seg-btn').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-dim') === d); });
+    document.getElementById('ec-stream').style.display = isStream ? '' : 'none';
+    document.getElementById('ec-seg').style.display = isStream ? '' : 'none';
+    document.getElementById('ec-alarm').style.display = isStream ? '' : 'none';
+    document.getElementById('ec-strip').style.display = isStream ? '' : 'none';
+    elDimCard.style.display = isStream ? 'none' : '';
+    var _tc = document.getElementById('ec-todo-card'); if (_tc) _tc.style.display = isStream ? '' : 'none';
+    elDimSrc.style.display = (d === 'item') ? '' : 'none';
+    if (isStream) render(); else renderDim();
+  }
+  document.getElementById('ec-dim').addEventListener('click', function (e) {
+    var b = e.target.closest('.pm-seg-btn');
+    if (!b) return;
+    switchDim(b.getAttribute('data-dim'));
+    window.showToast('已切换到「' + b.textContent.replace(/^[^\s]+\s*/, '') + '」视图', 'info');
+  });
+  elDimStage.addEventListener('click', function (e) {
+    var p = e.target.closest('[data-stage]');
+    if (!p) return;
+    elDimStage.querySelectorAll('.radio-pill').forEach(function (x) { x.classList.toggle('active', x === p); });
+    dimStage = p.getAttribute('data-stage'); renderDim();
+  });
+  elDimSrc.addEventListener('click', function (e) {
+    var p = e.target.closest('[data-src]');
+    if (!p) return;
+    elDimSrc.querySelectorAll('.radio-pill').forEach(function (x) { x.classList.toggle('active', x === p); });
+    dimSrc = p.getAttribute('data-src'); renderDim();
+  });
+  elDimSearch.addEventListener('input', function () { dimKw = elDimSearch.value.trim(); renderDim(); });
+
+  function applyStage(kind, code, stage) {
+    if (kind === 'task') {
+      if (window.TASK_STORE) TASK_STORE.setStage(code, stage, '事件管控中心更新阶段');
+      window.showToast('事项 ' + code + ' 阶段已更新为「' + stage + '」，已同步「任务分配」', 'success');
+    } else {
+      var ev = EVENTS.filter(function (x) { return x.id === code; })[0];
+      if (!ev) return;
+      var map = { '未开始': ['open', 0], '进行中': ['doing', 50], '已完成': ['closed', 100] };
+      ev.status = map[stage][0]; ev.progress = map[stage][1];
+      if (stage === '已完成') { ev.closedBy = OPERATOR; ev.closeTime = NOW_STR; }
+      ev.log = ev.log || [];
+      ev.log.push({ t: '阶段变更', who: OPERATOR, time: NOW_STR, note: '事件阶段更新为 ' + stage });
+      window.showToast('事件 ' + code + ' 阶段已更新为「' + stage + '」', 'success');
+    }
+    renderDim();
+  }
+  elDimBody.addEventListener('change', function (e) {
+    var sel = e.target.closest('.ec-stage-sel');
+    if (!sel) return;
+    var p = sel.getAttribute('data-stage-for').split(':');
+    applyStage(p[0], p.slice(1).join(':'), sel.value);
+  });
+  elDimBody.addEventListener('click', function (e) {
+    /* 按人员：展开 / 收起某人的清单 */
+    var head = e.target.closest('[data-ec-person-toggle]');
+    if (head) { head.parentElement.classList.toggle('collapsed'); return; }
+    /* 按人员：展开全部 / 收起全部 */
+    var all = e.target.closest('[data-ec-toggle-all]');
+    if (all) {
+      var cards = document.querySelectorAll('#ec-dim-body .ec-person-card');
+      var expand = all.textContent.indexOf('展开') >= 0;
+      cards.forEach(function (c) { c.classList.toggle('collapsed', !expand); });
+      all.textContent = expand ? '收起全部' : '展开全部';
+      return;
+    }
+    var b = e.target.closest('[data-dim-open]');
+    if (!b) return;
+    var p = b.getAttribute('data-dim-open').split(':');
+    openDimDetail(p[0], p.slice(1).join(':'));
+  });
+  function openDimDetail(kind, code) {
+    if (kind === 'task') {
+      var t = window.TASK_STORE ? TASK_STORE.byCode(code) : null;
+      if (!t) return;
+      var log = t.log || [];
+      modal({
+        title: '事项详情 · ' + t.code, sub: '迎检任务 · 与「任务分配」同源', ok: '关闭', okOnly: true,
+        body: '<div class="pm-detail-title">' + esc(t.code + ' ' + t.name) + '</div>' +
+          '<div class="pm-desc-list">' + row('分类', t.cat) + row('部门', t.dept) + row('关联条款', t.clause || t.code) +
+          row('负责人', unassignedName(t.owner)) + row('自评人', unassignedName(t.assessor)) + row('截止日期', t.due) +
+          row('任务阶段', t.stage) + row('处理进度', t.progress + '%') + '</div>' +
+          '<div class="pm-rail-title" style="margin:14px 0 2px;">阶段记录 · 审计追溯</div>' +
+          '<div class="pm-timeline">' + (log.length ? log.map(function (l) {
+            return '<div class="pm-tl-item done"><div class="pm-tl-title">' + esc(l.t) + '</div>' +
+              '<div class="pm-tl-time">' + esc(l.who || '—') + (l.time ? ' · ' + l.time : '') + '</div>' +
+              (l.note ? '<div class="pm-tl-note">' + esc(l.note) + '</div>' : '') + '</div>';
+          }).join('') : '<div class="pm-tl-item todo"><div class="pm-tl-title">暂无阶段记录</div></div>') + '</div>'
+      });
+    } else {
+      var ev = EVENTS.filter(function (x) { return x.id === code; })[0];
+      if (!ev) return;
+      activeId = ev.id;
+      switchDim('stream');
+      openDetail(ev.id);
+      window.showToast('已定位到事件流中的 ' + ev.id, 'info');
+    }
+  }
+  window.addEventListener('taskchange', function () { if (dim !== 'stream') renderDim(); });
+
+  activeId = null;
+  render();
+})();
+</script>
+</body>
+</html>

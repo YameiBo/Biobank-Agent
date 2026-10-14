@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="pmAPwUQ9XWImfVeAzVblAS">
+<head data-page-node-id="fLFUSW1wSQAFuIBF1gzl8z">
+<meta charset="UTF-8" data-page-node-id="cygv0CWE09iCn4Z7636rxO" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="Pw4xnCvEP8kkLEo6BIYxjv" />
+<title>版本管理 - CNAS 迎检</title>
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" data-page-node-id="Ntmb5WuWnHIGHaRvwxFyCL" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+</head>
+<body data-page-node-id="tlhlmDnQUowhpXUjDnEX82">
+<div class="layout" data-page-node-id="jU4WE6jvmWqYYSmtHSFzPw">
+  <aside class="sidebar" data-page-node-id="ROEPxXSarV8KDRQgsGiWs4">
+    <div class="sidebar-header" data-page-node-id="UH1BtJZSdCiQoovMTtiHPg">
+      <div class="sidebar-logo" data-page-node-id="89f5fUZJkwn4jBDKrAkYxy">◈</div>
+      <div class="sidebar-title" data-page-node-id="aeZNuR7UJDNDC7dyHX49b1">体系管理智能体</div>
+      <div class="sidebar-collapse-btn" data-page-node-id="msReJsZptP5qW15axq0h1c">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3 active" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main" data-page-node-id="CKMECNWIKw0gvCd8nIlr8q">
+    <header class="topbar" data-page-node-id="SaIK8B2JEq6YYLyHkSNk6O">
+      <div class="breadcrumb" data-page-node-id="y9petp9Vt2zGNsxaiRayYL">
+        <span data-page-node-id="BFDOlHiRuttqCtle7Ntp64">CNAS 迎检</span><span class="sep" data-page-node-id="oaOMgGENsp3DzrTAB4vLAK">/</span>
+        <span>证据材料中心</span><span class="sep">/</span>
+        <span class="current" data-page-node-id="7F9OuaCyfEQaMWc9WADDEL">版本管理</span>
+      </div>
+      <div class="topbar-right" data-page-node-id="7gFpAxk1VeeUfkSRHFDOpE">
+<!-- 2026-09-23 下线：旧的两角色演示开关（质量管理员/普通员工）
+<!-- 2026-09-23 下线：旧的两角色演示开关（质量管理员/普通员工）
+<!-- 2026-09-23 下线：旧的两角色演示开关（质量管理员/普通员工）
+     已升级为全站「演示身份」切换器（6 角色，见 assets/role-guard.js?v=20260924j）
+        <div class="role-switch" id="role-switch" title="切换当前角色，体验不同身份的功能差异" data-page-node-id="2hGg9KGc2Fgy47V0vEUAau">
+          <button class="role-switch-btn active" data-role="manager" data-page-node-id="NmqlJiApYA5xMAlzgL4tEK">质量管理员</button>
+          <button class="role-switch-btn" data-role="staff" data-page-node-id="jgBiN8AR984SPUbTv5smrL">普通员工</button>
+        </div>
+-->
+-->
+-->
+        <div class="topbar-icon-btn" data-page-node-id="SIZGIEMNctUFaWYJc7d52G">🔍</div><div class="topbar-icon-btn" data-page-node-id="6xxR9kV1ZLuPYy08S1zkCI">🔔</div>
+        <div class="user-chip" data-page-node-id="ICCSheKbuMbnHrpWpma6G3"><div class="user-avatar" data-page-node-id="7Hrh3T1y8NW3iwY7AI2TjM">质</div><span id="user-name" data-page-node-id="MdH96Jtai5lnIZ1qGGYbi8">质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content" data-page-node-id="sQcKcjpqVScuGjl3fdpBmp">
+      <div class="page-header" data-page-node-id="sBuylcb092km1daXcCYryL">
+        <div data-page-node-id="B1GpIalmll95mWtDX5oSX9">
+          <div class="page-title" data-page-node-id="3yEkRn0DU1r15E20etWco3">版本管理</div>
+          <div class="page-desc" data-page-node-id="Lwn2gPGFKxkOQL3zBOrEtk">质量文件、记录表格、评审报告的版本变更追踪与回溯对比</div>
+        </div>
+        <div class="page-actions" data-page-node-id="6P1VC8o6m49AKe44dozs2R">
+          <button class="btn" data-action="version-compare" data-page-node-id="QyrzXBGsPEvcDcHfiNFdcc">📊 版本对比</button>
+          <button class="btn" data-action="toast" data-msg="变更日志导出中" data-page-node-id="e83h3fHXBjLVbnNiBPnBZJ">📤 导出变更日志</button>
+          <button class="btn btn-primary" data-action="version-new" data-page-node-id="2ktvh1PGDVe0xUjkwMJ2tO">＋ 新建版本</button>
+        </div>
+      </div>
+
+      <!-- 概览 -->
+      <div class="grid grid-4" style="margin-bottom:16px;" data-page-node-id="dd4pAyaLyv95XWsXiIExCH">
+        <div class="stat" data-page-node-id="71MhotwQZIzxAldr2Jt4sw">
+          <div class="stat-label" data-page-node-id="v9mz2uonzeY6Poad8GKd5U">📚 受控文件</div>
+          <div class="stat-value" data-page-node-id="epiCbFHj5891iUotMUNZds">86</div>
+          <div class="stat-meta" data-page-node-id="o0FSNS9IS7L542hUxQ0JIR">全部文件</div>
+        </div>
+        <div class="stat" data-page-node-id="ckwb0RZZjSf7jHAz7rFZr6">
+          <div class="stat-label" data-page-node-id="g7lxWmCXTqzSdCa0xaMFkF">🔄 本月变更</div>
+          <div class="stat-value" data-page-node-id="8dgeIayQzGP9x1ASHPuIOC">12</div>
+          <div class="stat-meta" data-page-node-id="NW01oa3smWqlXmN7zaFoed"><span class="pos" data-page-node-id="ASBDKECXEARYjj72ADZH3G">较上月 +3</span></div>
+        </div>
+        <div class="stat" data-action="version-pending-review" data-requires-role="manager" id="stat-pending" data-page-node-id="mXyYyCpNHtDFEc1fsixsiM">
+          <div class="stat-label" data-page-node-id="g8mImfO3DeRaYde2KLq7Te">⏪ 待审核版本<span class="stat-pend-badge" id="stat-pend-badge" data-page-node-id="dmZK6w6WMKLkMrp0Lt0ybi">待审批</span></div>
+          <div class="stat-value" data-page-node-id="HULZU6T29Gh0Vcx68jneak">3</div>
+          <div class="stat-meta" data-page-node-id="5hAQAMHNZ4NlM1yvUqNVxD"><span class="neg" data-page-node-id="Ams0VUng8kv7DD6ftZfh35">需审批</span> · 点击进入</div>
+        </div>
+        <div class="stat" data-page-node-id="8kdqJDgD1O6a8EL5GHI3z3">
+          <div class="stat-label" data-page-node-id="XaY7PcuCqk2S3SFMww39dG">⚠ 即将过期</div>
+          <div class="stat-value" data-page-node-id="5MbBhtgO7ckxoMGD4Azww9">2</div>
+          <div class="stat-meta" data-page-node-id="4uCEkrHxB9D2BEHDy4ZuGH">30 天内</div>
+        </div>
+      </div>
+
+      <!-- 文件版本列表 -->
+      <div class="card" data-page-node-id="uZ97Sbejczz2ZM8tuZ2hhz">
+        <div class="card-header">
+          <div class="card-title">受控文件版本</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select class="select" id="v-filter-type" style="width:120px;">
+              <option value="all">全部类型</option>
+              <option value="manual">质量手册</option>
+              <option value="program">程序文件</option>
+              <option value="sop">SOP</option>
+              <option value="form">记录表格</option>
+            </select>
+            <select class="select" id="v-filter-status" style="width:120px;">
+              <option value="all">全部状态</option>
+              <option value="待审批">待审批</option>
+              <option value="已批准">已批准</option>
+              <option value="已驳回">已驳回</option>
+            </select>
+            <div class="search-box"><input class="input" id="v-search" placeholder="搜索文件名 / 修改人" /></div>
+          </div>
+        </div>
+
+        <div class="tabs" id="v-tabs">
+          <div class="tab active" data-ftype="all">全部 <span class="tab-count" data-count-for="all">0</span></div>
+          <div class="tab" data-ftype="manual">质量手册 <span class="tab-count" data-count-for="manual">0</span></div>
+          <div class="tab" data-ftype="program">程序文件 <span class="tab-count" data-count-for="program">0</span></div>
+          <div class="tab" data-ftype="sop">SOP <span class="tab-count" data-count-for="sop">0</span></div>
+          <div class="tab" data-ftype="form">记录表格 <span class="tab-count" data-count-for="form">0</span></div>
+          <div class="tab tab-accent" data-ftype="all" data-fstatus="pending">⏳ 待审批 <span class="tab-count" data-count-for="__pending">0</span></div>
+        </div>
+
+        <!-- 筛选结果条 -->
+        <div class="filter-bar" id="v-filter-bar" hidden>
+          <span id="v-filter-text">共 16 条</span>
+          <button class="btn-text" id="v-clear-filter">清除筛选</button>
+        </div>
+
+        <!-- 批量操作条（管理员选中行后出现） -->
+        <div class="bulk-bar" id="v-bulk-bar" hidden>
+          <span id="v-bulk-text">已选 <strong>0</strong> 项</span>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-sm" data-action="toast" data-msg="已批量导出所选文件">批量导出</button>
+            <button class="btn btn-sm" data-action="version-approve" data-name="批量选中的版本">批量审批</button>
+            <button class="btn btn-sm" id="v-bulk-cancel">取消选择</button>
+          </div>
+        </div>
+
+        <div class="table-wrap" data-page-node-id="Q1cBM104ce1k4ZxzifUMAA">
+          <table class="table" data-page-node-id="wAMMqLZL6sAeZGVXJx6f1A">
+            <thead>
+              <tr>
+                <th class="col-check"><input type="checkbox" id="v-check-all" title="全选本页" /></th>
+                <th class="sortable" data-sort="name">文件名 <span class="sort-ind">⇅</span></th>
+                <th>类型</th>
+                <th class="sortable" data-sort="ver">当前版本 <span class="sort-ind">⇅</span></th>
+                <th class="sortable" data-sort="hist">历史版本 <span class="sort-ind">⇅</span></th>
+                <th class="sortable" data-sort="mod">最后修改 <span class="sort-ind">⇅</span></th>
+                <th>修改人</th>
+                <th>审批状态</th>
+                <th class="sortable" data-sort="eff">生效日期 <span class="sort-ind">⇅</span></th>
+                <th class="col-actions">操作</th>
+              </tr>
+            </thead>
+            <tbody id="version-tbody">
+              <tr data-type="manual" data-status="已批准" data-ver="V3.2" data-mod="2026-08-20" data-eff="2026-09-01" data-name="质量手册">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 质量手册</strong></td>
+                <td><span class="tag tag-primary">手册</span></td>
+                <td><strong style="color:var(--primary);">V3.2</strong></td>
+                <td>3 个版本</td>
+                <td>2026-08-20</td>
+                <td>陈主管</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-09-01</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="manual" data-status="已批准" data-ver="V1.1" data-mod="2026-06-20" data-eff="2026-07-01" data-name="质量手册 - 附录A 职责分配">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 质量手册 - 附录A 职责分配</strong></td>
+                <td><span class="tag tag-primary">手册</span></td>
+                <td><strong style="color:var(--primary);">V1.1</strong></td>
+                <td>2 个版本</td>
+                <td>2026-06-20</td>
+                <td>陈主管</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-07-01</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="program" data-status="已批准" data-ver="V2.1" data-mod="2026-07-15" data-eff="2026-07-20" data-name="程序文件 - 公正性管理">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 程序文件 - 公正性管理</strong></td>
+                <td><span class="tag tag-default">程序</span></td>
+                <td><strong style="color:var(--primary);">V2.1</strong></td>
+                <td>2 个版本</td>
+                <td>2026-07-15</td>
+                <td>张三</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-07-20</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="program" data-status="已驳回" data-ver="V1.0" data-mod="2026-09-07" data-eff="—" data-name="程序文件 - 风险与机遇管理">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 程序文件 - 风险与机遇管理</strong></td>
+                <td><span class="tag tag-default">程序</span></td>
+                <td><strong style="color:var(--primary);">V1.0</strong></td>
+                <td>1 个版本</td>
+                <td>2026-09-07</td>
+                <td>张三</td>
+                <td><span class="tag tag-error">已驳回</span></td>
+                <td>—</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button> · <button class="btn-text" data-action="version-revise">修订</button></td>
+              </tr>
+              <tr data-type="program" data-status="已批准" data-ver="V3.1" data-mod="2026-08-28" data-eff="2026-09-01" data-name="程序文件 - 文件控制程序">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 程序文件 - 文件控制程序</strong></td>
+                <td><span class="tag tag-default">程序</span></td>
+                <td><strong style="color:var(--primary);">V3.1</strong></td>
+                <td>4 个版本</td>
+                <td>2026-08-28</td>
+                <td>周八</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-09-01</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="program" data-status="待审批" data-ver="V2.0" data-mod="2026-09-07" data-eff="—" data-name="程序文件 - 内部审核管理">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 程序文件 - 内部审核管理</strong></td>
+                <td><span class="tag tag-default">程序</span></td>
+                <td><strong style="color:var(--primary);">V2.0</strong></td>
+                <td>2 个版本</td>
+                <td>2026-09-07</td>
+                <td>孙七</td>
+                <td><span class="tag tag-warning">待审批</span></td>
+                <td>—</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button> · <button class="btn-text" data-action="version-approve">审批</button></td>
+              </tr>
+              <tr data-type="sop" data-status="现行有效" data-ver="V4.0" data-mod="2024-10-01" data-eff="2024-10-01" data-name="血液样本处理标准操作规程">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 血液样本处理标准操作规程</strong></td>
+                <td><span class="tag tag-default">SOP</span></td>
+                <td><strong style="color:var(--primary);">V4.0</strong></td>
+                <td>4 个版本（含 1 个已作废）</td>
+                <td>2024-10-01</td>
+                <td>孙伟</td>
+                <td><span class="tag tag-success">现行有效</span></td>
+                <td>2027-10-01</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="sop" data-status="待审批" data-ver="V4.0" data-mod="2026-09-05" data-eff="—" data-name="SOP - 样本接收与制备">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 SOP - 样本接收与制备</strong></td>
+                <td><span class="tag tag-default">SOP</span></td>
+                <td><strong style="color:var(--primary);">V4.0</strong></td>
+                <td>4 个版本</td>
+                <td>2026-09-05</td>
+                <td>周八</td>
+                <td><span class="tag tag-warning">待审批</span></td>
+                <td>—</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button> · <button class="btn-text" data-action="version-approve">审批</button></td>
+              </tr>
+              <tr data-type="sop" data-status="已批准" data-ver="V2.0" data-mod="2024-09-15" data-eff="2024-10-01" data-name="SOP - 设施与环境监测">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 SOP - 设施与环境监测</strong></td>
+                <td><span class="tag tag-default">SOP</span></td>
+                <td><strong style="color:var(--warning);">V2.0</strong> <span style="font-size:11px; color:var(--warning);">⚠ 即将过期</span></td>
+                <td>2 个版本</td>
+                <td>2024-09-15</td>
+                <td>郑十</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2024-10-01</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button> · <button class="btn-text" data-action="version-renew">续期</button></td>
+              </tr>
+              <tr data-type="sop" data-status="已批准" data-ver="V2.2" data-mod="2026-08-05" data-eff="2026-08-10" data-name="SOP - 样本储存与入库">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 SOP - 样本储存与入库</strong></td>
+                <td><span class="tag tag-default">SOP</span></td>
+                <td><strong style="color:var(--primary);">V2.2</strong></td>
+                <td>3 个版本</td>
+                <td>2026-08-05</td>
+                <td>郑十</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-08-10</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="sop" data-status="已批准" data-ver="V1.4" data-mod="2026-09-06" data-eff="2026-09-08" data-name="SOP - 样本出库与运输">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📄 SOP - 样本出库与运输</strong></td>
+                <td><span class="tag tag-default">SOP</span></td>
+                <td><strong style="color:var(--primary);">V1.4</strong></td>
+                <td>2 个版本</td>
+                <td>2026-09-06</td>
+                <td>周八</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-09-08</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="form" data-status="已批准" data-ver="V1.5" data-mod="2026-09-02" data-eff="2026-09-05" data-name="记录表格 - 设备校准记录表">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📊 记录表格 - 设备校准记录表</strong></td>
+                <td><span class="tag tag-default">表格</span></td>
+                <td><strong style="color:var(--primary);">V1.5</strong></td>
+                <td>5 个版本</td>
+                <td>2026-09-02</td>
+                <td>孙七</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-09-05</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="form" data-status="已批准" data-ver="V2.3" data-mod="2026-08-10" data-eff="2026-08-15" data-name="记录表格 - 人员培训档案">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📊 记录表格 - 人员培训档案</strong></td>
+                <td><span class="tag tag-default">表格</span></td>
+                <td><strong style="color:var(--primary);">V2.3</strong></td>
+                <td>3 个版本</td>
+                <td>2026-08-10</td>
+                <td>孙七</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-08-15</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="form" data-status="已批准" data-ver="V2.0" data-mod="2026-09-03" data-eff="2026-09-05" data-name="记录表格 - 温度监控记录表">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📊 记录表格 - 温度监控记录表</strong></td>
+                <td><span class="tag tag-default">表格</span></td>
+                <td><strong style="color:var(--primary);">V2.0</strong></td>
+                <td>6 个版本</td>
+                <td>2026-09-03</td>
+                <td>孙七</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-09-05</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="form" data-status="已批准" data-ver="V1.2" data-mod="2026-07-28" data-eff="2026-08-01" data-name="记录表格 - 内审检查表">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📊 记录表格 - 内审检查表</strong></td>
+                <td><span class="tag tag-default">表格</span></td>
+                <td><strong style="color:var(--primary);">V1.2</strong></td>
+                <td>2 个版本</td>
+                <td>2026-07-28</td>
+                <td>张三</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2026-08-01</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button></td>
+              </tr>
+              <tr data-type="form" data-status="待审批" data-ver="V3.2" data-mod="2026-09-07" data-eff="—" data-name="记录表格 - 不符合项跟踪表">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📊 记录表格 - 不符合项跟踪表</strong></td>
+                <td><span class="tag tag-default">表格</span></td>
+                <td><strong style="color:var(--primary);">V3.2</strong></td>
+                <td>3 个版本</td>
+                <td>2026-09-07</td>
+                <td>张三</td>
+                <td><span class="tag tag-warning">待审批</span></td>
+                <td>—</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button> · <button class="btn-text" data-action="version-approve">审批</button></td>
+              </tr>
+              <tr data-type="form" data-status="已批准" data-ver="V1.3" data-mod="2024-10-20" data-eff="2024-11-01" data-name="记录表格 - 供应商评价表">
+                <td class="col-check"><input type="checkbox" class="v-row-check" /></td>
+                <td><strong>📊 记录表格 - 供应商评价表</strong></td>
+                <td><span class="tag tag-default">表格</span></td>
+                <td><strong style="color:var(--warning);">V1.3</strong> <span style="font-size:11px; color:var(--warning);">⚠ 即将过期</span></td>
+                <td>2 个版本</td>
+                <td>2024-10-20</td>
+                <td>陈主管</td>
+                <td><span class="tag tag-success">已批准</span></td>
+                <td>2024-11-01</td>
+                <td class="col-actions"><button class="btn-text" data-action="version-detail">详情</button> · <button class="btn-text" data-action="version-compare">对比</button> · <button class="btn-text" data-action="version-renew">续期</button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 空状态 -->
+          <div class="empty-state" id="v-empty" hidden>
+            <div class="empty-icon">🔍</div>
+            <div class="empty-title">未找到匹配的文件</div>
+            <div class="empty-desc">当前筛选条件下没有受控文件，试试调整类型、状态或清空搜索关键词</div>
+            <button class="btn" id="v-empty-reset">重置筛选条件</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 版本对比示例 -->
+      <div class="card" style="margin-top:16px;" data-page-node-id="D0lUgEBlncGXAtxMlLaU71">
+        <div class="card-header" data-page-node-id="o07RZ4gCTW6LxCn8xf3LBB">
+          <div class="card-title" data-page-node-id="OchKry0vQVGPu4KtQyXKS8">
+            <span style="font-size:18px;" data-page-node-id="xaHWQ3nQxJSQI2CP8xEEBn">🔍</span>
+            版本对比示例：SOP - 样本接收与制备
+          </div>
+          <div data-page-node-id="hPChCTxkOZtyhTmepwXKFg">
+            <select class="select" style="width:160px;" data-page-node-id="C1TefcH91zTCkHHrzjkFin">
+              <option data-page-node-id="8qaNLpijSH4C9mCl3grLxL">V4.0 (2026-09-05)</option>
+            </select>
+            <span style="margin:0 8px; color:var(--text-tertiary);" data-page-node-id="h7nHqNvGeux0DtoHLSMEOw">⇄</span>
+            <select class="select" style="width:160px;" data-page-node-id="sF2YXL5XSDSaJWH837lyHA">
+              <option data-page-node-id="eiNEqvtJZaV2VeJrKyR9gJ">V3.0 (2024-06-12)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="gap:0; border:1px solid var(--border); border-radius:6px; overflow:hidden;" data-page-node-id="jJVfJsguG78DZtAr2GVSzY">
+          <div style="padding:12px 16px; background:#FFFBE6; border-right:1px solid var(--border);" data-page-node-id="pAvdzSoWCLeBN0RYST10eT">
+            <div style="font-size:13px; font-weight:600; color:var(--warning); margin-bottom:8px;" data-page-node-id="GEtu3xE5UGxVcbi3twtotx">⏷ V3.0 (旧版)</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.8; background:#FFFBE6;" data-page-node-id="vwvlcpeYzLxTXqK9ECenyW">
+              <div data-page-node-id="hwI78NBHEC1WEchYB7YULR">第 3.1 条 <strong style="background:#FFE7BA; padding:0 2px;" data-page-node-id="EdepC9ngfub1KTZIirtB0U">样本接收时需双人核对</strong></div>
+              <div data-page-node-id="hhkiVdWrf9O4KOGQcB41Ho">第 3.2 条 样本编号采用 8 位数字码</div>
+              <div style="text-decoration:line-through; color:var(--text-tertiary);" data-page-node-id="A6HTLGydWaEUKEPCjJqxps">第 3.3 条 离心参数固定为 3000rpm</div>
+            </div>
+          </div>
+          <div style="padding:12px 16px; background:#F0FFF4;" data-page-node-id="ccpMsH6qioKhTdMd0c69LS">
+            <div style="font-size:13px; font-weight:600; color:var(--success); margin-bottom:8px;" data-page-node-id="ZwS1CEmGBaIZVam8HCwPBU">⏷ V4.0 (新版)</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.8; background:#F0FFF4;" data-page-node-id="EpYvv4k5E4rG8f2zDWT9cV">
+              <div data-page-node-id="5ZPvip8G4P0d3MSTi61Cze">第 3.1 条 <strong style="background:#B7EB8F; padding:0 2px;" data-page-node-id="GmCjZyODz38RPQrpGEFBHn">样本接收时需扫码 + 双人核对，扫码记录自动入库</strong></div>
+              <div data-page-node-id="bvLAhTpxFtSGh3FoK40laq">第 3.2 条 样本编号采用 12 位字母数字混合码（含校验位）</div>
+              <div data-page-node-id="ctAtc6i9dK9NHZRWgXEXSO">第 3.3 条 离心参数根据样本类型动态调整：血液 2500rpm / 组织 1500rpm</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; padding:12px 16px; background:var(--primary-lighter); border-radius:6px; font-size:12px; color:var(--text-secondary);" data-page-node-id="NDwc6hqC42BR6FR3NG3DCF">
+          <strong style="color:var(--primary);" data-page-node-id="87L7Vkm7UbE0BWgAT36X4g">💡 变更说明</strong>：
+          本次主要变化：① 引入扫码验收提升追溯效率；② 编号升级为含校验位编码以减少人为错误；③ 离心参数按样本类型差异化配置，新增质控要求。
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+</body>
+</html>

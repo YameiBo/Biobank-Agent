@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>原型导航 - 体系管理智能体</title>
+  <link rel="stylesheet" href="assets/styles.css?v=20260924j" />
+  <style>
+    .preview { max-width: 1180px; margin: 0 auto; }
+    .preview-hero { padding: 28px 30px; border-radius: 14px; color: #fff; background: linear-gradient(120deg,#1e5bd6,#2b7fff 65%,#63a8ff); box-shadow: 0 12px 28px rgba(43,127,255,.2); }
+    .preview-hero h1 { margin: 0 0 8px; font-size: 25px; }
+    .preview-hero p { margin: 0; opacity: .86; font-size: 13px; }
+    .preview-section { margin-top: 22px; }
+    .preview-section-title { display:flex; align-items:center; gap:8px; margin:0 0 10px; font-size:16px; font-weight:650; }
+    .preview-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .preview-card { display:block; min-height:112px; padding:16px; border:1px solid var(--border-light); border-radius:10px; background:#fff; color:inherit; text-decoration:none; transition:all .18s; }
+    .preview-card:hover { transform:translateY(-3px); border-color:#9ec5ff; box-shadow:0 8px 20px rgba(29,33,41,.09); }
+    .preview-card .icon { display:block; width:34px; height:34px; line-height:34px; margin-bottom:10px; border-radius:9px; text-align:center; font-size:18px; background:var(--primary-light); color:var(--primary); }
+    .preview-card strong { display:block; font-size:14px; }
+    .preview-card small { display:block; margin-top:6px; color:var(--text-tertiary); line-height:1.5; }
+    /* 2026-09-23：迎检模块侧栏改成二级后，卡片上标出所属分组，与侧栏对得上 */
+    .preview-card .preview-tag { display:inline-block; margin-bottom:8px; padding:1px 7px; border-radius:8px; font-size:11px; color:var(--primary); background:var(--primary-light); }
+    .preview-card .preview-tag.solo { color:var(--text-tertiary); background:var(--bg-disabled); }
+    .preview-footer { margin-top:24px; color:var(--text-tertiary); font-size:12px; text-align:center; }
+    @media (max-width:900px) { .preview-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:520px) { .preview-grid { grid-template-columns:1fr; } .preview-hero { padding:22px; } }
+  </style>
+<link rel="stylesheet" href="assets/agent-widget.css?v=20260924j" />
+</head>
+<body>
+  <main class="content">
+    <div class="preview">
+      <section class="preview-hero">
+        <h1>体系管理智能体</h1>
+        <p>原型统一导航 · CNAS 迎检模块（9 个页面）+ 平台级模块（3 个页面）</p>
+      </section>
+
+      <!-- 顺序与分组同侧栏：迎检总览 / 迎检筹备 / 条款管理 / 证据材料中心 / 评审档案 -->
+      <section class="preview-section">
+        <h2 class="preview-section-title">📋 迎检模块</h2>
+        <div class="preview-grid">
+          <a class="preview-card" href="index.html"><span class="icon">⌂</span><span class="preview-tag solo">一级入口</span><strong>迎检总览</strong><small>迎检整体进度与任务总览</small></a>
+          <a class="preview-card" href="pages/task-config.html"><span class="icon">⊕</span><span class="preview-tag">迎检筹备</span><strong>任务分配</strong><small>负责人、自评人和复核人分配</small></a>
+          <a class="preview-card" href="pages/checklist.html"><span class="icon">✓</span><span class="preview-tag">迎检筹备</span><strong>检查清单</strong><small>检查点与完成状态管理</small></a>
+          <a class="preview-card" href="pages/clause-library.html"><span class="icon">≡</span><span class="preview-tag">条款管理</span><strong>CNAS 条款库</strong><small>CNAS-CL10 核查表 185 条 + ISO 20387 30 条 · 支持新增自定义条款</small></a>
+          <a class="preview-card" href="pages/self-assessment.html"><span class="icon">☐</span><span class="preview-tag">条款管理</span><strong>条款自评</strong><small>ISO 20387 全部 30 条条款导航、自评结果与佐证材料</small></a>
+          <a class="preview-card" href="pages/archive.html"><span class="icon">📁</span><span class="preview-tag">证据材料中心</span><strong>材料智能归档</strong><small>材料上传、识别与条款归档</small></a>
+          <a class="preview-card" href="pages/version.html"><span class="icon">↻</span><span class="preview-tag">证据材料中心</span><strong>版本管理</strong><small>受控文件版本与审批</small></a>
+          <a class="preview-card" href="pages/report.html"><span class="icon">▤</span><span class="preview-tag">评审档案</span><strong>智能报告</strong><small>标准化报告模板与预览</small></a>
+          <a class="preview-card" href="pages/history.html"><span class="icon">⏱</span><span class="preview-tag">评审档案</span><strong>历史评审记录</strong><small>历次评审档案与趋势分析</small></a>
+        </div>
+      </section>
+
+      <section class="preview-section">
+        <h2 class="preview-section-title">🧩 平台级模块</h2>
+        <div class="preview-grid">
+          <a class="preview-card" href="pages/rule-library.html"><span class="icon">📘</span><strong>规则库</strong><small>用户管理 / 角色与权限 / 规则引擎 / 触发日志</small></a>
+          <a class="preview-card" href="pages/event-control.html"><span class="icon">🧭</span><strong>事件管控中心</strong><small>事件全生命周期看板 + 列表 + 趋势与溯源审计</small></a>
+          <a class="preview-card" href="pages/data-quality.html"><span class="icon">📊</span><strong>样本数据质控</strong><small>四维质量评分 / 数据清洗 / 质量趋势 / 数据血缘 / 预警配置</small></a>
+        </div>
+      </section>
+
+      <div class="preview-footer">静态原型导航 · 所有页面均可返回侧边栏继续浏览</div>
+    </div>
+  </main>
+<script src="assets/agent-widget.js?v=20260924j"></script>
+</body>
+</html>

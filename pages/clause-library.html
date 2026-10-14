@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CNAS 条款库 - CNAS 迎检</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<style>
+/* ===== 标准库切换卡 ===== */
+.cl-lib{position:relative;cursor:pointer;transition:transform .16s,box-shadow .16s,border-color .16s;border:1px solid var(--border);}
+.cl-lib:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--primary-200);}
+.cl-lib.on{border-color:var(--primary);box-shadow:0 0 0 3px rgba(43,127,255,.10);}
+.cl-lib .on-flag{position:absolute;top:12px;right:14px;font-size:11px;font-weight:600;color:var(--primary);}
+.cl-lib .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--primary-light);color:var(--primary);}
+.cl-lib .lib-num{font-size:26px;font-weight:700;color:var(--text-primary);line-height:1.1;}
+.cl-lib .lib-num em{font-size:12px;font-weight:400;font-style:normal;color:var(--text-tertiary);margin-left:3px;}
+.cl-lib .lib-split{display:flex;gap:16px;font-size:12px;color:var(--text-tertiary);}
+.cl-lib .lib-split b{color:var(--text-secondary);font-weight:600;}
+
+/* ===== 条款列表：章 / 节 / 条 ===== */
+.cl-ch{border:1px solid var(--border);border-radius:var(--radius-xl);background:#fff;margin-bottom:10px;overflow:hidden;}
+.cl-ch-h{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;transition:background .15s;}
+.cl-ch-h:hover{background:var(--bg-hover);}
+.cl-ch-h .no{width:26px;height:26px;border-radius:7px;background:var(--primary-light);color:var(--primary);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cl-ch-h .nm{font-size:14px;font-weight:600;min-width:124px;}
+.cl-ch-h .ct{font-size:12px;color:var(--text-tertiary);min-width:88px;}
+.cl-ch-h .pct{font-size:12.5px;font-weight:600;color:var(--primary);min-width:56px;text-align:right;}
+.cl-ch-h .arw{color:var(--text-tertiary);font-size:12px;transition:transform .2s;}
+.cl-ch.open .cl-ch-h .arw{transform:rotate(90deg);}
+.cl-ch-b{display:none;border-top:1px solid var(--border-light);background:#FCFDFF;}
+.cl-ch.open .cl-ch-b{display:block;}
+.cl-sec{padding:9px 16px 3px;font-size:12px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:8px;}
+.cl-sec .line{flex:1;height:1px;background:var(--border-light);}
+.cl-sec .cnt{color:var(--text-tertiary);font-weight:400;}
+.cl-row{display:flex;align-items:center;gap:10px;padding:8px 16px;border-top:1px dashed var(--border-light);font-size:13px;transition:background .15s;}
+.cl-row:hover{background:var(--primary-50);}
+.cl-row .cid{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12px;color:var(--primary-dark);min-width:62px;font-weight:500;flex-shrink:0;}
+.cl-row .cnm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cl-row .cnm .sub{color:var(--text-tertiary);font-size:11.5px;font-weight:400;}
+.cl-row .cact{display:flex;gap:2px;flex-shrink:0;}
+.cl-row.flash{animation:clflash 2.2s ease-out;}
+@keyframes clflash{0%{background:#DCE9FF;}55%{background:#EAF2FF;}100%{background:transparent;}}
+
+/* ===== 新增条款：步骤条 / 校验 / 预览 ===== */
+.cl-step{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light);}
+.cl-step .si{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-tertiary);}
+.cl-step .si .dt{width:22px;height:22px;border-radius:50%;background:var(--bg-disabled);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;transition:.2s;}
+.cl-step .si.on{color:var(--primary);font-weight:600;}
+.cl-step .si.on .dt{background:var(--primary);color:#fff;}
+.cl-step .si.done .dt{background:var(--success);color:#fff;}
+.cl-step .sep{flex:1;height:1px;background:var(--border);}
+.cl-check{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px dashed var(--border-light);font-size:12.5px;}
+.cl-check:last-child{border-bottom:none;}
+.cl-check .ic{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0;margin-top:1px;}
+.cl-check .ic.ok{background:var(--success);}
+.cl-check .ic.no{background:var(--error);}
+.cl-check .ic.warn{background:var(--warning);}
+.cl-check .tx{flex:1;color:var(--text-secondary);line-height:1.6;}
+.cl-check .tx b{color:var(--text-primary);}
+.cl-check .tx .fx{color:var(--error);font-family:"SF Mono",Menlo,Consolas,monospace;font-weight:600;}
+.cl-prev{border:1px solid var(--primary-200);border-radius:10px;background:linear-gradient(135deg,#F5F9FF,#fff);padding:14px 16px;}
+.cl-prev .pv-id{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14px;font-weight:700;color:var(--primary-dark);}
+.cl-prev .pv-nm{font-size:14px;font-weight:600;color:var(--text-primary);margin-left:8px;}
+.cl-prev .pv-meta{display:flex;flex-wrap:wrap;gap:8px;margin:9px 0 10px;}
+.cl-prev .pv-tx{font-size:12.5px;line-height:1.85;color:var(--text-secondary);background:#fff;border:1px solid var(--border-light);border-radius:6px;padding:10px 12px;}
+.cl-hint{font-size:11.5px;margin-top:5px;color:var(--text-tertiary);}
+.cl-hint.ok{color:var(--success);}
+.cl-hint.no{color:var(--error);}
+.form-control.err{border-color:var(--error) !important;box-shadow:0 0 0 2px var(--error-bg) !important;}
+.cl-2col{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;}
+.cl-drop{border:1.5px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:.16s;}
+.cl-drop:hover{border-color:var(--primary-200);background:var(--primary-50);}
+.cl-imp-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--border-light);border-radius:8px;margin-bottom:6px;font-size:12.5px;}
+.cl-imp-row .st{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0;}
+.cl-imp-row .fn{flex:1;min-width:0;color:var(--text-secondary);}
+.cl-imp-row .msg{font-size:11.5px;color:var(--text-tertiary);white-space:nowrap;}
+.cl-pane{display:none;}
+.cl-pane.on{display:block;}
+
+/* ===== 条款解读（条款详情弹窗内） ===== */
+.cl-read{background:linear-gradient(135deg,#F5F9FF 0%,#FFFFFF 100%);border:1px solid var(--primary-100);border-radius:10px;padding:14px 16px;}
+.cl-read-tag{display:inline-block;font-size:11.5px;font-weight:700;color:var(--primary);background:var(--primary-light);border-radius:4px;padding:2px 8px;margin-bottom:9px;}
+.cl-read-tag + .cl-read-tag{margin-top:4px;}
+.cl-read-p{font-size:12.5px;line-height:1.95;color:var(--text-secondary);margin:0 0 9px;}
+.cl-read-p:last-of-type{margin-bottom:13px;}
+.cl-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px;}
+.cl-method{border:1px solid var(--border);border-radius:8px;padding:9px 10px;background:#fff;transition:.15s;}
+.cl-method.main{border-color:var(--primary-200);background:var(--primary-lighter);}
+.cl-method-h{display:flex;align-items:center;gap:5px;margin-bottom:6px;}
+.cl-method-n{font-size:12px;font-weight:600;color:var(--text-primary);white-space:nowrap;}
+.cl-method.main .cl-method-n{color:var(--primary-dark);}
+.cl-method-flag{font-size:10px;font-weight:600;color:#fff;background:var(--primary);border-radius:3px;padding:1px 4px;margin-left:auto;white-space:nowrap;}
+.cl-method-d{font-size:11.5px;line-height:1.75;color:var(--text-tertiary);}
+.cl-method-f{font-size:11.5px;line-height:1.75;color:var(--primary-dark);margin-top:6px;padding-top:6px;border-top:1px dashed var(--primary-100);}
+.cl-read-note{font-size:11.5px;color:var(--text-tertiary);margin-top:10px;}
+</style>
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3 active" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>CNAS 迎检</span><span class="sep">/</span>
+        <span>条款管理</span><span class="sep">/</span>
+        <span class="current">CNAS 条款库</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">CNAS 条款库</div>
+          <div class="page-desc">条款库 · CNAS-CL10:2020（GB/T 37864-2019）生物样本库质量和能力认可准则 · 185 条（管理 54 / 技术 131）</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" data-action="toast" data-msg="条款版本更新中，请稍候">🔄 更新条款版本</button>
+          <button class="btn btn-primary" data-action="clause-new" data-mode="single">＋ 新增条款</button>
+        </div>
+      </div>
+
+      <!-- ============ 当前库统计 ============ -->
+      <div class="grid grid-4" id="libKpi" style="margin-bottom:16px;"></div>
+
+      <!-- ============ 条款列表 ============ -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" id="listTitle">全部条款</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div class="search-box"><input class="input" id="clSearch" placeholder="按条款号 / 名称搜索" /></div>
+            <select class="select" id="clChFilter" style="width:150px;"></select>
+            <button class="btn btn-primary" data-action="clause-new" data-mode="single" style="height:32px; padding:0 12px; font-size:12.5px;">＋ 新增</button>
+          </div>
+        </div>
+
+        <div class="tabs" id="clTabs">
+          <div class="tab active" data-cat="all">全部条款</div>
+          <div class="tab" data-cat="管理">管理要求</div>
+          <div class="tab" data-cat="技术">技术要求</div>
+          <div class="tab" data-cat="custom">自定义条款<span class="tag tag-default" id="tabCustomCnt" style="margin-left:6px; height:18px;">0</span></div>
+        </div>
+
+        <div id="clFilterBar" style="display:none; align-items:center; gap:10px; margin:10px 0; padding:8px 12px; background:var(--primary-lighter); border-radius:6px; font-size:12.5px; color:var(--text-secondary);">
+          <span id="clFilterText"></span>
+          <button class="btn-text" id="clFilterClear" style="margin-left:auto;">清除筛选</button>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin:12px 0 10px;">
+          <span style="font-size:12.5px; color:var(--text-tertiary);" id="clCountHint"></span>
+          <span style="display:flex; gap:6px;">
+            <button class="btn btn-sm" id="clExpandAll">展开全部章节</button>
+            <button class="btn btn-sm" id="clCollapseAll">收起全部</button>
+          </span>
+        </div>
+
+        <div id="clList"></div>
+
+        <div id="clEmpty" class="empty" style="display:none;">
+          <div class="icon">🔍</div>
+          <div>没有匹配的条款</div>
+          <div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;">换个关键词，或直接新增一条自定义条款</div>
+          <button class="btn btn-primary" data-action="clause-new" data-mode="single" style="margin-top:14px;">＋ 新增条款</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../assets/clause-lib.js?v=20260924j"></script>
+<script src="../assets/clause-reading.js?v=20260924j"></script>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script>
+/* ==========================================================================
+   CNAS 条款库 — 页面逻辑
+   · 单库展示：CNAS-CL10:2020（GB/T 37864-2019）条款全文 185 条
+   · 数据驱动渲染：章 → 二级节 → 条款
+   · 新增条款：三步向导 + 批量导入 + 自定义条款管理
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var CL = window.CLAUSE_LIB;
+  var CUSTOM_KEY = 'cnas_custom_clauses_v1';
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function $(id) { return document.getElementById(id); }
+  function catTag(cat) { return cat === '管理' ? 'tag-primary' : 'tag-warning'; }
+  function toList(s) {
+    return String(s || '').split(/[\n；;]+/).map(function (x) { return x.trim(); }).filter(Boolean);
+  }
+
+  /* ---------- 自定义条款存储 ---------- */
+  var storageOK = true;
+  function loadCustom() {
+    try { return JSON.parse(localStorage.getItem(CUSTOM_KEY)) || []; }
+    catch (e) { storageOK = false; return []; }
+  }
+  function saveCustom(arr) {
+    try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(arr)); storageOK = true; }
+    catch (e) { storageOK = false; }
+  }
+  var CUSTOM = loadCustom();
+
+  var state = { lib: 'gb37864', cat: 'all', ch: 'all', kw: '', flash: '', openCh: '' };
+
+  /* ======================================================================
+     标准库切换卡
+     ====================================================================== */
+  function renderLibSwitch() {
+    if (!$('libSwitch')) return;
+    $('libSwitch').innerHTML = ['gb37864', 'cl10'].map(function (k) {
+      var lib = CL.libs[k];
+      var total = CL.count(k);
+      var mng = CL.catCount(k, '管理'), tec = CL.catCount(k, '技术');
+      var secTotal = lib.chapters.reduce(function (a, c) { return a + c.secs.length; }, 0);
+      var on = state.lib === k;
+      return '' +
+        '<div class="card cl-lib' + (on ? ' on' : '') + '" data-lib-pick="' + k + '">' +
+          (on ? '<span class="on-flag">✓ 当前使用</span>' : '') +
+          '<div style="display:flex; align-items:flex-start; gap:14px;">' +
+            '<div style="width:46px; height:46px; border-radius:12px; background:' + (on ? 'var(--primary)' : 'var(--primary-light)') + '; color:' + (on ? '#fff' : 'var(--primary)') + '; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">' + (k === 'gb37864' ? '📘' : (k === 'cl10' ? '📐' : '🌐')) + '</div>' +
+            '<div style="flex:1; min-width:0;">' +
+              '<div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">' +
+                '<span style="font-size:15px; font-weight:600;">' + esc(lib.name) + '</span>' +
+                '<span class="badge">' + esc(lib.badge) + '</span>' +
+              '</div>' +
+              '<div style="font-size:12px; color:var(--text-tertiary); line-height:1.6;">' + esc(lib.fullName) + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex; align-items:flex-end; gap:20px; margin-top:14px;">' +
+            '<div>' +
+              '<div class="lib-num">' + total + '<em>条款</em></div>' +
+              '<div style="font-size:12px; color:var(--text-tertiary); margin-top:3px;">' + lib.chapters.length + ' 章 · ' + secTotal + ' 个二级节</div>' +
+            '</div>' +
+            '<div class="lib-split" style="margin-bottom:4px;">' +
+              '<span>管理要求 <b>' + mng + '</b></span><span>技术要求 <b>' + tec + '</b></span>' +
+            '</div>' +
+            '<button class="btn btn-sm" style="margin-left:auto;" data-lib-pick="' + k + '">' + (on ? '当前库' : '切换到此库') + '</button>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+
+    $('libSwitch').querySelectorAll('[data-lib-pick]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var k = el.getAttribute('data-lib-pick');
+        if (k === state.lib) return;
+        state.lib = k; state.ch = 'all'; state.kw = ''; state.openCh = '';
+        $('clSearch').value = '';
+        renderAll();
+        if (window.showToast) showToast('已切换到 ' + CL.libs[k].name + '（' + CL.count(k) + ' 条条款）', 'info');
+      });
+    });
+  }
+
+  /* ======================================================================
+     统计格 / 章节下拉
+     ====================================================================== */
+  function renderKpi() {
+    var k = state.lib, lib = CL.libs[k];
+    var total = CL.count(k);
+    var secTotal = lib.chapters.reduce(function (a, c) { return a + c.secs.length; }, 0);
+    var customCnt = CUSTOM.filter(function (c) { return c.lib === k; }).length;
+    var mng = CL.catCount(k, '管理'), tec = CL.catCount(k, '技术');
+    var cells = [
+      { l: '📋 条款总数', v: total, u: '条', m: lib.chapters.length + ' 章 · ' + secTotal + ' 个二级节' },
+      { l: '🗂 管理要求', v: mng, u: '条', m: '第 4 / 5 / 8 章 · 占比 ' + Math.round(mng / total * 100) + '%' },
+      { l: '🔬 技术要求', v: tec, u: '条', m: '第 6 / 7 章 · 占比 ' + Math.round(tec / total * 100) + '%' },
+      { l: '✎ 自定义条款', v: customCnt, u: '条', m: customCnt ? '已并入本库条款池' : '尚未新增' }
+    ];
+    $('libKpi').innerHTML = cells.map(function (c) {
+      return '<div class="stat">' +
+        '<div class="stat-label">' + c.l + '</div>' +
+        '<div class="stat-value">' + c.v + '<span class="stat-unit">' + c.u + '</span></div>' +
+        '<div class="stat-meta">' + c.m + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderChFilter() {
+    var sel = $('clChFilter');
+    sel.innerHTML = '<option value="all">全部章节</option>' + CL.libs[state.lib].chapters.map(function (c) {
+      return '<option value="' + c.ch + '">第 ' + c.ch + ' 章 · ' + esc(c.name) + '</option>';
+    }).join('');
+    sel.value = state.ch;
+  }
+
+  /* ======================================================================
+     数据筛选
+     ====================================================================== */
+  function currentRows() {
+    if (state.cat === 'custom') {
+      return CUSTOM.slice().sort(function (a, b) { return a.created < b.created ? 1 : -1; });
+    }
+    var base = CL.get(state.lib).map(function (x) {
+      return { id: x.id, name: x.name, lib: x.lib, ch: x.ch, chName: x.chName, sec: x.sec, secName: x.secName, cat: x.cat, custom: false };
+    });
+    CUSTOM.filter(function (c) { return c.lib === state.lib; }).forEach(function (c) {
+      base.push({ id: c.id, name: c.name, lib: c.lib, ch: c.ch, chName: c.chName, sec: c.sec, secName: c.secName, cat: c.cat, custom: true });
+    });
+    if (state.cat !== 'all') base = base.filter(function (x) { return x.cat === state.cat; });
+    if (state.ch !== 'all') base = base.filter(function (x) { return x.ch === state.ch; });
+    if (state.kw) {
+      var kw = state.kw.toLowerCase();
+      base = base.filter(function (x) {
+        return (x.id + ' ' + x.name + ' ' + x.secName).toLowerCase().indexOf(kw) >= 0;
+      });
+    }
+    return base;
+  }
+
+  /* ======================================================================
+     列表渲染
+     ====================================================================== */
+  function rowHtml(r, forceCustom) {
+    var custom = r.custom || forceCustom;
+    return '<div class="cl-row" data-cid="' + esc(r.id) + '">' +
+      '<span class="cid">' + esc(r.id) + '</span>' +
+      '<span class="cnm">' + esc(r.name) +
+        '<span class="sub"> · ' + esc(r.secName || '') + '</span>' +
+        (custom ? ' <span class="tag tag-success" style="height:18px;">自定义</span>' : '') +
+      '</span>' +
+      '<span class="tag ' + catTag(r.cat) + '">' + esc(r.cat) + '</span>' +
+      '<span class="cact">' +
+        '<button class="btn btn-sm" data-action="clause-lib-detail" data-lib="' + esc(r.lib) + '" data-id="' + esc(r.id) + '">详情</button>' +
+        (custom ? '<button class="btn btn-sm" data-action="clause-del" data-lib="' + esc(r.lib) + '" data-id="' + esc(r.id) + '">删除</button>' : '') +
+      '</span>' +
+    '</div>';
+  }
+
+  function renderList() {
+    var rows = currentRows();
+    var wrap = $('clList');
+    var isCustomTab = state.cat === 'custom';
+    var customOfLib = CUSTOM.filter(function (c) { return c.lib === state.lib; }).length;
+    var total = isCustomTab ? CUSTOM.length : (CL.count(state.lib) + customOfLib);
+
+    $('clCountHint').textContent = '显示 ' + rows.length + ' / ' + total + ' 条' +
+      (state.cat === 'all' ? '' : '（' + (state.cat === '管理' ? '管理要求' : state.cat === '技术' ? '技术要求' : '自定义条款') + '）');
+    $('clEmpty').style.display = rows.length ? 'none' : '';
+    wrap.style.display = rows.length ? '' : 'none';
+
+    var fb = $('clFilterBar'), tags = [];
+    if (state.ch !== 'all') tags.push('第 ' + state.ch + ' 章');
+    if (state.kw) tags.push('关键词「' + state.kw + '」');
+    if (state.cat !== 'all') tags.push(state.cat === '管理' ? '管理要求' : state.cat === '技术' ? '技术要求' : '自定义条款');
+    if (tags.length) { fb.style.display = 'flex'; $('clFilterText').textContent = '当前筛选：' + tags.join(' · '); }
+    else fb.style.display = 'none';
+
+    if (!rows.length) { wrap.innerHTML = ''; return; }
+
+    if (isCustomTab) {
+      var groups = {}, order = [];
+      rows.forEach(function (r) {
+        var g = r.libName || (CL.libs[r.lib] ? CL.libs[r.lib].name : r.lib);
+        if (!groups[g]) { groups[g] = []; order.push(g); }
+        groups[g].push(r);
+      });
+      wrap.innerHTML = order.map(function (g) {
+        return '<div class="cl-ch open">' +
+          '<div class="cl-ch-h" style="cursor:default;">' +
+            '<span class="no">✎</span><span class="nm">' + esc(g) + '</span>' +
+            '<span class="ct">' + groups[g].length + ' 条自定义</span>' +
+            '<span class="arw" style="visibility:hidden;">▶</span>' +
+          '</div>' +
+          '<div class="cl-ch-b">' + groups[g].map(function (r) { return rowHtml(r, true); }).join('') + '</div>' +
+        '</div>';
+      }).join('');
+      return;
+    }
+
+    var lib = CL.libs[state.lib], html = '';
+    lib.chapters.forEach(function (c, ci) {
+      var list = rows.filter(function (x) { return x.ch === c.ch; });
+      if (!list.length) return;
+      var open = state.openCh ? (c.ch === state.openCh) : (ci === 0);
+      html += '<div class="cl-ch' + (open ? ' open' : '') + '" data-ch="' + c.ch + '">';
+      html += '<div class="cl-ch-h">' +
+        '<span class="no">' + c.ch + '</span>' +
+        '<span class="nm">第 ' + c.ch + ' 章 ' + esc(c.name) + '</span>' +
+        '<span class="ct">' + list.length + ' 条条款</span>' +
+        '<span class="pct">' + CL.catOf(c.ch) + '要求</span>' +
+        '<span class="arw">▶</span>' +
+      '</div><div class="cl-ch-b">';
+      c.secs.forEach(function (s) {
+        var srows = list.filter(function (x) { return x.sec === s.n; });
+        if (!srows.length) return;
+        html += '<div class="cl-sec"><span>' + esc(s.n) + ' ' + esc(s.name) + '</span>' +
+          '<span class="line"></span><span class="cnt">' + srows.length + ' 条</span></div>';
+        html += srows.map(function (r) { return rowHtml(r, false); }).join('');
+      });
+      html += '</div></div>';
+    });
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('.cl-ch-h').forEach(function (h) {
+      h.addEventListener('click', function () {
+        if (h.style.cursor === 'default') return;
+        h.parentElement.classList.toggle('open');
+      });
+    });
+
+    if (state.flash) {
+      var t = wrap.querySelector('.cl-row[data-cid="' + state.flash + '"]');
+      if (t) {
+        t.classList.add('flash');
+        try { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {}
+      }
+      state.flash = '';
+    }
+  }
+
+  /* 注：页面底部原有「条款 · 评审要点」示例卡（#clDemoCard / renderDemo）
+     已按需求于 2026-09-23 去掉；条款解读改到「条款详情」弹窗内查看。 */
+
+  function renderAll() {
+    renderLibSwitch();
+    renderKpi();
+    renderChFilter();
+    renderList();
+    $('tabCustomCnt').textContent = CUSTOM.length;
+    $('listTitle').textContent = state.cat === 'custom' ? '自定义条款'
+      : (state.cat === 'all' ? '全部条款'
+      : (state.cat === '管理' ? '管理要求条款' : '技术要求条款'));
+  }
+
+  /* ---------- 页签 / 搜索 / 筛选 ---------- */
+  $('clTabs').querySelectorAll('.tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      state.cat = t.getAttribute('data-cat');
+      state.openCh = '';
+      renderAll();
+    });
+  });
+  var kwTimer;
+  $('clSearch').addEventListener('input', function (e) {
+    clearTimeout(kwTimer);
+    var v = e.target.value.trim();
+    kwTimer = setTimeout(function () { state.kw = v; renderList(); }, 160);
+  });
+  $('clChFilter').addEventListener('change', function (e) { state.ch = e.target.value; state.openCh = ''; renderList(); });
+  $('clFilterClear').addEventListener('click', function () {
+    state.ch = 'all'; state.kw = ''; state.cat = 'all'; state.openCh = '';
+    $('clSearch').value = ''; $('clChFilter').value = 'all';
+    $('clTabs').querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.getAttribute('data-cat') === 'all'); });
+    renderAll();
+  });
+  $('clExpandAll').addEventListener('click', function () {
+    document.querySelectorAll('#clList .cl-ch').forEach(function (c) { c.classList.add('open'); });
+  });
+  $('clCollapseAll').addEventListener('click', function () {
+    document.querySelectorAll('#clList .cl-ch').forEach(function (c) { c.classList.remove('open'); });
+  });
+
+  /* ======================================================================
+     共用：选项与校验工具
+     ====================================================================== */
+  function libOpts() {
+    return ['gb37864', 'cl10'].map(function (k) { return { v: k, t: CL.libs[k].name }; });
+  }
+  function chOpts(libKey) {
+    return CL.libs[libKey].chapters.map(function (c) { return { v: c.ch, t: '第 ' + c.ch + ' 章 · ' + c.name }; });
+  }
+  function secOpts(libKey, ch) {
+    var c = CL.libs[libKey].chapters.filter(function (x) { return x.ch === ch; })[0];
+    if (!c) return [];
+    return c.secs.map(function (s) { return { v: s.n, t: s.n + ' ' + s.name }; });
+  }
+  function secName(libKey, sec) {
+    var out = '';
+    CL.libs[libKey].chapters.forEach(function (c) {
+      c.secs.forEach(function (s) { if (s.n === sec) out = s.name; });
+    });
+    return out;
+  }
+  function nextId(libKey, sec) {
+    var used = {};
+    CL.get(libKey).forEach(function (x) { if (x.sec === sec) used[x.id] = 1; });
+    CUSTOM.filter(function (c) { return c.lib === libKey; }).forEach(function (x) { if (x.sec === sec) used[x.id] = 1; });
+    var n = 1;
+    while (used[sec + '.' + n]) n++;
+    return sec + '.' + n;
+  }
+  function idExists(libKey, id) {
+    if (CL.find(libKey, id)) return true;
+    return CUSTOM.some(function (c) { return c.lib === libKey && c.id === id; });
+  }
+  function optHtml(list, cur, ph) {
+    return '<option value="">' + ph + '</option>' + list.map(function (o) {
+      return '<option value="' + o.v + '"' + (o.v === cur ? ' selected' : '') + '>' + esc(o.t) + '</option>';
+    }).join('');
+  }
+
+  /* ======================================================================
+     弹窗一：新增 / 编辑条款
+     ====================================================================== */
+  function clauseNewModal(c) {
+    var editId = c.editid || '';
+    var isEdit = c.mode === 'edit' && !!editId;
+    var inited = isEdit ? CUSTOM.filter(function (x) { return x.id === editId; })[0] : null;
+    var M = { lib: 'cl10', ch: '', sec: '', id: '', name: '', text: '', points: '', evid: '', owner: '', eff: '', remark: '' };
+    if (inited) {
+      M = { lib: inited.lib, ch: inited.ch, sec: inited.sec, id: inited.id, name: inited.name,
+            text: inited.text || '', points: inited.points || '', evid: inited.evid || '',
+            owner: inited.owner || '', eff: inited.eff || '', remark: inited.remark || '' };
+    }
+
+    var stepHtml =
+      '<div class="cl-step">' +
+        '<span class="si on" data-step-ind="1"><span class="dt">1</span>填写条款信息</span><span class="sep"></span>' +
+        '<span class="si" data-step-ind="2"><span class="dt">2</span>校验与预览</span><span class="sep"></span>' +
+        '<span class="si" data-step-ind="3"><span class="dt">3</span>确认保存</span>' +
+      '</div>';
+
+    var step1Html =
+      '<div class="cl-pane on" data-step="1">' +
+        '<div class="cl-2col">' +
+          '<div class="form-item"><label class="form-label">所属标准库<span class="req">*</span></label>' +
+            '<select class="form-control" id="fLib">' + optHtml(libOpts(), M.lib, '请选择标准库') + '</select></div>' +
+          '<div class="form-item"><label class="form-label">所属章节<span class="req">*</span></label>' +
+            '<select class="form-control" id="fCh">' + optHtml(chOpts(M.lib), M.ch, '请选择章节') + '</select></div>' +
+          '<div class="form-item"><label class="form-label">所属二级节<span class="req">*</span></label>' +
+            '<select class="form-control" id="fSec">' + optHtml(secOpts(M.lib, M.ch), M.sec, M.ch ? '请选择二级节' : '请先选择章节') + '</select>' +
+            '<div class="cl-hint" id="fSecHint"></div></div>' +
+          '<div class="form-item"><label class="form-label">条款号<span class="req">*</span></label>' +
+            '<input class="form-control" id="fId" placeholder="如 7.5.13" value="' + esc(M.id) + '" />' +
+            '<div class="cl-hint" id="fIdHint">格式 x.y 或 x.y.z；同一标准库内不可重复</div></div>' +
+          '<div class="form-item"><label class="form-label">条款名称<span class="req">*</span></label>' +
+            '<input class="form-control" id="fName" placeholder="如 储存温度记录" value="' + esc(M.name) + '" />' +
+            '<div class="cl-hint" id="fNameHint"></div></div>' +
+          '<div class="form-item"><label class="form-label">条款类别<span style="font-size:11px; color:var(--text-tertiary); font-weight:400; margin-left:6px;">随章节自动归属</span></label>' +
+            '<input class="form-control" id="fCat" value="—" disabled style="background:var(--bg-disabled);" /></div>' +
+        '</div>' +
+        '<div class="form-item"><label class="form-label">条款原文<span class="req">*</span></label>' +
+          '<textarea class="form-control" id="fText" rows="4" placeholder="填写该条款的原文或等效表述（建议不少于 10 个字）">' + esc(M.text) + '</textarea>' +
+          '<div class="cl-hint" id="fTextHint"></div></div>' +
+        '<div class="cl-2col">' +
+          '<div class="form-item"><label class="form-label">评审要点<span style="font-size:11px; color:var(--text-tertiary); font-weight:400; margin-left:6px;">每行一条</span></label>' +
+            '<textarea class="form-control" id="fPoints" rows="3" placeholder="是否建立文件化程序&#10;是否保留可追溯记录">' + esc(M.points) + '</textarea></div>' +
+          '<div class="form-item"><label class="form-label">常见证据</label>' +
+            '<textarea class="form-control" id="fEvid" rows="3" placeholder="程序文件 · 记录表 · 培训记录">' + esc(M.evid) + '</textarea></div>' +
+          '<div class="form-item"><label class="form-label">建议责任人</label>' +
+            '<input class="form-control" id="fOwner" placeholder="如 质量主管 + 样本库主任" value="' + esc(M.owner) + '" /></div>' +
+          '<div class="form-item"><label class="form-label">生效日期</label>' +
+            '<input class="form-control" type="date" id="fEff" value="' + esc(M.eff) + '" /></div>' +
+        '</div>' +
+        '<div class="form-item"><label class="form-label">备注</label>' +
+          '<textarea class="form-control" id="fRemark" rows="2" placeholder="补充说明，如来源文件、适用场景等">' + esc(M.remark) + '</textarea></div>' +
+        '<div style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--primary-lighter); border-radius:8px; font-size:12.5px; color:var(--text-secondary);">' +
+          '<span>💡</span><span>选中「所属二级节」后，条款号会自动预填该节下一个可用编号，避免与存量条款撞号。</span>' +
+        '</div>' +
+      '</div>';
+
+    var step2Html =
+      '<div class="cl-pane" data-step="2">' +
+        '<div class="modal-section"><div class="modal-section-title">校验结果</div><div id="fChecks"></div></div>' +
+        '<div class="modal-section"><div class="modal-section-title">条款预览</div><div id="fPreview"></div></div>' +
+      '</div>';
+
+    var step3Html =
+      '<div class="cl-pane" data-step="3">' +
+        '<div class="cl-check"><span class="ic ok">✓</span><span class="tx">条款信息已通过全部校验，确认后写入条款库并立即生效。</span></div>' +
+        '<div style="margin-top:16px;">' +
+          '<div class="desc-item"><div class="desc-label">写入位置</div><div class="desc-value" id="fSummaryPath">—</div></div>' +
+          '<div class="desc-item"><div class="desc-label">条款状态</div><div class="desc-value">立即生效 · 纳入「条款自评 / 检查清单 / 智能报告」条款池</div></div>' +
+          '<div class="desc-item"><div class="desc-label">存储方式</div><div class="desc-value" id="fSummaryStore">—</div></div>' +
+        '</div>' +
+        '<div style="margin-top:16px; padding:10px 12px; background:var(--warning-bg); border-radius:8px; font-size:12.5px; color:#8a5000; line-height:1.75;">' +
+          '⚠️ 自定义条款与标准库条款分开展示，并在列表与详情中标注「自定义」来源，便于评审时区分。' +
+        '</div>' +
+      '</div>';
+
+    var batchHtml =
+      '<div class="cl-pane" data-pane="batch">' +
+        '<div class="modal-section">' +
+          '<div class="modal-section-title">📄 第一步 · 下载导入模板</div>' +
+          '<div style="display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--border-light); border-radius:8px;">' +
+            '<span style="font-size:22px;">📊</span>' +
+            '<div style="flex:1;"><div style="font-size:13px; font-weight:600;">条款批量导入模板.xlsx</div>' +
+            '<div style="font-size:11.5px; color:var(--text-tertiary);">列：标准库 · 章节 · 二级节 · 条款号 · 条款名称 · 条款类别 · 条款原文 · 评审要点 · 常见证据 · 建议责任人 · 生效日期</div></div>' +
+            '<button class="btn" data-action="toast" data-msg="模板下载中：条款批量导入模板.xlsx">下载模板</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="modal-section">' +
+          '<div class="modal-section-title">📥 第二步 · 上传文件并校验</div>' +
+          '<div class="cl-drop" id="fDrop">' +
+            '<div style="font-size:26px; margin-bottom:6px;">📁</div>' +
+            '<div style="font-size:13px; font-weight:600;">点击选择文件，或拖拽到此处</div>' +
+            '<div style="font-size:11.5px; color:var(--text-tertiary); margin-top:5px;">支持 .xlsx / .csv，单次不超过 500 条</div>' +
+          '</div>' +
+          '<div id="fImpResult" style="margin-top:14px;"></div>' +
+        '</div>' +
+        '<div class="modal-section">' +
+          '<div class="modal-section-title">📌 导入规则</div>' +
+          '<div class="cl-check"><span class="ic warn">!</span><span class="tx">条款号在同一标准库内 <b>重复的行会被跳过</b>，不影响其余行导入。</span></div>' +
+          '<div class="cl-check"><span class="ic warn">!</span><span class="tx">条款号格式不符合 <code>x.y</code> / <code>x.y.z</code> 的行标记为失败，需修正后重新导入。</span></div>' +
+          '<div class="cl-check"><span class="ic warn">!</span><span class="tx">「章节」「二级节」需与目标标准库中的既有节一致，否则归入「未分类」并提示人工确认。</span></div>' +
+        '</div>' +
+      '</div>';
+
+    return {
+      title: isEdit ? ('编辑自定义条款 — ' + esc(editId)) : '新增条款',
+      subtitle: isEdit ? '修改条款内容与归属，保存后立即在条款库生效'
+                      : '支持单条新增与批量导入；新增条款纳入「自定义条款」，并参与条款自评、检查清单与报告生成',
+      size: 'modal-xl',
+      body:
+        '<div style="display:flex; gap:8px; margin-bottom:16px;">' +
+          '<button class="btn' + (isEdit ? ' active' : ' active') + '" data-mode-pill="single" style="flex:1; height:38px;">✎ 单条新增</button>' +
+          (isEdit ? '' : '<button class="btn" data-mode-pill="batch" style="flex:1; height:38px;">📥 批量导入</button>') +
+        '</div>' +
+        '<div class="cl-pane on" data-pane="single">' + stepHtml + step1Html + step2Html + step3Html + '</div>' +
+        (isEdit ? '' : batchHtml),
+
+      footer:
+        '<button class="btn" data-modal-close>取消</button>' +
+        '<button class="btn" id="fPrev" style="display:none;">上一步</button>' +
+        '<button class="btn btn-primary" id="fNext">下一步：校验与预览</button>' +
+        '<button class="btn btn-primary" id="fSave" style="display:none;">确认保存</button>' +
+        '<button class="btn btn-primary" id="fSaveMore" style="display:none;">保存并继续新增</button>' +
+        '<button class="btn btn-primary" id="fImport" style="display:none; opacity:.5;">导入选中条款</button>',
+
+      onMount: function (root) {
+        var step = 1, importReady = false;
+        function q(id) { return root.querySelector('#' + id); }
+        var fLib = q('fLib'), fCh = q('fCh'), fSec = q('fSec'), fId = q('fId'), fName = q('fName'),
+            fCat = q('fCat'), fText = q('fText'), fPoints = q('fPoints'), fEvid = q('fEvid'),
+            fOwner = q('fOwner'), fEff = q('fEff'), fRemark = q('fRemark');
+
+        /* ---------- 联动 ---------- */
+        function refreshCh(cur) { fCh.innerHTML = optHtml(chOpts(fLib.value), cur, '请选择章节'); }
+        function refreshSec(cur) {
+          var opts = secOpts(fLib.value, fCh.value);
+          fSec.innerHTML = optHtml(opts, cur, fCh.value ? '请选择二级节' : '请先选择章节');
+          q('fSecHint').textContent = opts.length ? '该章共 ' + opts.length + ' 个二级节' : '';
+        }
+        function syncCat() {
+          fCat.value = (fLib.value && fCh.value) ? (CL.catOf(fCh.value) + '要求') : '—';
+        }
+        refreshCh(M.ch); refreshSec(M.sec); syncCat();
+
+        /* ---------- 字段级校验 ---------- */
+        function checkId(silent) {
+          var v = fId.value.trim(), hint = q('fIdHint');
+          fId.classList.remove('err');
+          if (!v) {
+            if (!silent) { hint.className = 'cl-hint'; hint.textContent = '格式 x.y 或 x.y.z；同一标准库内不可重复'; }
+            return false;
+          }
+          if (!/^\d+(\.\d+){1,2}$/.test(v)) {
+            fId.classList.add('err'); hint.className = 'cl-hint no';
+            hint.textContent = '✕ 格式不正确，应为 x.y 或 x.y.z（如 7.5.13）';
+            return false;
+          }
+          if (idExists(fLib.value, v) && v !== editId) {
+            fId.classList.add('err'); hint.className = 'cl-hint no';
+            var sug = fSec.value ? nextId(fLib.value, fSec.value) : '';
+            hint.textContent = '✕ 该条款号在 ' + CL.libs[fLib.value].name + ' 中已存在' + (sug ? '，建议使用 ' + sug : '');
+            return false;
+          }
+          hint.className = 'cl-hint ok'; hint.textContent = '✓ 条款号可用';
+          return true;
+        }
+        function checkName(silent) {
+          var v = fName.value.trim(), hint = q('fNameHint');
+          fName.classList.remove('err');
+          if (!v) { if (!silent) { hint.className = 'cl-hint'; hint.textContent = ''; } return false; }
+          if (v.length < 2) { fName.classList.add('err'); hint.className = 'cl-hint no'; hint.textContent = '✕ 条款名称至少 2 个字符'; return false; }
+          hint.className = 'cl-hint ok'; hint.textContent = '✓ 名称可用';
+          return true;
+        }
+        function checkText(silent) {
+          var v = fText.value.trim(), hint = q('fTextHint');
+          fText.classList.remove('err');
+          if (!v) { if (!silent) hint.textContent = ''; return false; }
+          if (v.length < 10) { hint.className = 'cl-hint no'; hint.textContent = '⚠ 内容过短（' + v.length + ' 字），将标记为「警告」但不阻断保存'; return false; }
+          hint.className = 'cl-hint ok'; hint.textContent = '✓ 长度符合要求（' + v.length + ' 字）';
+          return true;
+        }
+
+        fLib.addEventListener('change', function () { refreshCh(''); refreshSec(''); syncCat(); fId.value = ''; checkId(true); });
+        fCh.addEventListener('change', function () { refreshSec(''); syncCat(); fId.value = ''; checkId(true); });
+        fSec.addEventListener('change', function () {
+          if (fSec.value && !fId.value.trim()) { fId.value = nextId(fLib.value, fSec.value); checkId(false); }
+        });
+        fId.addEventListener('input', function () { checkId(false); });
+        fName.addEventListener('input', function () { checkName(false); });
+        fText.addEventListener('input', function () { checkText(false); });
+        checkId(true); checkName(true); checkText(true);
+
+        /* ---------- 汇总校验 ---------- */
+        function validate() {
+          var id = fId.value.trim();
+          var v = {
+            id: /^\d+(\.\d+){1,2}$/.test(id),
+            dup: id ? !(idExists(fLib.value, id) && id !== editId) : false,
+            name: fName.value.trim().length >= 2,
+            sec: !!fSec.value,
+            text: fText.value.trim().length >= 10,
+            store: storageOK
+          };
+          v.pass = v.id && v.dup && v.name && v.sec;
+          return v;
+        }
+        function renderChecks() {
+          var v = validate();
+          var sug = (fSec.value && !v.dup) ? nextId(fLib.value, fSec.value) : '';
+          var items = [
+            { k: v.id, block: true, ok: '条款号格式正确（' + esc(fId.value.trim() || '—') + '）', no: '条款号必填，且需符合 x.y 或 x.y.z 格式' },
+            { k: v.dup, block: true, ok: '条款号在 ' + CL.libs[fLib.value].name + ' 中唯一', no: '条款号与既有条款重复' + (sug ? '，可用编号：<span class="fx">' + esc(sug) + '</span>' : '') },
+            { k: v.name, block: true, ok: '条款名称已填写（' + esc(fName.value.trim()) + '）', no: '条款名称必填，且不少于 2 个字符' },
+            { k: v.sec, block: true, ok: '章节归属完整（第 ' + esc(fCh.value || '—') + ' 章 · ' + esc(fSec.value || '—') + ' ' + esc(secName(fLib.value, fSec.value)) + '）', no: '请选择所属章节与二级节' },
+            { k: v.text, block: false, ok: '条款原文长度符合要求（' + fText.value.trim().length + ' 字）', no: '条款原文少于 10 字，将标记为「警告」但不阻断保存' },
+            { k: v.store, block: false, ok: '本地存储可用，条款刷新后仍然保留', no: '本地存储不可用，条款仅本次会话有效' }
+          ];
+          q('fChecks').innerHTML = items.map(function (it) {
+            var ic = it.k ? 'ok' : (it.block ? 'no' : 'warn');
+            var mk = it.k ? '✓' : (it.block ? '✕' : '!');
+            return '<div class="cl-check"><span class="ic ' + ic + '">' + mk + '</span><span class="tx">' + (it.k ? it.ok : it.no) + '</span></div>';
+          }).join('');
+          renderPreview(v);
+          return v;
+        }
+        function renderPreview(v) {
+          var cat = fCh.value ? CL.catOf(fCh.value) : '';
+          var chName = fCh.value
+            ? CL.libs[fLib.value].chapters.filter(function (x) { return x.ch === fCh.value; })[0].name : '';
+          var pts = toList(fPoints.value);
+          q('fPreview').innerHTML =
+            '<div class="cl-prev">' +
+              '<div style="display:flex; align-items:center; flex-wrap:wrap;">' +
+                '<span class="pv-id">' + esc(fId.value.trim() || '—') + '</span>' +
+                '<span class="pv-nm">' + esc(fName.value.trim() || '（未填写条款名称）') + '</span>' +
+              '</div>' +
+              '<div class="pv-meta">' +
+                '<span class="tag tag-primary">' + esc(CL.libs[fLib.value].name) + '</span>' +
+                '<span class="tag tag-default">第 ' + esc(fCh.value || '—') + ' 章' + (chName ? ' ' + esc(chName) : '') + '</span>' +
+                '<span class="tag tag-default">' + esc(fSec.value || '—') + ' ' + esc(secName(fLib.value, fSec.value)) + '</span>' +
+                (cat ? '<span class="tag ' + catTag(cat) + '">' + esc(cat) + '要求</span>' : '') +
+                '<span class="tag tag-success">自定义</span>' +
+                (v.text ? '' : '<span class="tag tag-warning">原文待补充</span>') +
+              '</div>' +
+              '<div class="pv-tx">' + esc(fText.value.trim() || '（未填写）').replace(/\n/g, '<br>') + '</div>' +
+              (pts.length ? '<div style="margin-top:10px; font-size:12px; color:var(--text-secondary); line-height:1.9;">' +
+                '<b style="color:var(--text-primary);">评审要点</b><br>' + pts.map(function (p, i) { return (i + 1) + '. ' + esc(p); }).join('<br>') + '</div>' : '') +
+              (fEvid.value.trim() ? '<div style="margin-top:8px; font-size:12px; color:var(--text-secondary); line-height:1.9;">' +
+                '<b style="color:var(--text-primary);">常见证据</b><br>' + esc(fEvid.value.trim()) + '</div>' : '') +
+            '</div>';
+        }
+
+        /* ---------- 步骤与页签控制 ---------- */
+        function setStep(n) {
+          step = n;
+          root.querySelectorAll('.cl-pane[data-step]').forEach(function (p) {
+            p.classList.toggle('on', p.getAttribute('data-step') === String(n));
+          });
+          root.querySelectorAll('[data-step-ind]').forEach(function (s) {
+            var i = +s.getAttribute('data-step-ind');
+            s.classList.toggle('on', i === n);
+            s.classList.toggle('done', i < n);
+            s.querySelector('.dt').textContent = i < n ? '✓' : String(i);
+          });
+          var bPrev = q('fPrev'), bNext = q('fNext'), bSave = q('fSave'), bMore = q('fSaveMore');
+          bPrev.style.display = n > 1 ? '' : 'none';
+          bNext.style.display = n < 3 ? '' : 'none';
+          bNext.textContent = n === 1 ? '下一步：校验与预览' : '下一步：确认保存';
+          bSave.style.display = n === 3 ? '' : 'none';
+          bMore.style.display = n === 3 ? '' : 'none';
+        }
+        function switchMode(m) {
+          root.querySelectorAll('[data-mode-pill]').forEach(function (b) {
+            b.classList.toggle('active', b.getAttribute('data-mode-pill') === m);
+          });
+          root.querySelectorAll('.cl-pane[data-pane]').forEach(function (p) {
+            p.classList.toggle('on', p.getAttribute('data-pane') === m);
+          });
+          q('fPrev').style.display = 'none';
+          q('fNext').style.display = m === 'single' ? '' : 'none';
+          q('fSave').style.display = 'none';
+          q('fSaveMore').style.display = 'none';
+          var imp = q('fImport');
+          if (imp) {
+            imp.style.display = m === 'batch' ? '' : 'none';
+            imp.style.opacity = importReady ? '1' : '.5';
+          }
+          if (m === 'single') setStep(step);
+        }
+        root.querySelectorAll('[data-mode-pill]').forEach(function (b) {
+          b.addEventListener('click', function () { switchMode(b.getAttribute('data-mode-pill')); });
+        });
+
+        q('fPrev').addEventListener('click', function () { setStep(Math.max(1, step - 1)); });
+        q('fNext').addEventListener('click', function () {
+          if (step === 1) {
+            checkId(false); checkName(false); checkText(false);
+            var v = validate();
+            renderChecks();
+            if (!v.pass) { if (window.showToast) showToast('请先修正校验未通过的必填项', 'error'); return; }
+            setStep(2);
+          } else if (step === 2) {
+            var v2 = validate();
+            if (!v2.pass) { if (window.showToast) showToast('校验未通过，无法进入确认步骤', 'error'); renderChecks(); return; }
+            q('fSummaryPath').textContent = CL.libs[fLib.value].name + ' › 第 ' + fCh.value + ' 章 › ' + fSec.value + ' ' + secName(fLib.value, fSec.value) + ' › ' + fId.value.trim();
+            q('fSummaryStore').textContent = storageOK
+              ? '浏览器本地存储（刷新后保留）；点「保存并继续新增」可连续录入'
+              : '当前环境本地存储不可用，降级为仅本次会话有效';
+            setStep(3);
+          }
+        });
+
+        /* ---------- 保存 ---------- */
+        function doSave(keepGoing) {
+          var v = validate();
+          if (!v.pass) { if (window.showToast) showToast('校验未通过，无法保存', 'error'); setStep(2); renderChecks(); return; }
+          var chObj = CL.libs[fLib.value].chapters.filter(function (x) { return x.ch === fCh.value; })[0];
+          var rec = {
+            id: fId.value.trim(), name: fName.value.trim(),
+            lib: fLib.value, libName: CL.libs[fLib.value].name,
+            ch: fCh.value, chName: chObj.name,
+            sec: fSec.value, secName: secName(fLib.value, fSec.value),
+            cat: CL.catOf(fCh.value),
+            text: fText.value.trim(), points: fPoints.value, evid: fEvid.value.trim(),
+            owner: fOwner.value.trim(), eff: fEff.value, remark: fRemark.value.trim(),
+            created: new Date().toISOString().slice(0, 16).replace('T', ' ')
+          };
+          if (isEdit && inited) {
+            CUSTOM = CUSTOM.filter(function (x) { return !(x.id === inited.id && x.lib === inited.lib); });
+          }
+          CUSTOM.push(rec);
+          saveCustom(CUSTOM);
+
+          state.lib = rec.lib; state.flash = rec.id; state.openCh = rec.ch;
+          state.kw = ''; state.ch = 'all'; state.cat = 'all';
+          $('clSearch').value = ''; $('clChFilter').value = 'all';
+          $('clTabs').querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.getAttribute('data-cat') === 'all'); });
+          renderAll();
+          if (window.showToast) {
+            showToast((isEdit ? '已更新条款 ' : '已新增条款 ') + rec.id + ' ' + rec.name +
+              (storageOK ? '' : '（本地存储不可用，仅本次会话有效）'), storageOK ? 'success' : 'error');
+          }
+          if (keepGoing) {
+            ['fId', 'fName', 'fText', 'fPoints', 'fEvid', 'fOwner', 'fEff', 'fRemark'].forEach(function (id) {
+              var el = q(id);
+              if (el) { el.value = ''; el.classList.remove('err'); }
+            });
+            var h1 = q('fIdHint'); h1.className = 'cl-hint'; h1.textContent = '格式 x.y 或 x.y.z；同一标准库内不可重复';
+            var h2 = q('fNameHint'); h2.className = 'cl-hint'; h2.textContent = '';
+            var h3 = q('fTextHint'); h3.className = 'cl-hint'; h3.textContent = '';
+            if (fSec.value) { fId.value = nextId(fLib.value, fSec.value); checkId(false); }
+            setStep(1);
+          } else {
+            closeModal();
+          }
+        }
+        q('fSave').addEventListener('click', function () { doSave(false); });
+        q('fSaveMore').addEventListener('click', function () { doSave(true); });
+
+        /* ---------- 批量导入（演示级） ---------- */
+        var drop = q('fDrop');
+        var IMP = [
+          { id: '4.1.9',  name: '公正性年度评估',     lib: 'cl10', ch: '4', sec: '4.1' },
+          { id: '7.5.13', name: '储存温度记录复核',   lib: 'cl10', ch: '7', sec: '7.5' },
+          { id: '6.2.11', name: '人员能力再评估',     lib: 'cl10', ch: '6', sec: '6.2' }
+        ];
+        if (drop) {
+          drop.addEventListener('click', function () {
+            importReady = true;
+            q('fImpResult').innerHTML =
+              '<div style="font-size:12.5px; font-weight:600; margin-bottom:8px;">已解析 条款批量导入_20260917.xlsx · 共 5 行</div>' +
+              '<div class="cl-imp-row"><span class="st" style="background:var(--success);">✓</span><span class="fn">格式正确、无重复，可直接导入</span><span class="msg">3 行</span></div>' +
+              '<div class="cl-imp-row"><span class="st" style="background:var(--warning);">!</span><span class="fn">条款号与标准库既有条款重复，已跳过</span><span class="msg">1 行</span></div>' +
+              '<div class="cl-imp-row"><span class="st" style="background:var(--error);">✕</span><span class="fn">条款号格式不合法（如 <code>7.5.1.2.3</code>）</span><span class="msg">1 行 · 需修正</span></div>' +
+              '<div style="margin-top:12px; display:flex; gap:10px; align-items:center;">' +
+                '<button class="btn" data-action="toast" data-msg="已下载校验失败明细.csv，请修正后重新导入">下载失败明细</button>' +
+                '<span style="font-size:12px; color:var(--text-tertiary);">将导入 3 条，跳过 2 条</span>' +
+              '</div>';
+            q('fImport').style.opacity = '1';
+          });
+        }
+        var btnImp = q('fImport');
+        if (btnImp) {
+          btnImp.addEventListener('click', function () {
+            if (!importReady) { if (window.showToast) showToast('请先选择要导入的文件', 'error'); return; }
+            var now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            var n = 0;
+            IMP.forEach(function (x) {
+              if (idExists(x.lib, x.id)) return;
+              var chObj = CL.libs[x.lib].chapters.filter(function (c) { return c.ch === x.ch; })[0];
+              CUSTOM.push({
+                id: x.id, name: x.name, lib: x.lib, libName: CL.libs[x.lib].name,
+                ch: x.ch, chName: chObj.name, sec: x.sec, secName: secName(x.lib, x.sec),
+                cat: CL.catOf(x.ch),
+                text: '按 ' + CL.libs[x.lib].name + ' 要求执行并保留可追溯记录。',
+                points: '', evid: '', owner: '', eff: '', remark: '批量导入', created: now
+              });
+              n++;
+            });
+            saveCustom(CUSTOM);
+            state.lib = 'cl10'; state.cat = 'custom'; state.ch = 'all'; state.kw = ''; state.openCh = '';
+            $('clSearch').value = ''; $('clChFilter').value = 'all';
+            $('clTabs').querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.getAttribute('data-cat') === 'custom'); });
+            renderAll();
+            if (window.showToast) showToast('已导入 ' + n + ' 条条款，可在「自定义条款」页签查看', 'success');
+            closeModal();
+          });
+        }
+
+        setStep(1);
+        try { fLib.focus(); } catch (e) {}
+      }
+    };
+  }
+  if (typeof MODALS !== 'undefined') MODALS['clause-new'] = clauseNewModal;
+
+  /* ======================================================================
+     弹窗二：条款详情
+     ====================================================================== */
+  function libDetailModal(c) {
+    var libKey = c.lib || state.lib;
+    var custom = CUSTOM.filter(function (x) { return x.lib === libKey && x.id === c.id; })[0];
+    var item = custom || CL.find(libKey, c.id);
+    if (!item) return { toastOnly: true, toastMsg: '未找到条款 ' + (c.id || '') };
+
+    var isCustom = !!custom;
+    var libName = CL.libs[item.lib].name;
+    var text = item.text || ('应按 ' + libName + ' 第 ' + item.ch + ' 章要求，对「' + item.name + '」建立文件化程序、明确岗位职责，并保留可追溯的实施记录。');
+    var pts = toList(item.points);
+    if (!pts.length) pts = [
+      '是否建立对应的程序文件并受控发布',
+      '是否保留条款执行的客观证据记录',
+      '相关人员是否接受培训 / 授权并考核合格',
+      '发现偏离时是否有处置与纠正记录'
+    ];
+
+    /* 条款解读：标准解读段落 + 五类评审方式（数据源 assets/clause-reading.js?v=20260924j） */
+    var reading = (window.CLAUSE_READING && window.CLAUSE_READING.build)
+      ? window.CLAUSE_READING.build({
+          id: item.id, name: item.name, lib: item.lib,
+          ch: item.ch, chName: item.chName, sec: item.sec, secName: item.secName,
+          text: text, points: item.points
+        }, libName)
+      : null;
+
+    return {
+      title: item.id + ' ' + item.name,
+      subtitle: libName + ' · 第 ' + item.ch + ' 章 ' + item.chName + ' · ' + item.sec + ' ' + item.secName,
+      size: 'modal-lg',
+      body:
+        '<div class="modal-section">' +
+          '<div class="modal-section-title">条款信息</div>' +
+          '<div class="desc-list">' +
+            '<div class="desc-item"><div class="desc-label">条款编号</div><div class="desc-value">' + esc(item.id) + '</div></div>' +
+            '<div class="desc-item"><div class="desc-label">条款名称</div><div class="desc-value">' + esc(item.name) + '</div></div>' +
+            '<div class="desc-item"><div class="desc-label">所属标准库</div><div class="desc-value">' + esc(libName) + '</div></div>' +
+            '<div class="desc-item"><div class="desc-label">条款类别</div><div class="desc-value">' + esc(item.cat) + '要求</div></div>' +
+            '<div class="desc-item"><div class="desc-label">章节归属</div><div class="desc-value">第 ' + esc(item.ch) + ' 章 ' + esc(item.chName) + ' › ' + esc(item.sec) + ' ' + esc(item.secName) + '</div></div>' +
+            '<div class="desc-item"><div class="desc-label">条款来源</div><div class="desc-value">' + (isCustom ? '<span class="tag tag-success">自定义</span> <span style="font-size:12px;color:var(--text-tertiary);">' + esc(custom.created || '') + '</span>' : '<span class="tag tag-primary">标准库内置</span>') + '</div></div>' +
+            '<div class="desc-item"><div class="desc-label">自评状态</div><div class="desc-value"><span class="tag tag-success">已完成</span></div></div>' +
+            '<div class="desc-item"><div class="desc-label">关联材料</div><div class="desc-value">3 份</div></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="modal-section">' +
+          '<div class="modal-section-title">条款原文</div>' +
+          '<div style="font-size:13px; line-height:1.9; color:var(--text-secondary); background:var(--bg-page); padding:12px 14px; border-radius:6px;">' + esc(text) + '</div>' +
+        '</div>' +
+        (reading ?
+        '<div class="modal-section">' +
+          '<div class="modal-section-title">条款解读</div>' +
+          '<div class="cl-read">' +
+            '<div class="cl-read-tag">【标准解读】</div>' +
+            reading.interp.map(function (p) { return '<p class="cl-read-p">' + esc(p) + '</p>'; }).join('') +
+            '<div class="cl-read-tag">【评审方式】</div>' +
+            '<div class="cl-methods">' +
+              reading.methods.map(function (m) {
+                return '<div class="cl-method' + (m.main ? ' main' : '') + '">' +
+                  '<div class="cl-method-h">' +
+                    '<span class="cl-method-n">' + m.icon + ' 【' + esc(m.n) + '】</span>' +
+                    (m.main ? '<span class="cl-method-flag">建议主用</span>' : '') +
+                  '</div>' +
+                  '<div class="cl-method-d">' + esc(m.desc) + '</div>' +
+                  (m.focus ? '<div class="cl-method-f">本条重点：' + esc(m.focus) + '</div>' : '') +
+                '</div>';
+              }).join('') +
+            '</div>' +
+            '<div class="cl-read-note">标「建议主用」者为该条款评审时的优先取证方式；五类方式可组合使用，互不替代。</div>' +
+          '</div>' +
+        '</div>' : '') +
+        '<div class="modal-section">' +
+          '<div class="modal-section-title">评审要点</div>' +
+          '<div class="timeline">' + pts.map(function (p, i) {
+            return '<div class="tl-item done"><div class="tl-time">要点 ' + (i + 1) + '</div><div class="tl-title">' + esc(p) + '</div></div>';
+          }).join('') + '</div>' +
+        '</div>' +
+        '<div class="modal-section">' +
+          '<div class="modal-section-title">佐证材料</div>' +
+          '<div class="file-card"><div class="file-icon">📄</div><div class="file-meta"><div class="file-name">' + esc(item.name) + '管理程序 V2.1.pdf</div><div class="file-sub">1.2 MB · 2026-08-20 上传</div></div><button class="btn btn-sm" data-modal-close data-toast="正在预览材料">预览</button></div>' +
+          '<div class="file-card"><div class="file-icon">📊</div><div class="file-meta"><div class="file-name">条款执行记录表.xlsx</div><div class="file-sub">86 KB · 2026-08-22 上传</div></div><button class="btn btn-sm" data-modal-close data-toast="正在预览材料">预览</button></div>' +
+        '</div>' +
+        (item.remark ? '<div class="modal-section"><div class="modal-section-title">备注</div><div style="font-size:12.5px; color:var(--text-secondary);">' + esc(item.remark) + '</div></div>' : '') +
+        (item.owner ? '<div class="modal-section"><div class="modal-section-title">建议责任人</div><div style="font-size:12.5px; color:var(--text-secondary);">' + esc(item.owner) + '</div></div>' : ''),
+      footer:
+        '<button class="btn" data-modal-close>关闭</button>' +
+        (isCustom
+          ? '<button class="btn" data-action="clause-del" data-lib="' + esc(item.lib) + '" data-id="' + esc(item.id) + '">删除该条款</button>' +
+            '<button class="btn" data-action="clause-new" data-mode="edit" data-editid="' + esc(item.id) + '">编辑</button>'
+          : '') +
+        '<a class="btn btn-primary" href="self-assessment.html?lib=' + esc(item.lib) + '&amp;id=' + encodeURIComponent(item.id) + '&amp;from=clause-lib">去自评</a>'
+    };
+  }
+  if (typeof MODALS !== 'undefined') MODALS['clause-lib-detail'] = libDetailModal;
+
+  /* ======================================================================
+     弹窗三：删除自定义条款（二次确认）
+     ====================================================================== */
+  function libDeleteModal(c) {
+    var rec = CUSTOM.filter(function (x) { return x.lib === c.lib && x.id === c.id; })[0];
+    if (!rec) return { toastOnly: true, toastMsg: '未找到该自定义条款' };
+    return {
+      title: '删除自定义条款',
+      subtitle: '该操作只影响自定义条款，标准库内置条款不受影响',
+      body:
+        '<div class="cl-check"><span class="ic warn">!</span><span class="tx">即将删除 <b>' + esc(rec.id) + ' ' + esc(rec.name) + '</b>（' + esc(rec.libName) + '）。删除后该条款将从条款池、条款自评与检查清单中移除。</span></div>' +
+        '<div style="margin-top:16px; padding:10px 12px; background:var(--warning-bg); border-radius:8px; font-size:12.5px; color:#8a5000;">此操作不可撤销，如需保留请选择「取消」。</div>',
+      footer: '<button class="btn" data-modal-close>取消</button>' +
+              '<button class="btn btn-primary" data-modal-close data-cl-del="1" data-toast="已删除自定义条款">确认删除</button>',
+      onMount: function (root) {
+        var btn = root.querySelector('[data-cl-del]');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+          CUSTOM = CUSTOM.filter(function (x) { return !(x.lib === c.lib && x.id === c.id); });
+          saveCustom(CUSTOM);
+          if (state.flash === c.id) state.flash = '';
+          renderAll();
+          if (window.showToast) showToast('已删除自定义条款 ' + c.id, 'success');
+        });
+      }
+    };
+  }
+  if (typeof MODALS !== 'undefined') MODALS['clause-del'] = libDeleteModal;
+
+  /* ---------- 启动 ---------- */
+  renderAll();
+})();
+</script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="EIVgvpI9bNWW8a0IJjYmGk">
+<head data-page-node-id="5iIa5KqpWgLAgayjJv3WPP">
+<meta charset="UTF-8" data-page-node-id="lLQC9B9NAhOlh8Wa9nbslR" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="vgGnJ50Kuf93I9YYdlscCG" />
+<title>历史评审记录 - CNAS 迎检</title>
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" data-page-node-id="ni1oDrhHdTnhJGHT2cLnll" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+</head>
+<body data-page-node-id="Xd8ln19pUXBoseK5tUdJFN">
+<div class="layout" data-page-node-id="QZz2bSclv2qtTeVuIGdG5m">
+  <aside class="sidebar" data-page-node-id="YmUxgaDzAUlkhOIxh5NJNU">
+    <div class="sidebar-header" data-page-node-id="gIDaZA2leoUg66rwETxtuC">
+      <div class="sidebar-logo" data-page-node-id="pjKmjCiA6TByUKEgUarlFJ">◈</div>
+      <div class="sidebar-title" data-page-node-id="SMldttIKKBZBGsvA5VmdLt">体系管理智能体</div>
+      <div class="sidebar-collapse-btn" data-page-node-id="Spl7vnXFvtK2ExWvjR8oMc">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3 active" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main" data-page-node-id="r1qtSBhsGGP0KDnUAPaYbW">
+    <header class="topbar" data-page-node-id="cnJZCGN6CJSGHBN15OY8VZ">
+      <div class="breadcrumb" data-page-node-id="dvnSGBM8yU7e5xNybrOZPt">
+        <span data-page-node-id="fYJ1BMrFhE7nQMMAEvzsyo">CNAS 迎检</span><span class="sep" data-page-node-id="OrPA1yWoZqBSvINEwfj1UV">/</span>
+        <span>评审档案</span><span class="sep">/</span>
+        <span class="current" data-page-node-id="7ZCj6PutyHqJX6sn2sWMmP">历史评审记录</span>
+      </div>
+      <div class="topbar-right" data-page-node-id="9X8MTnvRvfaRXB0HGacX4d">
+        <div class="topbar-icon-btn" data-page-node-id="gGscl9sGPgzkS9NeG3hDlT">🔍</div><div class="topbar-icon-btn" data-page-node-id="yG9r5Qo13OStqHbYFhApvI">🔔</div>
+        <div class="user-chip" data-page-node-id="YOIwZcf0xbZDu3TbYhCpOC"><div class="user-avatar" data-page-node-id="7hcU0S8qfZ4iEx7N6DxhG2">质</div><span data-page-node-id="wkqXPCfNXSugKrlCCrSr52">质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content" data-page-node-id="GOdEk69Nrq3IbmwHpDfa49">
+      <div class="page-header" data-page-node-id="h7LQWoZj22IUl1qvqrBRA8">
+        <div data-page-node-id="vkfWWfsJDCFSGgnGWQBZLB">
+          <div class="page-title" data-page-node-id="Eb2BizwInnvY8PLAgpDKwh">历史评审记录</div>
+          <div class="page-desc" data-page-node-id="AoA6W5w8qAtZxggwlDiRhW">查阅历次评审档案、整改记录与评审结论，支持版本对比与趋势分析</div>
+        </div>
+        <div class="page-actions" data-page-node-id="Dq9634Ydx7hVOh0IWbmMMr">
+          <button class="btn" data-action="history-trend" data-page-node-id="5bkudhro6mNb8BSMwXw72Y">📊 趋势分析</button>
+          <button class="btn" data-action="history-export" data-page-node-id="ptVaC7PR8IjtzSJ8tBgSAB">📤 导出档案</button>
+          <button class="btn btn-primary" data-action="history-upload" data-page-node-id="ZAXxDJvw30utLekDLIZiX3">＋ 上传历史档案</button>
+        </div>
+      </div>
+
+      <!-- 时间轴概览 -->
+      <div class="card" style="margin-bottom:16px;" data-page-node-id="dI3XCq6i78tunCUFHGRvRS">
+        <div class="card-header" data-page-node-id="9pyqNVwqilteRvoJ098S1u">
+          <div class="card-title" data-page-node-id="IwpvMgRIC6n6GCCxSUTSiz">评审档案时间轴</div>
+          <span style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="CH8uvXxl6m922Aitlkg8ld">共 5 次评审记录</span>
+        </div>
+
+        <div style="position:relative; padding:8px 0;" data-page-node-id="f9LFcdMeAins0D8W5PFZWo">
+          <div style="position:absolute; left:120px; top:0; bottom:0; width:2px; background:var(--border-light);" data-page-node-id="2DTS3Uz8TqbOy7z47cxxP0"></div>
+
+          <div style="display:flex; align-items:center; gap:16px; padding:14px 0; position:relative;" data-page-node-id="mvSAt2KTkYqXCz1GTGXC2A">
+            <div style="width:110px; text-align:right; color:var(--primary); font-weight:600;" data-page-node-id="dEF7kkGs0u4QhMM7yF9l3f">2026-Q4</div>
+            <div style="position:absolute; left:113px; width:14px; height:14px; background:var(--primary); border:3px solid #fff; border-radius:50%; box-shadow:0 0 0 2px var(--primary);" data-page-node-id="2HBhmFEHphu7zhEAWdPM0T"></div>
+            <div style="margin-left:30px; flex:1; padding:12px 16px; background:var(--primary-lighter); border:1px solid var(--primary-100); border-radius:8px;" data-page-node-id="8IjGP8DmlCA2A2FaCtWdg5">
+              <div style="display:flex; justify-content:space-between; align-items:center;" data-page-node-id="xIwXCEAugjC5UC2mqd2TFe">
+                <strong data-page-node-id="Y2KjfJrGuN0XNKDT316rub">当前评审周期 · CNAS 2026 复审</strong>
+                <span class="tag tag-primary" data-page-node-id="37BzFtuFVsGrwbeEvRGOaQ">进行中</span>
+              </div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;" data-page-node-id="MDhzIo2Tw2NZrS4xI1AvOp">2026-09-01 ~ 2027-01-15 · 负责人 陈主管 · 30 个条款</div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px; padding:14px 0; position:relative;" data-page-node-id="1RWRVn5BwLTpLFCBnEFDlN">
+            <div style="width:110px; text-align:right; color:var(--text-secondary); font-weight:600;" data-page-node-id="0CJufGB8t4rxVSGb8f9b1x">2024-Q4</div>
+            <div style="position:absolute; left:113px; width:14px; height:14px; background:var(--success); border:3px solid #fff; border-radius:50%; box-shadow:0 0 0 2px var(--success);" data-page-node-id="Fq4B7ukvYzTuD9RX9EGKTZ"></div>
+            <div style="margin-left:30px; flex:1; padding:12px 16px; background:#fff; border:1px solid var(--border); border-radius:8px;" data-page-node-id="l1jNSC4OHFeEYJr8IePce1">
+              <div style="display:flex; justify-content:space-between; align-items:center;" data-page-node-id="DTTQsVKVKRwvs6YE70Duss">
+                <strong data-page-node-id="vEGiMLdJIEP4ZaWoFDd5e4">CNAS 2024 初次评审</strong>
+                <span class="tag tag-success" data-page-node-id="Pna2yvxvHM9MmfEQtSbwHG">通过</span>
+              </div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;" data-page-node-id="dtMo7CMVcnZ2edd2nv42Cx">2024-08-15 ~ 2024-12-20 · 负责人 陈主管 · 30/30 符合 · 0 不符合</div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px; padding:14px 0; position:relative;" data-page-node-id="BBPVXfD0FsG55qaaPo1hFa">
+            <div style="width:110px; text-align:right; color:var(--text-secondary); font-weight:600;" data-page-node-id="twv4L92jRICZeeIXS2hjXx">2022-Q3</div>
+            <div style="position:absolute; left:113px; width:14px; height:14px; background:var(--warning); border:3px solid #fff; border-radius:50%; box-shadow:0 0 0 2px var(--warning);" data-page-node-id="KeHGyXK4HNEev5jAnPvf8D"></div>
+            <div style="margin-left:30px; flex:1; padding:12px 16px; background:#fff; border:1px solid var(--border); border-radius:8px;" data-page-node-id="a5wEHdO8Hrcbh5VCFeU3iV">
+              <div style="display:flex; justify-content:space-between; align-items:center;" data-page-node-id="dGH6xDUDnNHdpv8SIsJoIY">
+                <strong data-page-node-id="ywWAvuEsKinnCnSTgpsybe">内部审核（预评审）</strong>
+                <span class="tag tag-warning" data-page-node-id="DzCJlpdhbaJo7bhj9Q3MqB">部分符合</span>
+              </div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;" data-page-node-id="ICFRk8khFou1L2imZ58BKg">2022-07-10 ~ 2022-09-30 · 负责人 王主管 · 27/30 符合 · 3 整改</div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px; padding:14px 0; position:relative;" data-page-node-id="YEH9Sq7aaiENXQbBcrQ7Gp">
+            <div style="width:110px; text-align:right; color:var(--text-secondary); font-weight:600;" data-page-node-id="jjJJKk41e27fYyji7AdShY">2020-Q4</div>
+            <div style="position:absolute; left:113px; width:14px; height:14px; background:var(--success); border:3px solid #fff; border-radius:50%; box-shadow:0 0 0 2px var(--success);" data-page-node-id="fIDN4BVJW5AumNKodO7goH"></div>
+            <div style="margin-left:30px; flex:1; padding:12px 16px; background:#fff; border:1px solid var(--border); border-radius:8px;" data-page-node-id="DgeECTgKyZTrDmAwnKQyPF">
+              <div style="display:flex; justify-content:space-between; align-items:center;" data-page-node-id="pbQp8pNdFnBDxEal0jBf0C">
+                <strong data-page-node-id="i7Si1GFwZnNdvf2XlqsXTJ">CNAS 2020 初次评审</strong>
+                <span class="tag tag-success" data-page-node-id="hmgGzs4LlvNhUVSM5eVzll">通过</span>
+              </div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;" data-page-node-id="9maMy0nbndrNyAmV14FDY0">2020-09-01 ~ 2020-12-15 · 负责人 王主管 · 30/30 符合</div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px; padding:14px 0; position:relative;" data-page-node-id="AEGgABAlhG7Jsrb6WxQZ1b">
+            <div style="width:110px; text-align:right; color:var(--text-secondary); font-weight:600;" data-page-node-id="DWj2CPX8GNqgjHAmGPhIq3">2018-Q3</div>
+            <div style="position:absolute; left:113px; width:14px; height:14px; background:var(--success); border:3px solid #fff; border-radius:50%; box-shadow:0 0 0 2px var(--success);" data-page-node-id="QDOB2JLhg43w10CXxWg07Q"></div>
+            <div style="margin-left:30px; flex:1; padding:12px 16px; background:#fff; border:1px solid var(--border); border-radius:8px;" data-page-node-id="7zwhzHGEwksVkkjPKKgvHS">
+              <div style="display:flex; justify-content:space-between; align-items:center;" data-page-node-id="UCNfUjCracB3rVpxrnGZjY">
+                <strong data-page-node-id="8ctWqsiHaGnPd6caAKOi7E">实验室认可筹建</strong>
+                <span class="tag tag-default" data-page-node-id="iQteOKdU2d87KLnYEfHZQD">筹备</span>
+              </div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;" data-page-node-id="0dShpqHr74jGiErzlOC8LK">2018-06-01 ~ 2018-12-30 · 体系建立阶段</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 详细记录列表 -->
+      <div class="card" data-page-node-id="nrMkUhzdHfWfXrIJOTap8D">
+        <div class="card-header" data-page-node-id="2woI76iWxx19MerM83XGQ3">
+          <div class="card-title" data-page-node-id="OJNn0TLwDVecKGj8LlJfh3">详细档案</div>
+          <div style="display:flex; gap:8px;" data-page-node-id="FqOUSlDsPvWtUgN1MCNg4T">
+            <select class="select" style="width:140px;" data-page-node-id="SP3H7O02fBAGzU3xecV7a2"><option data-page-node-id="eVbGWSIGmOAnUzf0NZ1XlX">全部年份</option><option data-page-node-id="GcXhBSoLdTSnGUkQhoaMEK">2026</option><option data-page-node-id="zpJxl11nmYc2xXyokZZUS8">2024</option><option data-page-node-id="gu3d9AiKhgEaaZFY0gTbrn">2022</option><option data-page-node-id="P4DXGAEeAvvtC4De73S7fn">2020</option></select>
+            <select class="select" style="width:140px;" data-page-node-id="wlZTEHSqIRkB4kCHlR2Gue"><option data-page-node-id="xepiKcnQHn8CokpOKDPPO8">全部结论</option><option data-page-node-id="DicSVAdFmi6gQpJkNnT6PG">通过</option><option data-page-node-id="0EYkwVsZwkHx8nryx6bk2A">部分符合</option><option data-page-node-id="D2jEjD15TrXFESvokHvebQ">未通过</option></select>
+            <div class="search-box" data-page-node-id="wvhwpuMjhw5VKewL5BscLM"><input class="input" placeholder="搜索档案" data-page-node-id="OmVy06gGAKxWtp9ulg0aqq" /></div>
+          </div>
+        </div>
+
+        <div class="table-wrap" data-page-node-id="H41DvPBowxbTXR6XEUBBZE">
+          <table class="table" data-page-node-id="h7xGy0P8Juy5G0pbCVkHCU">
+            <thead data-page-node-id="efgsuEKiJG2lf2umY0JscC">
+              <tr data-page-node-id="BjcL2B8ae9Fxej45POJly8">
+                <th data-page-node-id="ETlcB3HCwa0dgrBrfmVbwC">档案编号</th>
+                <th data-page-node-id="mt1kWr6GeEx1aYJmuPmBHU">评审名称</th>
+                <th data-page-node-id="fXnX3htkB5wOAaRftnZlbL">评审周期</th>
+                <th data-page-node-id="0RvSygCraHmT4UsZypZQ6C">评审类型</th>
+                <th data-page-node-id="e4ZtxqLRGA2t0MhHqbltgN">评审组</th>
+                <th data-page-node-id="ptLUlG0DxPxX2saQLcEZBG">符合率</th>
+                <th data-page-node-id="oq8F4weYGvfSjNadPa76cf">不符合项</th>
+                <th data-page-node-id="rSSN60CELaPGqE4CFM7GS5">结论</th>
+                <th class="col-actions" data-page-node-id="XBSsMJR7B3DoGXJFjMD1xd">操作</th>
+              </tr>
+            </thead>
+            <tbody data-page-node-id="Zge7ia9YNwSA9wHZ6K1BVd">
+              <tr data-page-node-id="9TE03LFrK0yLRzNwrl3OHt">
+                <td data-page-node-id="Q3SV5x3jxohMVZOovyH005"><strong data-page-node-id="jrfsVAtEHdEQP1ZyijgI0y">CNAS-2026-Q4-001</strong></td>
+                <td data-page-node-id="YCHAF8gLz7k6NcS0V7eC0m">2026 年度复审</td>
+                <td data-page-node-id="i9xmEAzlsMzn01Eo0eUvP6">2026.09 ~ 2027.01</td>
+                <td data-page-node-id="ysogsSpfHYgftxrGJnlmzo"><span class="tag tag-primary" data-page-node-id="6Y3Gok6tOg64wvTe3e4T69">CNAS 复评</span></td>
+                <td data-page-node-id="0nLA3yqBmKJCGirVVCwIR9">陈主管</td>
+                <td data-page-node-id="OF3sb8xKm01aU9jAnk8RwK"><div style="display:flex; align-items:center; gap:6px;" data-page-node-id="GxyK7bg0SHNKx8VecMlaFF"><span data-page-node-id="BIrGLswttIF6r8buuuCBe4">70%</span><div class="progress" style="width:60px;" data-page-node-id="frV1z9NsF6JSdlBLaFal0s"><div class="progress-bar" style="width:70%;" data-page-node-id="nUo9oVBjA2EROteLDe1VNI"></div></div></div></td>
+                <td data-page-node-id="y8ZxxEKwCHah13lE5C55LQ">1</td>
+                <td data-page-node-id="epoGBIzAs6Fh3oYOcDfSiA"><span class="tag tag-primary" data-page-node-id="B7XCYSEQQ7tz4ut0WxtPfa">进行中</span></td>
+                <td class="col-actions" data-page-node-id="3ZksekMzR9zhALU0iNycNE"><button class="btn-text" data-action="history-detail" data-page-node-id="caossB4JySLapqYzMiFCF6">查看</button> · <button class="btn-text" data-action="history-download" data-page-node-id="vvt4NwL8WxV4G6iQdbMvnj">下载</button></td>
+              </tr>
+              <tr data-page-node-id="QUd1cgkRB2RkfQGY3QDFPI">
+                <td data-page-node-id="Ja7XrOKJqFEmoE0a50iyTI"><strong data-page-node-id="ppiDeXG2NeFRWgvZwNR8zR">CNAS-2024-Q4-001</strong></td>
+                <td data-page-node-id="0Anl8KwyOMajPqcwfiw2xd">2024 初次评审</td>
+                <td data-page-node-id="BuCjYP7NW23BNNlgIe3kdC">2024.08 ~ 2024.12</td>
+                <td data-page-node-id="FzD3jzFg7VFDaaPZzP34Yo"><span class="tag tag-success" data-page-node-id="SAcPEv73SP6VCNjXDSiFUg">CNAS 初评</span></td>
+                <td data-page-node-id="JDJGAoSCxTQXCN2fEBXI68">陈主管</td>
+                <td data-page-node-id="ow50bGXiu64AFluIVSx3CW"><div style="display:flex; align-items:center; gap:6px;" data-page-node-id="I2ZLix6rGpBFuCphDQ6TyO"><span data-page-node-id="KKfpeFa7sedtVNJ9LHWFLD">100%</span><div class="progress" style="width:60px;" data-page-node-id="kj0djVPBkA3mj5CLiode2q"><div class="progress-bar success" style="width:100%;" data-page-node-id="6BcRsET02HfqRlSWkR3xDX"></div></div></div></td>
+                <td data-page-node-id="0YeJjLpHoHZyon5UiOMIbO">0</td>
+                <td data-page-node-id="KlVWwITw5vj2borQIXXmgO"><span class="tag tag-success" data-page-node-id="nA8FQcxTKGJ6pCGrH5dDEd">通过</span></td>
+                <td class="col-actions" data-page-node-id="mxTDBK99lFFe12CfFQrVUF"><button class="btn-text" data-action="history-detail" data-page-node-id="gTapMhcImdNGbbz10CnJQw">查看</button> · <button class="btn-text" data-action="history-download" data-page-node-id="YAkwrjAPKh0buEZpSV0K11">下载</button></td>
+              </tr>
+              <tr data-page-node-id="qb9FVZbU5EsZ4lsMsyRXt6">
+                <td data-page-node-id="2Fw8OPRACEeUvT4EuERaJ6"><strong data-page-node-id="t5zPZUSlIvIyBFLlnFIUMq">INT-2022-Q3-001</strong></td>
+                <td data-page-node-id="aDukBObDO7hecsiMAM6M0A">2022 内部预审</td>
+                <td data-page-node-id="J8LcVJTWt6ddF3MYoqeTdq">2022.07 ~ 2022.09</td>
+                <td data-page-node-id="MHV0WI8rEDUfzyBc7aQwma"><span class="tag tag-default" data-page-node-id="QgjBXBH9ysRATMtDkFgqxu">内部</span></td>
+                <td data-page-node-id="jS0WZoinitcRCwbRJtRDzS">王主管</td>
+                <td data-page-node-id="n7rh9ZT840JH8fJ9uWmKEz"><div style="display:flex; align-items:center; gap:6px;" data-page-node-id="EJz4bEkFnOCa892XlCO50h"><span data-page-node-id="szL6fYUHkrbXsijkIjFUI2">90%</span><div class="progress" style="width:60px;" data-page-node-id="qnU5jAyrcj18skXCphWuVa"><div class="progress-bar warning" style="width:90%;" data-page-node-id="eeFzhL7tHHteW3tL8xAX0n"></div></div></div></td>
+                <td data-page-node-id="HmW4RzJ2X6Lo4hIINO5Bog">3</td>
+                <td data-page-node-id="WHRWQ2eZwGXCzzvCFZ99KC"><span class="tag tag-warning" data-page-node-id="sDdqfPX72kyRdQa7zPweEw">部分符合</span></td>
+                <td class="col-actions" data-page-node-id="4h73pYUyfS2AU4a5IepckL"><button class="btn-text" data-action="history-detail" data-page-node-id="s8j1UJHB7THBGTFxFhL1Wx">查看</button> · <button class="btn-text" data-action="history-download" data-page-node-id="V95FP658aKTNxt9eMP2xR6">下载</button></td>
+              </tr>
+              <tr data-page-node-id="sEeFSGExE4Wc5NuNpyciyj">
+                <td data-page-node-id="0oSmQt6UzC6HfHpbHhIIRY"><strong data-page-node-id="dp5vWIY8cJBWc71Gt4RfCa">CNAS-2020-Q4-001</strong></td>
+                <td data-page-node-id="wTrZgzjSbZPYWZ8lrvig2u">2020 初次评审</td>
+                <td data-page-node-id="d0Sb1Cgj0uj7Q7kMUWmvjJ">2020.09 ~ 2020.12</td>
+                <td data-page-node-id="7WWNJtIPyHU55Hqx4ExSSv"><span class="tag tag-success" data-page-node-id="OtL8kIS4zHeLQ2rDZEmPaG">CNAS 初评</span></td>
+                <td data-page-node-id="HlPBSwH77Zd70Bie2PvY7S">王主管</td>
+                <td data-page-node-id="GWCWQDDWMUUY20iFpYvBpa"><div style="display:flex; align-items:center; gap:6px;" data-page-node-id="piXj58ltr61UA0AgRaKArj"><span data-page-node-id="PwhqJD0GDDevOFF4ohLLVY">100%</span><div class="progress" style="width:60px;" data-page-node-id="kngK51vDx78328ECfLXj0M"><div class="progress-bar success" style="width:100%;" data-page-node-id="8sOuSw4GgwzkVsJ1HzqrGN"></div></div></div></td>
+                <td data-page-node-id="3pcHyvuhyfql3B0cHIHPcm">0</td>
+                <td data-page-node-id="Ejeuj9pdl3Sh7bBaXdSBz8"><span class="tag tag-success" data-page-node-id="ZZdII2zE3TN78UzV6HacXy">通过</span></td>
+                <td class="col-actions" data-page-node-id="gneciMd30YCNKGGBzahHxA"><button class="btn-text" data-action="history-detail" data-page-node-id="Z8ANK9NKhdEN1oxOXfaWO9">查看</button> · <button class="btn-text" data-action="history-download" data-page-node-id="2jhtEH2aLSGtPQ3UXkCaf5">下载</button></td>
+              </tr>
+              <tr data-page-node-id="W7CxyaQrPWFM6LRCvZzdMR">
+                <td data-page-node-id="QzQtD95kVoQth7UB99CX4t"><strong data-page-node-id="LkWKut5ctxSsENEic4UV45">SUP-2018-Q3-001</strong></td>
+                <td data-page-node-id="oAEzFloCKMgAMgEKD0BOWe">2018 实验室认可筹建</td>
+                <td data-page-node-id="tQowXzapr6y0WUKdztjZvI">2018.06 ~ 2018.12</td>
+                <td data-page-node-id="yFC3jBMroijGqncAAyGLNU"><span class="tag tag-default" data-page-node-id="Zlkym1JJbRoAbBrlV8uHYX">筹建</span></td>
+                <td data-page-node-id="uQ5NwcH0TlsefPTESRBFe8">王主管</td>
+                <td data-page-node-id="u1qVNDPlMpqHzoUL6VlYVB"><span style="color:var(--text-tertiary);" data-page-node-id="NZATvuTCJOCjSDXcQKOWHA">—</span></td>
+                <td data-page-node-id="PsTh3kx2IOZarKid1cf15o">—</td>
+                <td data-page-node-id="Lp70jAxwmcHdV9IA3oGsq0"><span class="tag tag-default" data-page-node-id="NcxK14tcnRKl1bCoL2O2FV">筹备</span></td>
+                <td class="col-actions" data-page-node-id="9xxVUFKs3CxAreqUal8FTU"><button class="btn-text" data-action="history-detail" data-page-node-id="mj20FLIygBB9DkwKgS70iv">查看</button> · <button class="btn-text" data-action="history-download" data-page-node-id="QOYxDsp7px1LO7LwL4LVD9">下载</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 趋势分析 -->
+      <div class="grid grid-2" style="margin-top:16px;" data-page-node-id="hXhxZCqOiEAyp4Bd6NCXCi">
+        <div class="card" data-page-node-id="yWJbYcDL3NuQJL6FuSujuC">
+          <div class="card-header" data-page-node-id="3tjY4htNEnGbYodykP1jtX">
+            <div class="card-title" data-page-node-id="ABHltYB9tOEcxzWIuphtjY">📈 不符合项趋势</div>
+            <div style="display:flex; align-items:center; gap:10px;" data-page-node-id="KMwi2blVCpkaQ8lENA10VD">
+              <span class="tag tag-success" data-page-node-id="Ba2yQrEU8NUdvLWcBERinA">逐年下降 ↓</span>
+              <button class="btn-text" data-action="history-trend" data-page-node-id="NtsByRCR7em2uGHMHNJXgj">查看完整分析 →</button>
+            </div>
+          </div>
+          <div style="display:flex; align-items:flex-end; gap:18px; height:180px; padding:16px 0;" data-page-node-id="8rban8mdZE6UmOmlzrWAcb">
+            <div style="flex:1; text-align:center;" data-page-node-id="K0gw1mEjtJDJPERhgHFTSR">
+              <div style="background:var(--warning); height:90%; border-radius:4px 4px 0 0; margin-bottom:6px;" data-page-node-id="PAuAgE3a1FxdujblRzDOPt"></div>
+              <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="TW3uvFDZjCAWtz8GT26qUf">2022</div>
+              <div style="font-weight:600;" data-page-node-id="3CXHSGicr1dVqceWd8cpq6">3 项</div>
+            </div>
+            <div style="flex:1; text-align:center;" data-page-node-id="MOLoeOCZWJYi4NuRQghrbg">
+              <div style="background:var(--success); height:30%; border-radius:4px 4px 0 0; margin-bottom:6px;" data-page-node-id="OpTuvzyWrm9TwrAmsHL4dl"></div>
+              <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="jzPu8l71p80wcV2JEzupZF">2024</div>
+              <div style="font-weight:600;" data-page-node-id="NR2EOpcsT5rn3sB4D4IkaW">0 项</div>
+            </div>
+            <div style="flex:1; text-align:center;" data-page-node-id="ozedFdoXvYQR9uFwygMglD">
+              <div style="background:var(--primary); height:50%; border-radius:4px 4px 0 0; margin-bottom:6px;" data-page-node-id="NrwLn199DKEY0HNq1N7TXb"></div>
+              <div style="font-size:12px; color:var(--text-tertiary);" data-page-node-id="6N05FZhCIJ2pps5AUp9gAd">2026</div>
+              <div style="font-weight:600;" data-page-node-id="d2zB9TzqI486imvVNlRMpu">1 项</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-page-node-id="5r0tXe15G8VGA4ZDNU2Oz8">
+          <div class="card-header" data-page-node-id="HgoloALy5LMh9KClxYxlTK">
+            <div class="card-title" data-page-node-id="OxU8DLlBK1KM0dXBhz7a7r">🏆 评审优秀实践沉淀</div>
+          </div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.9;" data-page-node-id="woS79ERAbMdYA9FHSmFmyc">
+            <div style="padding:10px 0; border-bottom:1px dashed var(--border-light);" data-page-node-id="UiQhuSj2XNqVekhykKdwQT">
+              <strong style="color:var(--primary);" data-page-node-id="W6CH0tbfjqiFqIuGHNIZyJ">2024</strong> · 公正性与保密性声明全员电子签署，签署率 100%
+            </div>
+            <div style="padding:10px 0; border-bottom:1px dashed var(--border-light);" data-page-node-id="SH1D1KqtdzIExiGfxsH2Nh">
+              <strong style="color:var(--primary);" data-page-node-id="UXgqmDWcaoX2s9AajLbAcx">2024</strong> · 设备校准证书全部接入 LIMS 系统，自动预警到期
+            </div>
+            <div style="padding:10px 0; border-bottom:1px dashed var(--border-light);" data-page-node-id="0UkjpYclR1o3xuXheOghTU">
+              <strong style="color:var(--primary);" data-page-node-id="xCuGNNRwLD7MQXmlBqez7R">2022</strong> · 建立"三级文件"体系，质量手册 - 程序文件 - SOP 分级管理
+            </div>
+            <div style="padding:10px 0;" data-page-node-id="9RK8pK24sy2ZCxeD9s3tPC">
+              <strong style="color:var(--primary);" data-page-node-id="jXXl95D1bvua1ILWQExQDG">2020</strong> · 首次通过 CNAS 评审，成为区域内首家获认可样本库
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+</body>
+</html>

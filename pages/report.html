@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>智能报告 - CNAS 迎检</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3 active" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>CNAS 迎检</span><span class="sep">/</span>
+        <span>评审档案</span><span class="sep">/</span>
+        <span class="current">智能报告</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">智能报告</div>
+          <div class="page-desc">基于条款自评、检查清单与归档材料一键生成标准化迎检报告</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn" data-action="report-template">⚙ 模板管理</button>
+          <button class="btn" data-action="toast" data-msg="已进入历史报告列表">📚 历史报告</button>
+          <button class="btn btn-primary" data-action="report-new">＋ 新建报告</button>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 280px 1fr; gap:16px;">
+        <!-- 左侧：模板选择 -->
+        <div class="card">
+          <div class="card-header">
+            <strong style="font-size:14px;">报告模板</strong>
+            <span class="card-extra" data-action="report-tpl-new" style="cursor:pointer;" title="增加模板">＋</span>
+          </div>
+          <div style="font-size:13px;" id="rpt-tpl-list"></div>
+
+          <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border-light);">
+            <strong style="font-size:13px; display:block; margin-bottom:8px;">已生成报告</strong>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.9;">
+              <div>📄 CNAS-2026-自评-初稿.docx</div>
+              <div style="color:var(--text-tertiary); font-size:11px;">2026-09-05 · 8.4MB</div>
+              <div style="margin-top:8px;">📄 CNAS-2026-不符合项清单.docx</div>
+              <div style="color:var(--text-tertiary); font-size:11px;">2026-09-02 · 0.8MB</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：报告配置 + 预览 -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">报告配置</div>
+            <span class="tag tag-primary" id="rpt-tpl-tag">CNAS 自评报告 · 标准模板</span>
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-bottom:6px;">报告标题</div>
+              <input class="input" id="rpt-c-title" value="样本库 2026 年度 CNAS 复审自评报告" />
+            </div>
+            <div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-bottom:6px;">报告编号</div>
+              <input class="input" id="rpt-c-no" value="CNAS-2026-Q4-SR-001" />
+            </div>
+            <div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-bottom:6px;">评审周期</div>
+              <input class="input" id="rpt-c-period" value="2026-09-01 ~ 2027-01-15" />
+            </div>
+            <div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-bottom:6px;">出具日期</div>
+              <input class="input" id="rpt-c-date" type="date" value="2026-09-08" />
+            </div>
+            <div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-bottom:6px;">编制人</div>
+              <input class="input" id="rpt-c-author" value="张三" />
+            </div>
+            <div>
+              <div style="font-size:12px; color:var(--text-tertiary); margin-bottom:6px;">审核人</div>
+              <input class="input" id="rpt-c-reviewer" value="陈主管" />
+            </div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="font-size:12px; color:var(--text-tertiary);">包含章节（<span id="rpt-mod-count">9</span>）</div>
+              <button class="btn btn-sm" data-action="report-module-add">＋ 增加报告模块</button>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;" id="rpt-modules">
+              <span class="filter-chip active">📋 评审概述</span>
+              <span class="filter-chip active">📐 体系文件清单</span>
+              <span class="filter-chip active">📊 条款符合性分析</span>
+              <span class="filter-chip active">⚠ 不符合项清单</span>
+              <span class="filter-chip active">✅ 检查清单完成情况</span>
+              <span class="filter-chip active">📁 归档材料索引</span>
+              <span class="filter-chip">📈 趋势分析图</span>
+              <span class="filter-chip">📜 历史评审对比</span>
+              <span class="filter-chip">💡 改进建议</span>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <div style="font-size:12px; color:var(--text-tertiary); margin-bottom:8px;">数据来源</div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <span class="tag tag-success">✓ 条款自评 (30/30)</span>
+              <span class="tag tag-success">✓ 检查清单 (156 项)</span>
+              <span class="tag tag-success">✓ 材料归档 (128 份)</span>
+              <span class="tag tag-success">✓ 历史评审 (5 次)</span>
+              <span class="tag tag-warning">⚠ 版本变更 (12 项)</span>
+            </div>
+          </div>
+
+          <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-light); display:flex; gap:8px;">
+            <button class="btn" data-action="report-preview">👁 预览报告</button>
+            <button class="btn" data-action="toast" data-msg="报告正在导出为 Word">📤 导出 Word</button>
+            <button class="btn" data-action="toast" data-msg="报告正在导出为 PDF">📤 导出 PDF</button>
+            <button class="btn" data-action="toast" data-msg="报告邮件分发中">📧 邮件分发</button>
+            <button class="btn btn-primary" style="margin-left:auto;" data-action="report-generate">⚡ 立即生成报告</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 报告预览 -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-header">
+          <div class="card-title">报告预览</div>
+          <span style="font-size:12px; color:var(--text-tertiary);">实时渲染 · 最终以导出为准</span>
+        </div>
+
+        <!-- 模拟报告纸张（内容随所选模板动态渲染，#rpt-paper） -->
+        <div id="rpt-paper" style="max-width:760px; margin:0 auto; background:#fff; padding:48px 56px; box-shadow:var(--shadow-lg); border-radius:4px; border:1px solid var(--border-light);">
+          <div style="text-align:center; padding-bottom:20px; border-bottom:2px solid var(--primary);">
+            <div style="font-size:22px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">样本库 2026 年度 CNAS 复审自评报告</div>
+            <div style="font-size:13px; color:var(--text-tertiary);">报告编号：CNAS-2026-Q4-SR-001 · 出具日期：2026-09-08</div>
+          </div>
+
+          <h3 style="font-size:15px; margin:24px 0 12px; color:var(--primary);">一、评审概述</h3>
+          <p style="font-size:13px; line-height:1.9; color:var(--text-secondary); text-indent:2em;">
+            本报告基于 ISO 20387:2018《生物技术 - 生物样本库 - 生物样本库质量与能力要求》标准，对本样本库 2026 年度质量体系运行情况进行全面自评。本次自评覆盖 30 个评审条款、156 项检查清单、128 份归档材料，整体符合率为 70%，已识别 1 项不符合项并制定整改计划。
+          </p>
+
+          <h3 style="font-size:15px; margin:24px 0 12px; color:var(--primary);">二、条款符合性分析</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px;">
+            <thead>
+              <tr style="background:var(--primary-lighter);">
+                <th style="padding:8px; border:1px solid var(--border); text-align:left;">分类</th>
+                <th style="padding:8px; border:1px solid var(--border); text-align:left;">条款数</th>
+                <th style="padding:8px; border:1px solid var(--border); text-align:left;">已完成</th>
+                <th style="padding:8px; border:1px solid var(--border); text-align:left;">符合率</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:8px; border:1px solid var(--border);">管理要求</td>
+                <td style="padding:8px; border:1px solid var(--border);">13</td>
+                <td style="padding:8px; border:1px solid var(--border);">7</td>
+                <td style="padding:8px; border:1px solid var(--border); color:var(--success);">53.8%</td>
+              </tr>
+              <tr>
+                <td style="padding:8px; border:1px solid var(--border);">技术要求</td>
+                <td style="padding:8px; border:1px solid var(--border);">17</td>
+                <td style="padding:8px; border:1px solid var(--border);">4</td>
+                <td style="padding:8px; border:1px solid var(--border); color:var(--warning);">23.5%</td>
+              </tr>
+              <tr style="background:var(--primary-lighter); font-weight:600;">
+                <td style="padding:8px; border:1px solid var(--border);">合计</td>
+                <td style="padding:8px; border:1px solid var(--border);">30</td>
+                <td style="padding:8px; border:1px solid var(--border);">11</td>
+                <td style="padding:8px; border:1px solid var(--border); color:var(--primary);">36.7%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 style="font-size:15px; margin:24px 0 12px; color:var(--primary);">三、不符合项清单</h3>
+          <div style="padding:14px 16px; background:var(--error-bg); border-left:3px solid var(--error); border-radius:4px; font-size:13px; line-height:1.9; color:var(--text-secondary);">
+            <strong style="color:var(--error);">不符合项 NC-2026-001：8.3 风险与机遇</strong><br>
+            描述：本年度识别的风险与机遇不足 5 项，未对已识别的 3 项风险制定应对措施并评估有效性。<br>
+            整改责任：完成时间：<br>
+            <strong>张三</strong> · 2026-11-30
+          </div>
+
+          <div style="margin-top:32px; padding-top:16px; border-top:1px solid var(--border-light); text-align:right; font-size:12px; color:var(--text-tertiary);">
+            第 1 页 / 共 28 页 · 由体系管理智能体自动生成
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+<script>
+/* 智能报告页交互（2026-09-24）：
+   1) 右上角「＋」增加模板 → 表单弹窗 → 加入左侧列表并打开模板详情（可操作）；
+   2) 点击模板 → 切换高亮 + 右上标签 + 右侧「报告配置 + 章节 + 预览纸张」联动，
+      并打开「模板详情」弹窗（可勾选模块后「应用此模板」）；
+   3) 「＋ 增加报告模块」→ 详情弹窗，配置后追加为新的章节模块。 */
+(function () {
+  if (typeof MODALS === 'undefined' || typeof INLINE === 'undefined') return;
+
+  var ICONS = { '评审概述': '📋', '体系文件清单': '📐', '条款符合性分析': '📊', '不符合项清单': '⚠', '检查清单完成情况': '✅', '归档材料索引': '📁', '趋势分析图': '📈', '历史评审对比': '📜', '改进建议': '💡', '整改概述': '🛠', '纠正措施': '🧭', '有效性验证': '✅', '运行概述': '📄', '目标达成': '🎯' };
+  var ALL_MODULES = ['评审概述', '体系文件清单', '条款符合性分析', '不符合项清单', '检查清单完成情况', '归档材料索引', '趋势分析图', '历史评审对比', '改进建议', '整改概述', '纠正措施', '有效性验证', '运行概述', '目标达成'];
+
+  var TEMPLATES = [
+    { id: 'self', ico: '📄', name: 'CNAS 自评报告', tag: '标准', desc: '符合 CNAS-CL01:2018 模板要求', type: 'Word', scope: '全部 30 条款', pages: '约 28 页', updated: '2026-08-01', def: true,
+      modules: ['评审概述', '体系文件清单', '条款符合性分析', '不符合项清单', '检查清单完成情况', '归档材料索引'],
+      config: { title: '样本库 2026 年度 CNAS 复审自评报告', no: 'CNAS-2026-Q4-SR-001', period: '2026-09-01 ~ 2027-01-15', date: '2026-09-08', author: '张三', reviewer: '陈主管' },
+      preview: { footer: '第 1 页 / 共 28 页 · 由体系管理智能体自动生成', blocks: [
+        { h: '一、评审概述', p: '本报告基于 ISO 20387:2018《生物技术 - 生物样本库 - 生物样本库质量与能力要求》标准，对本样本库 2026 年度质量体系运行情况进行全面自评。本次自评覆盖 30 个评审条款、156 项检查清单、128 份归档材料，整体符合率为 70%，已识别 1 项不符合项并制定整改计划。' },
+        { h: '二、条款符合性分析', table: { head: ['分类', '条款数', '已完成', '符合率'], rows: [['管理要求', '13', '7', '53.8%'], ['技术要求', '17', '4', '23.5%'], ['合计', '30', '11', '36.7%']] } },
+        { h: '三、不符合项清单', note: { title: '不符合项 NC-2026-001：8.3 风险与机遇', lines: ['描述：本年度识别的风险与机遇不足 5 项，未对已识别的 3 项风险制定应对措施并评估有效性。', '整改责任：张三 · 完成时间：2026-11-30'] } }
+      ] } },
+    { id: 'onsite', ico: '📄', name: '现场评审汇报', tag: '汇报', desc: '现场评审专家汇报模板', type: 'PPT', scope: '管理 + 技术全部条款', pages: '约 22 页', updated: '2026-07-20',
+      modules: ['评审概述', '条款符合性分析', '不符合项清单', '趋势分析图'],
+      config: { title: '样本库 CNAS 现场评审汇报（2026）', no: 'CNAS-2026-Q4-OS-002', period: '2026-09-01 ~ 2026-09-05', date: '2026-09-05', author: '陈主管', reviewer: '张建国' },
+      preview: { footer: '第 1 页 / 共 22 页 · 现场汇报用 · 由体系管理智能体自动生成', blocks: [
+        { h: '一、评审安排', p: '本次现场评审自 2026-09-01 至 2026-09-05，覆盖管理要求与技术要求的全部 30 个条款，评审组由 3 名专家组成，采用文件审查 + 现场观察 + 人员访谈方式。' },
+        { h: '二、条款符合情况', table: { head: ['评审方式', '涉及条款', '符合', '需关注'], rows: [['文件审查', '18', '15', '3'], ['现场观察', '8', '6', '2'], ['人员访谈', '4', '4', '0']] } },
+        { h: '三、重点问题与建议', note: { title: '重点关注：6.5 计量溯源性', lines: ['部分设备校准证书临近到期，建议在迎检前完成送检并更新溯源记录。', '后续跟踪责任人：孙七 · 计划完成：2026-10-15'] } }
+      ] } },
+    { id: 'ncr', ico: '📄', name: '整改报告', tag: '整改', desc: '不符合项整改与验证', type: 'Word', scope: '仅不符合项相关条款', pages: '约 12 页', updated: '2026-06-15',
+      modules: ['整改概述', '不符合项清单', '纠正措施', '有效性验证'],
+      config: { title: 'NCR-2026-001 不符合项整改报告', no: 'CNAS-2026-NCR-001', period: '2026-09-10 ~ 2026-11-30', date: '2026-09-10', author: '张三', reviewer: '李慧' },
+      preview: { footer: '第 1 页 / 共 12 页 · 整改验证报告 · 由体系管理智能体自动生成', blocks: [
+        { h: '一、不符合项描述', p: '不符合项 NC-2026-001（对应条款 8.3 风险与机遇）：本年度识别的风险与机遇不足 5 项，未对已识别的 3 项风险制定应对措施并评估有效性。' },
+        { h: '二、原因分析', p: '风险与机遇识别流程未与年度管理评审充分联动，责任分工不明确，导致识别数量与应对措施跟踪不足。' },
+        { h: '三、纠正措施与验证', note: { title: '纠正措施与有效性验证', lines: ['① 重新梳理风险与机遇清单，补充至 8 项并逐项制定应对措施（责任：张三 · 2026-11-15）；', '② 将风险评审纳入管理评审议程（责任：李慧 · 2026-11-30）；', '③ 验证方式：抽查清单与会议记录，确认应对措施闭环。'] } }
+      ] } },
+    { id: 'summary', ico: '📄', name: '体系运行总结', tag: '总结', desc: '年度质量体系运行报告', type: 'Word', scope: '全体系', pages: '约 18 页', updated: '2026-03-02',
+      modules: ['运行概述', '目标达成', '趋势分析图', '历史评审对比', '改进建议'],
+      config: { title: '样本库 2026 年度质量体系运行报告', no: 'CNAS-2026-YR-003', period: '2026-01-01 ~ 2026-12-31', date: '2026-12-31', author: '张三', reviewer: '陈主管' },
+      preview: { footer: '第 1 页 / 共 18 页 · 年度运行总结 · 由体系管理智能体自动生成', blocks: [
+        { h: '一、运行概述', p: '2026 年度质量体系整体运行平稳，完成 30 个条款的自评与整改跟踪，关键过程受控，未发生重大质量事故。' },
+        { h: '二、质量目标达成', table: { head: ['质量目标', '目标值', '实际值', '达成'], rows: [['条款符合率', '≥ 90%', '92.4%', '达成'], ['材料归档及时率', '≥ 95%', '96.1%', '达成'], ['不符合项关闭率', '100%', '100%', '达成']] } },
+        { h: '三、趋势与改进', p: '相较上一年度，条款符合率提升 6.8 个百分点；下一年度重点改进方向为计量溯源管理与数据质量自动化检测。' }
+      ] } }
+  ];
+  var currentTpl = 'self';
+
+  function byId(id) { return TEMPLATES.filter(function (t) { return t.id === id; })[0]; }
+  function iconOf(m) { return ICONS[m] || '📦'; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+  function bindChip(el) { el.addEventListener('click', function () { el.classList.toggle('active'); }); }
+  function refreshCount() {
+    var n = document.querySelectorAll('#rpt-modules .filter-chip.active').length;
+    var c = document.getElementById('rpt-mod-count'); if (c) c.textContent = n;
+  }
+
+  function renderTplList() {
+    var host = document.getElementById('rpt-tpl-list'); if (!host) return;
+    host.innerHTML = TEMPLATES.map(function (t) {
+      var on = t.id === currentTpl;
+      return '<div data-action="report-tpl-pick" data-tpl="' + t.id + '"' +
+        ' style="padding:10px 12px; border-radius:6px; cursor:pointer; margin-bottom:8px;' +
+        (on ? ' background:var(--primary-light); color:var(--primary); font-weight:500; border:1px solid var(--primary-100);'
+            : ' border:1px solid transparent;') + '">' +
+        '<div style="display:flex; justify-content:space-between;"><span>' + t.ico + ' ' + esc(t.name) + '</span>' +
+        '<span style="' + (on ? 'font-weight:400;' : 'color:var(--text-tertiary);') + '">' + esc(t.tag) + '</span></div>' +
+        '<div style="font-size:11px; color:var(--text-tertiary); margin-top:2px;">' + esc(t.desc) + '</div>' +
+        '<div style="display:flex; justify-content:flex-end; margin-top:4px;">' +
+        '<button class="btn-text" data-action="report-tpl-detail" data-tpl-id="' + t.id + '" style="font-size:12px; padding:2px 6px;">查看详情 ›</button>' +
+        '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  /* 右侧「报告配置」随模板联动 */
+  function renderConfig(t) {
+    var c = (t && t.config) || {};
+    var set = function (id, v) { var el = document.getElementById(id); if (el) el.value = (v == null ? '' : v); };
+    set('rpt-c-title', c.title || t.name);
+    set('rpt-c-no', c.no || '');
+    set('rpt-c-period', c.period || '');
+    set('rpt-c-date', c.date || '');
+    set('rpt-c-author', c.author || '');
+    set('rpt-c-reviewer', c.reviewer || '');
+  }
+
+  /* 右侧「报告预览」纸张随模板联动 */
+  function renderPaper(t) {
+    var host = document.getElementById('rpt-paper'); if (!host) return;
+    var p = (t && t.preview) || {};
+    var c = (t && t.config) || {};
+    var html =
+      '<div style="text-align:center; padding-bottom:20px; border-bottom:2px solid var(--primary);">' +
+        '<div style="font-size:22px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">' + esc(c.title || t.name) + '</div>' +
+        '<div style="font-size:13px; color:var(--text-tertiary);">报告编号：' + esc(c.no || '—') + ' · 出具日期：' + esc(c.date || '—') + '</div>' +
+      '</div>';
+    (p.blocks || []).forEach(function (b) {
+      html += '<h3 style="font-size:15px; margin:24px 0 12px; color:var(--primary);">' + esc(b.h) + '</h3>';
+      if (b.p) html += '<p style="font-size:13px; line-height:1.9; color:var(--text-secondary); text-indent:2em;">' + esc(b.p) + '</p>';
+      if (b.table) {
+        html += '<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px;"><thead><tr style="background:var(--primary-lighter);">' +
+          b.table.head.map(function (h) { return '<th style="padding:8px;border:1px solid var(--border);text-align:left;">' + esc(h) + '</th>'; }).join('') +
+          '</tr></thead><tbody>' +
+          b.table.rows.map(function (r, ri) {
+            var last = ri === b.table.rows.length - 1;
+            return '<tr' + (last ? ' style="background:var(--primary-lighter);font-weight:600;"' : '') + '>' +
+              r.map(function (cell) { return '<td style="padding:8px;border:1px solid var(--border);">' + esc(cell) + '</td>'; }).join('') + '</tr>';
+          }).join('') + '</tbody></table>';
+      }
+      if (b.note) {
+        html += '<div style="padding:14px 16px; background:var(--error-bg); border-left:3px solid var(--error); border-radius:4px; font-size:13px; line-height:1.9; color:var(--text-secondary);">' +
+          '<strong style="color:var(--error);">' + esc(b.note.title) + '</strong>' +
+          b.note.lines.map(function (l) { return '<br>' + esc(l); }).join('') + '</div>';
+      }
+    });
+    html += '<div style="margin-top:32px; padding-top:16px; border-top:1px solid var(--border-light); text-align:right; font-size:12px; color:var(--text-tertiary);">' + esc(p.footer || '由体系管理智能体自动生成') + '</div>';
+    host.innerHTML = html;
+  }
+
+  /* 切换模板：左列表高亮 + 右上标签 + 配置 + 章节 + 预览 一起联动 */
+  function selectTpl(id, openDetail) {
+    var t = byId(id); if (!t) return;
+    currentTpl = id;
+    renderTplList();
+    var tag = document.getElementById('rpt-tpl-tag');
+    if (tag) tag.textContent = t.name + ' · ' + t.tag + '模板';
+    renderConfig(t);
+    applyModules(t.modules);
+    renderPaper(t);
+    if (openDetail) openModal('report-tpl-detail', { id: id });
+  }
+
+  /* 点击模板卡：切换（右侧联动），不弹窗 */
+  INLINE['report-tpl-pick'] = function (el) {
+    var t = byId(el.getAttribute('data-tpl')); if (!t) return;
+    selectTpl(t.id, false);
+    window.showToast('已切换模板：' + t.name + '（' + t.type + '），右侧配置与预览已同步', 'info');
+  };
+
+  /* 模板卡右下角「查看详情」：打开模板详情弹窗（沿用现有弹窗样式） */
+  INLINE['report-tpl-detail'] = function (el) {
+    openModal('report-tpl-detail', { id: el.getAttribute('data-tpl-id') });
+  };
+
+  MODALS['report-tpl-detail'] = function (c) {
+    var t = byId(c.id || currentTpl) || TEMPLATES[0];
+    var list = ALL_MODULES.map(function (m) {
+      var on = t.modules.indexOf(m) >= 0;
+      return '<div class="check-item" data-mod="' + esc(m) + '"><div class="checkbox' + (on ? ' checked' : '') + '"></div>' +
+        '<div class="check-item-text">' + iconOf(m) + ' ' + esc(m) + '</div></div>';
+    }).join('');
+    var row = function (k, v) { return '<div class="desc-item"><div class="desc-label">' + k + '</div><div class="desc-value">' + v + '</div></div>'; };
+    return {
+      title: '模板详情 · ' + t.name,
+      subtitle: t.type + ' 模板 · ' + t.scope + ' · ' + t.pages,
+      size: 'modal-lg',
+      body:
+        '<div class="modal-section"><div class="modal-section-title">基本信息</div><div class="desc-list">' +
+        row('模板名称', esc(t.name)) + row('类型', esc(t.type)) + row('适用范围', esc(t.scope)) +
+        row('预估篇幅', esc(t.pages)) + row('最近更新', esc(t.updated)) +
+        row('当前状态', t.def ? '<span class="tag tag-primary">默认模板</span>' : '<span class="tag tag-success">启用</span>') +
+        '</div></div>' +
+        '<div class="modal-section"><div class="modal-section-title">包含模块（勾选后点「应用此模板」写回章节）</div>' + list + '</div>',
+      headerAction: '<button class="btn btn-sm" data-tpl-edit>✎ 编辑模板</button>',
+      footer: '<button class="btn" data-modal-close>关闭</button><button class="btn btn-primary" data-tpl-apply>应用此模板</button>',
+      onMount: function (root) {
+        var ed = root.querySelector('[data-tpl-edit]');
+        if (ed) ed.addEventListener('click', function () { window.showToast('正在打开「' + t.name + '」模板编辑器…', 'info'); });
+        root.querySelector('[data-tpl-apply]').addEventListener('click', function () {
+          var picks = [];
+          root.querySelectorAll('.check-item[data-mod]').forEach(function (it) {
+            if (it.querySelector('.checkbox').classList.contains('checked')) picks.push(it.getAttribute('data-mod'));
+          });
+          applyModules(picks);
+          closeModal();
+          window.showToast('已应用模板「' + t.name + '」，包含 ' + picks.length + ' 个模块', 'success');
+        });
+      }
+    };
+  };
+
+  function applyModules(mods) {
+    var host = document.getElementById('rpt-modules'); if (!host) return;
+    mods = mods || [];
+    host.innerHTML = ALL_MODULES.map(function (m) {
+      return '<span class="filter-chip' + (mods.indexOf(m) >= 0 ? ' active' : '') + '">' + iconOf(m) + ' ' + esc(m) + '</span>';
+    }).join('');
+    host.querySelectorAll('.filter-chip').forEach(bindChip);
+    refreshCount();
+  }
+
+  INLINE['report-module-add'] = function () { openModal('report-module-add', {}); };
+  MODALS['report-module-add'] = function () {
+    return {
+      title: '增加报告模块',
+      subtitle: '配置模块名称、类型与数据来源，保存后加入报告章节',
+      size: 'modal-md',
+      body:
+        '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">模块名称 <span class="req">*</span></label>' +
+        '<input class="input" id="rpt-m-name" placeholder="例如：设备校准情况汇总" /></div>' +
+        '<div class="form-item"><label class="form-label">模块类型</label><select class="select" id="rpt-m-type">' +
+        ['正文章节', '表格', '图表', '附录'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">数据来源</label><select class="select" id="rpt-m-src">' +
+        ['条款自评', '检查清单', '材料归档', '历史评审', '规则库', '手工录入'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">图标</label><select class="select" id="rpt-m-ico">' +
+        ['📦', '📋', '📊', '📐', '📁', '📈', '📜', '💡', '⚠', '✅', '🎯', '🧭'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">插入位置</label><select class="select" id="rpt-m-pos">' +
+        ['追加到末尾', '插入到首位'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item full"><label class="form-label">模块说明</label>' +
+        '<textarea class="input" id="rpt-m-desc" rows="2" style="height:auto;padding:8px 12px;" placeholder="说明该模块的统计口径 / 数据范围，便于评审查阅"></textarea></div>' +
+        '<div class="form-item full"><label class="form-label">默认纳入报告</label>' +
+        '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);">' +
+        '<span class="checkbox checked" id="rpt-m-def" style="cursor:pointer;"></span>生成报告时默认勾选该模块</label></div>' +
+        '</div>',
+      footer: '<button class="btn" data-modal-close>取消</button><button class="btn btn-primary" data-rpt-m-ok>确认增加</button>',
+      onMount: function (root) {
+        root.querySelector('[data-rpt-m-ok]').addEventListener('click', function () {
+          var name = root.querySelector('#rpt-m-name').value.trim();
+          if (!name) { window.showToast('请填写模块名称', 'error'); return; }
+          var ico = root.querySelector('#rpt-m-ico').value;
+          var pos = root.querySelector('#rpt-m-pos').value;
+          var active = root.querySelector('#rpt-m-def').classList.contains('checked');
+          var host = document.getElementById('rpt-modules');
+          var span = document.createElement('span');
+          span.className = 'filter-chip' + (active ? ' active' : '');
+          span.setAttribute('data-custom', '1');
+          span.textContent = ico + ' ' + name;
+          bindChip(span);
+          if (pos.indexOf('首位') >= 0) host.insertBefore(span, host.firstChild); else host.appendChild(span);
+          refreshCount();
+          closeModal();
+          window.showToast('已增加报告模块「' + name + '」（' + root.querySelector('#rpt-m-type').value + ' · 数据来源 ' + root.querySelector('#rpt-m-src').value + '）', 'success');
+        });
+      }
+    };
+  };
+
+  /* ---------- 右上角「＋」增加模板 ---------- */
+  INLINE['report-tpl-new'] = function () { openModal('report-tpl-new', {}); };
+  MODALS['report-tpl-new'] = function () {
+    var pre = ['评审概述', '条款符合性分析', '不符合项清单', '改进建议'];
+    var mods = ALL_MODULES.map(function (m) {
+      var on = pre.indexOf(m) >= 0;
+      return '<div class="check-item" data-mod="' + esc(m) + '"><div class="checkbox' + (on ? ' checked' : '') + '"></div>' +
+        '<div class="check-item-text">' + iconOf(m) + ' ' + esc(m) + '</div></div>';
+    }).join('');
+    return {
+      title: '增加报告模板',
+      subtitle: '配置模板信息，保存后加入左侧模板列表并打开模板详情',
+      size: 'modal-md',
+      body:
+        '<div class="pm-form-grid">' +
+        '<div class="form-item full"><label class="form-label">模板名称 <span class="req">*</span></label>' +
+        '<input class="input" id="rpt-t-name" placeholder="例如：2027 年度迎检预检报告" /></div>' +
+        '<div class="form-item"><label class="form-label">模板类型</label><select class="select" id="rpt-t-type">' +
+        ['Word', 'PPT', 'Excel'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">模板标签</label><select class="select" id="rpt-t-tag">' +
+        ['标准', '汇报', '整改', '总结', '自定义'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        '<div class="form-item"><label class="form-label">适用范围</label><input class="input" id="rpt-t-scope" value="全部 30 条款" /></div>' +
+        '<div class="form-item"><label class="form-label">更新日期</label><input class="input" id="rpt-t-date" type="date" value="2026-09-24" /></div>' +
+        '<div class="form-item full"><label class="form-label">模板说明</label><input class="input" id="rpt-t-desc" placeholder="一句话说明该模板用途" /></div>' +
+        '<div class="form-item full"><label class="form-label">默认包含模块</label>' +
+        '<div style="max-height:180px;overflow:auto;border:1px solid var(--border-light);border-radius:8px;padding:4px 0;">' + mods + '</div></div>' +
+        '</div>',
+      footer: '<button class="btn" data-modal-close>取消</button><button class="btn btn-primary" data-rpt-t-ok>确认增加</button>',
+      onMount: function (root) {
+        root.querySelector('[data-rpt-t-ok]').addEventListener('click', function () {
+          var name = root.querySelector('#rpt-t-name').value.trim();
+          if (!name) { window.showToast('请填写模板名称', 'error'); return; }
+          var type = root.querySelector('#rpt-t-type').value;
+          var tag = root.querySelector('#rpt-t-tag').value;
+          var scope = root.querySelector('#rpt-t-scope').value.trim() || '全部条款';
+          var date = root.querySelector('#rpt-t-date').value || '2026-09-24';
+          var desc = root.querySelector('#rpt-t-desc').value.trim() || '自定义报告模板';
+          var picks = [];
+          root.querySelectorAll('.check-item[data-mod]').forEach(function (it) {
+            if (it.querySelector('.checkbox').classList.contains('checked')) picks.push(it.getAttribute('data-mod'));
+          });
+          var id = 'tpl' + Date.now();
+          TEMPLATES.push({
+            id: id, ico: '📄', name: name, tag: tag, desc: desc, type: type, scope: scope, pages: '约 20 页', updated: date, def: false, modules: picks,
+            config: { title: name, no: 'CNAS-2026-' + id.slice(-4), period: '2026-09-01 ~ 2027-01-15', date: date, author: '张三', reviewer: '陈主管' },
+            preview: { footer: '第 1 页 / 共 20 页 · 由体系管理智能体自动生成', blocks: [
+              { h: '一、概述', p: '本报告依据模板「' + name + '」生成，包含模块：' + (picks.join('、') || '（未选择）') + '。' },
+              { h: '二、数据与结论', p: '（示例内容：正式生成时将按所选模块填充来自条款自评 / 检查清单 / 归档材料的数据，最终以导出为准。）' }
+            ] }
+          });
+          selectTpl(id, true);
+          window.showToast('已增加模板「' + name + '」（' + type + '），可在详情中应用', 'success');
+        });
+      }
+    };
+  };
+
+  renderTplList();
+  selectTpl(currentTpl, false);
+})();
+</script>
+</body>
+</html>

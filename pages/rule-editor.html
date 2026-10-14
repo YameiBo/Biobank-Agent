@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>新建规则  - 体系管理智能体</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924j" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924j" />
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item active" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>规则库</span><span class="sep">/</span>
+        <span class="current" id="re-crumb">新建规则</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title" id="re-title">新建规则</div>
+          <div class="page-desc">可视化规则编排 · 从左侧拖拽节点到 IF / THEN 区域即可配置，全程无需编程 · 保存后自动生成版本号并回写规则列表</div>
+        </div>
+        <div class="page-actions">
+          <a class="btn" href="rule-library.html">← 返回规则列表</a>
+          <button class="btn" id="re-tpl" data-pm="rule-tpl">📋 存为模板</button>
+          <button class="btn btn-primary" id="re-save" data-pm="rule-save">💾 保存规则</button>
+        </div>
+      </div>
+
+      <!-- 规则基本信息 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="pm-form-grid">
+          <div class="form-item"><label class="form-label">规则名称 <span class="req">*</span></label><input class="input" id="re-name" placeholder="如：设备校准到期预警" /></div>
+          <div class="form-item"><label class="form-label">触发方式</label>
+            <select class="select" id="re-trigger">
+              <option>定时触发（每日 08:00）</option>
+              <option>样本接收事件触发</option>
+              <option>文件更新事件触发</option>
+              <option>传感器数据触发</option>
+              <option>手动触发</option>
+            </select></div>
+          <div class="form-item"><label class="form-label">适用范围</label>
+            <select class="select"><option>全库</option><option>设备模块</option><option>样本模块</option><option>文件模块</option></select></div>
+          <div class="form-item"><label class="form-label">规则分类</label>
+            <select class="select"><option>质量</option><option>设备</option><option>样本</option><option>容量</option></select></div>
+        </div>
+      </div>
+
+      <!-- 可视化编排器 -->
+      <div class="pm-orch-pane" style="margin-bottom:16px;">
+        <div class="pm-orch-pane-title">可视化规则编排 <small>拖拽左侧节点到 IF / THEN 区域，拖动行可调整顺序</small></div>
+        <div class="pm-orch">
+          <!-- 节点面板 -->
+          <div class="pm-orch-pane" style="background:var(--bg-page);">
+            <div class="pm-orch-pane-title">节点面板</div>
+            <div class="pm-orch-group">
+              <small>条件节点</small>
+              <div class="pm-node-chip" draggable="true" data-kind="cond" data-idx="0"><span class="pm-node-ico">▦</span>数值比较</div>
+              <div class="pm-node-chip" draggable="true" data-kind="cond" data-idx="1"><span class="pm-node-ico">☰</span>字段枚举</div>
+              <div class="pm-node-chip" draggable="true" data-kind="cond" data-idx="2"><span class="pm-node-ico">⏱</span>时间判断</div>
+              <div class="pm-node-chip" draggable="true" data-kind="cond" data-idx="3"><span class="pm-node-ico">∅</span>字段缺失</div>
+            </div>
+            <div class="pm-orch-group">
+              <small>逻辑节点</small>
+              <div class="pm-node-chip" draggable="true" data-kind="logic" data-idx="0"><span class="pm-node-ico">∧</span>AND 且</div>
+              <div class="pm-node-chip" draggable="true" data-kind="logic" data-idx="1"><span class="pm-node-ico">∨</span>OR 或</div>
+              <div class="pm-node-chip" draggable="true" data-kind="logic" data-idx="2"><span class="pm-node-ico">¬</span>NOT 非</div>
+            </div>
+            <div class="pm-orch-group">
+              <small>动作节点</small>
+              <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="0"><span class="pm-node-ico">🔔</span>发送通知</div>
+              <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="1"><span class="pm-node-ico">🧾</span>生成工单</div>
+              <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="2"><span class="pm-node-ico">⛔</span>阻断操作</div>
+              <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="3"><span class="pm-node-ico">🗒</span>写入日志</div>
+            </div>
+          </div>
+
+          <!-- 画布 -->
+          <div class="pm-orch-pane" id="re-orch-canvas">
+            <div class="pm-orch-pane-title">规则画布 <small id="re-orch-tip">拖入节点以添加条件 / 动作，拖动行可调整顺序</small></div>
+            <div class="pm-orch-zone" id="re-zone-cond" data-zone="cond">
+              <div class="pm-orch-zone-head"><span class="pm-orch-key">IF</span>满足以下条件</div>
+              <div id="re-cond-rows"></div>
+            </div>
+            <div class="pm-orch-zone" id="re-zone-act" data-zone="act">
+              <div class="pm-orch-zone-head"><span class="pm-orch-key then">THEN</span>执行以下动作 <span class="pm-orch-hint">动作按先后顺序执行</span></div>
+              <div id="re-act-rows"></div>
+            </div>
+            <div class="pm-orch-foot">
+              <button class="btn btn-sm" id="re-orch-clear">清空画布</button>
+            </div>
+          </div>
+
+          <!-- 实时预览 -->
+          <div class="pm-orch-pane pm-orch-preview">
+            <div class="pm-orch-pane-title">实时预览 <small>随画布同步生成</small></div>
+            <div class="pm-orch-code" id="re-orch-code"></div>
+            <div style="font-size:11.5px;color:var(--text-tertiary);margin-top:8px;line-height:1.6;">
+              规则以「条件 → 动作」形式内置，改规则不改代码；保存后自动生成新版本号并写入版本管理。
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924j"></script>
+<script src="../assets/task-store.js?v=20260924j"></script>
+  <script src="../assets/app.js?v=20260924j"></script>
+<script src="../assets/role-guard.js?v=20260924j"></script>
+<script src="../assets/agent-widget.js?v=20260924j"></script>
+<script src="../assets/rule-store.js?v=20260924j"></script>
+<script>
+/* ===================== 规则库 · 新建 / 编辑规则（可视化编排） ===================== */
+(function () {
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); };
+
+  var NODE_DEF = {
+    cond: [
+      { t: '数值比较', field: '储存温度', op: '≤', val: '-60℃' },
+      { t: '字段枚举', field: '事件类型', op: '等于', val: '设备异常' },
+      { t: '时间判断', field: '校准到期日', op: '≤', val: '30天' },
+      { t: '字段缺失', field: '知情同意书编号', op: '为空', val: '' }
+    ],
+    act: [
+      { t: '发送通知', who: '设备负责人', how: '邮件' },
+      { t: '生成工单', who: '事件管控中心', how: '待分派' },
+      { t: '阻断操作', who: '入库流程', how: '拒绝入库' },
+      { t: '写入日志', who: '操作日志', how: '触发日志' }
+    ]
+  };
+  var FIELD_POOL = ['储存温度', '校准到期日', '样本编号', '处理时长', '分装量', '知情同意书编号', '事件类型', '设备状态', '液氮液位', '文件状态', '整改截止日'];
+  var OP_POOL = ['≤', '≥', '=', '≠', '包含', '为空', '不为空'];
+  var WHO_POOL = ['设备负责人', '质量负责人', '样本管理员', '采集方', '事件管控中心', '操作日志'];
+
+  var elCondRows = document.getElementById('re-cond-rows');
+  var elActRows  = document.getElementById('re-act-rows');
+  var elOrchCode = document.getElementById('re-orch-code');
+
+  var orch = {
+    conds: [
+      { field: '储存温度', op: '≤', val: '-60℃', join: 'AND' },
+      { field: '校准到期日', op: '≤', val: '30天', join: 'AND' }
+    ],
+    acts: [
+      { who: '设备负责人', how: '邮件', act: '发送通知' },
+      { who: '事件管控中心', how: '待分派', act: '生成工单' }
+    ]
+  };
+
+  /* ---------- 编辑模式：从 ?rule=<id> 载入 ---------- */
+  var editId = (location.search.match(/[?&]rule=([^&]+)/) || [])[1];
+  editId = editId ? decodeURIComponent(editId) : null;
+  var editing = null;
+  if (editId && window.RULE_STORE) {
+    editing = window.RULE_STORE.byId(editId);
+    if (editing) {
+      document.getElementById('re-title').textContent = '编辑规则';
+      document.getElementById('re-crumb').textContent = '编辑规则';
+      document.title = '编辑规则  - 体系管理智能体';
+      document.getElementById('re-name').value = editing.name;
+      if (editing.conds && editing.conds.length) orch.conds = JSON.parse(JSON.stringify(editing.conds));
+      if (editing.acts && editing.acts.length) orch.acts = JSON.parse(JSON.stringify(editing.acts));
+      var tr = document.getElementById('re-trigger');
+      if (editing.trigger) { appendOption(tr, editing.trigger); tr.value = editing.trigger; }
+    }
+  }
+  function appendOption(sel, val) {
+    for (var i = 0; i < sel.options.length; i++) if (sel.options[i].value === val || sel.options[i].text === val) return;
+    var o = document.createElement('option'); o.textContent = val; o.value = val; sel.appendChild(o);
+  }
+
+  function optList(list, cur) {
+    return list.map(function (o) { return '<option' + (o === cur ? ' selected' : '') + '>' + o + '</option>'; }).join('');
+  }
+  function renderCondRows() {
+    if (!orch.conds.length) { elCondRows.innerHTML = '<div class="pm-empty" style="padding:18px 8px;font-size:12px;">把左侧「条件节点」拖到这里</div>'; return; }
+    elCondRows.innerHTML = orch.conds.map(function (c, i) {
+      var logic = i === 0 ? '' :
+        '<div class="pm-orch-logic"><select class="select" data-orch="join" data-i="' + i + '">' + optList(['AND', 'OR'], c.join) + '</select>连接上一条件</div>';
+      return logic +
+        '<div class="pm-orch-row" draggable="true" data-zone="cond" data-i="' + i + '">' +
+        '<input class="input" data-orch="field" data-i="' + i + '" value="' + esc(c.field) + '" list="re-field-pool" />' +
+        '<select class="select" data-orch="op" data-i="' + i + '">' + optList(OP_POOL, c.op) + '</select>' +
+        '<input class="input" data-orch="val" data-i="' + i + '" value="' + esc(c.val) + '" placeholder="取值" />' +
+        '<button class="pm-orch-del" data-orch-del="cond" data-i="' + i + '" title="删除该条件">✕</button>' +
+        '</div>';
+    }).join('');
+  }
+  function renderActRows() {
+    if (!orch.acts.length) { elActRows.innerHTML = '<div class="pm-empty" style="padding:18px 8px;font-size:12px;">把左侧「动作节点」拖到这里</div>'; return; }
+    elActRows.innerHTML = orch.acts.map(function (a, i) {
+      return '<div class="pm-orch-row pm-act-row" draggable="true" data-zone="act" data-i="' + i + '">' +
+        '<select class="select" data-orch="act" data-i="' + i + '">' + optList(['发送通知', '生成工单', '阻断操作', '写入日志'], a.act) + '</select>' +
+        '<select class="select" data-orch="who" data-i="' + i + '">' + optList(WHO_POOL.concat(['入库流程', '文件持有人']), a.who) + '</select>' +
+        '<button class="pm-orch-del" data-orch-del="act" data-i="' + i + '" title="删除该动作">✕</button>' +
+        '</div>';
+    }).join('');
+  }
+  function renderCode() {
+    var condTxt = orch.conds.length
+      ? orch.conds.map(function (c, i) {
+          var seg = '（' + esc(c.field) + ' <span class="op">' + esc(c.op) + '</span> <span class="val">' + esc(c.val || '—') + '</span>）';
+          return (i ? ' <span class="op">' + esc(c.join) + '</span><br/>&nbsp;&nbsp;' : '') + seg;
+        }).join('')
+      : '<span class="op">（未配置条件）</span>';
+    var actTxt = orch.acts.length
+      ? orch.acts.map(function (a, i) {
+          return '<br/>&nbsp;&nbsp;' + (i + 1) + '. <span class="act">' + esc(a.act) + '</span> → ' + esc(a.who) + ' · ' + esc(a.how);
+        }).join('')
+      : '<br/>&nbsp;&nbsp;<span class="op">（未配置动作）</span>';
+    elOrchCode.innerHTML = '<span class="kw">IF</span> ' + condTxt + '<br/><span class="kw">THEN</span>' + actTxt;
+  }
+  function renderOrch() { renderCondRows(); renderActRows(); renderCode(); }
+
+  /* ---------- 拖拽 ---------- */
+  var dragPayload = null;
+  document.querySelectorAll('.pm-node-chip').forEach(function (chip) {
+    chip.addEventListener('dragstart', function (e) {
+      dragPayload = { src: 'palette', kind: chip.getAttribute('data-kind'), idx: +chip.getAttribute('data-idx') };
+      try { e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload)); } catch (err) {}
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+  });
+  ['re-zone-cond', 're-zone-act'].forEach(function (id) {
+    var zone = document.getElementById(id);
+    zone.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = dragPayload && dragPayload.src === 'row' ? 'move' : 'copy';
+      zone.classList.add('dragover');
+    });
+    zone.addEventListener('dragleave', function (e) { if (!zone.contains(e.relatedTarget)) zone.classList.remove('dragover'); });
+    zone.addEventListener('drop', function (e) {
+      e.preventDefault(); zone.classList.remove('dragover');
+      var payload = dragPayload;
+      if (!payload) { try { payload = JSON.parse(e.dataTransfer.getData('text/plain')); } catch (err) { return; } }
+      var target = e.target.closest('.pm-orch-row');
+      var zoneKind = zone.getAttribute('data-zone');
+      if (payload.src === 'row') {
+        if (payload.zone !== zoneKind) { window.showToast('条件与动作之间不能互相移动', 'error'); return; }
+        var list = zoneKind === 'cond' ? orch.conds : orch.acts;
+        var to = list.length;
+        if (target) {
+          var where = target.getAttribute('data-drop') || 'before';
+          var ti = +target.getAttribute('data-i');
+          to = where === 'after' ? ti + 1 : ti;
+        }
+        moveItem(list, payload.i, to); clearDropMark(); renderOrch();
+        window.showToast('已调整' + (zoneKind === 'cond' ? '条件' : '动作') + '顺序', 'info');
+        return;
+      }
+      if (payload.kind === 'cond') {
+        if (zoneKind !== 'cond') { window.showToast('条件节点只能放入 IF 条件区', 'error'); return; }
+        var c = NODE_DEF.cond[payload.idx];
+        orch.conds.push({ field: c.field, op: c.op, val: c.val, join: 'AND' });
+        renderOrch(); flashLast(elCondRows);
+        window.showToast('已添加条件：' + c.t + '（' + c.field + '）', 'success');
+        return;
+      }
+      if (payload.kind === 'act') {
+        if (zoneKind !== 'act') { window.showToast('动作节点只能放入 THEN 动作区', 'error'); return; }
+        var a = NODE_DEF.act[payload.idx];
+        orch.acts.push({ act: a.t, who: a.who, how: a.how });
+        renderOrch(); flashLast(elActRows);
+        window.showToast('已添加动作：' + a.t + ' → ' + a.who, 'success');
+        return;
+      }
+      if (payload.kind === 'logic') {
+        var name = ['AND', 'OR', 'NOT'][payload.idx];
+        if (orch.conds.length < 2) { window.showToast('至少需要 2 个条件才能使用 ' + name + ' 连接', 'error'); return; }
+        orch.conds[orch.conds.length - 1].join = name === 'NOT' ? 'AND' : name;
+        renderOrch();
+        window.showToast('连接符已切换为「' + (name === 'NOT' ? 'AND（NOT 用于单条件取反）' : name) + '」', 'info');
+      }
+    });
+  });
+  document.getElementById('re-orch-canvas').addEventListener('dragstart', function (e) {
+    var row = e.target.closest('.pm-orch-row');
+    if (!row) return;
+    dragPayload = { src: 'row', zone: row.getAttribute('data-zone'), i: +row.getAttribute('data-i') };
+    try { e.dataTransfer.setData('text/plain', JSON.stringify(dragPayload)); } catch (err) {}
+    e.dataTransfer.effectAllowed = 'move';
+    row.classList.add('dragging');
+  });
+  document.getElementById('re-orch-canvas').addEventListener('dragend', clearDropMark);
+  document.getElementById('re-orch-canvas').addEventListener('dragover', function (e) {
+    var row = e.target.closest('.pm-orch-row');
+    if (!row || !dragPayload || dragPayload.src !== 'row') return;
+    e.preventDefault();
+    var r = row.getBoundingClientRect();
+    var top = e.clientY < r.top + r.height / 2;
+    document.querySelectorAll('.pm-orch-row').forEach(function (x) { x.classList.remove('over-top', 'over-bottom'); x.removeAttribute('data-drop'); });
+    row.classList.add(top ? 'over-top' : 'over-bottom');
+    row.setAttribute('data-drop', top ? 'before' : 'after');
+  });
+  function clearDropMark() {
+    document.querySelectorAll('.pm-orch-row').forEach(function (r) { r.classList.remove('dragging', 'over-top', 'over-bottom'); r.removeAttribute('data-drop'); });
+  }
+  function moveItem(list, from, to) {
+    if (from === to || from === to - 1) return;
+    var it = list.splice(from, 1)[0];
+    list.splice(to > from ? to - 1 : to, 0, it);
+  }
+  function flashLast(host) {
+    var rows = host.querySelectorAll('.pm-orch-row'), last = rows[rows.length - 1];
+    if (!last) return; last.classList.add('pm-flash'); setTimeout(function () { last.classList.remove('pm-flash'); }, 1700);
+  }
+
+  /* ---------- 行内编辑 / 删除 ---------- */
+  document.getElementById('re-orch-canvas').addEventListener('input', function (e) {
+    var el = e.target.closest('[data-orch]'); if (!el) return;
+    var k = el.getAttribute('data-orch'), i = +el.getAttribute('data-i');
+    if (k === 'join') orch.conds[i].join = el.value;
+    else if (k === 'op') orch.conds[i].op = el.value;
+    else if (k === 'field') orch.conds[i].field = el.value;
+    else if (k === 'val') orch.conds[i].val = el.value;
+    else if (k === 'act') orch.acts[i].act = el.value;
+    else if (k === 'who') orch.acts[i].who = el.value;
+    renderCode();
+  });
+  document.getElementById('re-orch-canvas').addEventListener('change', function (e) {
+    var el = e.target.closest('select[data-orch]'); if (!el) return;
+    var k = el.getAttribute('data-orch'), i = +el.getAttribute('data-i');
+    if (k === 'join') orch.conds[i].join = el.value;
+    if (k === 'op') orch.conds[i].op = el.value;
+    if (k === 'act') orch.acts[i].act = el.value;
+    if (k === 'who') orch.acts[i].who = el.value;
+    renderCode();
+  });
+  document.getElementById('re-orch-canvas').addEventListener('click', function (e) {
+    var del = e.target.closest('[data-orch-del]'); if (!del) return;
+    var zone = del.getAttribute('data-orch-del'), i = +del.getAttribute('data-i');
+    var list = zone === 'cond' ? orch.conds : orch.acts;
+    if (list.length <= 1) { window.showToast('规则至少需保留 1 个' + (zone === 'cond' ? '条件' : '动作'), 'error'); return; }
+    list.splice(i, 1); renderOrch();
+    window.showToast('已删除该' + (zone === 'cond' ? '条件' : '动作'), 'info');
+  });
+  document.getElementById('re-orch-clear').addEventListener('click', function () {
+    if (!orch.conds.length && !orch.acts.length) { window.showToast('画布已经是空的', 'info'); return; }
+    orch.conds = []; orch.acts = []; renderOrch();
+    window.showToast('画布已清空，可从左侧拖入节点重新配置', 'info');
+  });
+
+  /* ---------- 保存规则 ---------- */
+  function saveRule() {
+    var name = (document.getElementById('re-name').value || '').trim();
+    if (!name) { window.showToast('请先填写规则名称', 'error'); document.getElementById('re-name').focus(); return; }
+    if (!orch.conds.length || !orch.acts.length) { window.showToast('请先配置条件与动作', 'error'); return; }
+    var trigger = document.getElementById('re-trigger').value;
+    var expr = 'IF ' + orch.conds.map(function (c) { return c.field + ' ' + c.op + ' ' + c.val; }).join(' / ') +
+      ' → ' + orch.acts.map(function (a) { return a.act + '：' + a.who; }).join(' + ');
+    var payload = {
+      name: name, trigger: trigger, freq: '0 次', last: '—', on: true,
+      conds: JSON.parse(JSON.stringify(orch.conds)), acts: JSON.parse(JSON.stringify(orch.acts)), expr: expr
+    };
+    if (editing && window.RULE_STORE) {
+      var m = /v(\d+)\.(\d+)/.exec(editing.ver || 'v1.0');
+      payload.ver = m ? ('v' + m[1] + '.' + (parseInt(m[2], 10) + 1)) : 'v1.1';
+      window.RULE_STORE.update(editing.id, payload);
+      window.showToast('规则已保存（' + payload.ver + '），已回写规则列表并生成新版本', 'success');
+      if (window.ROLES) ROLES.addAudit({ actor: ROLES.current(), kind: '修改', detail: '修改规则「' + name + '」编排，版本 ' + payload.ver });
+    } else {
+      payload.id = 'custom_' + Date.now();
+      payload.ver = 'v1.0';
+      if (window.RULE_STORE) window.RULE_STORE.add(payload);
+      window.showToast('规则已保存，版本号 v1.0，已写入规则列表', 'success');
+      if (window.ROLES) ROLES.addAudit({ actor: ROLES.current(), kind: '新增', detail: '新建规则「' + name + '」，版本 v1.0' });
+    }
+  }
+  document.getElementById('re-save').addEventListener('click', saveRule);
+  document.getElementById('re-tpl').addEventListener('click', function () {
+    if (!orch.conds.length) { window.showToast('请先配置条件再存为模板', 'error'); return; }
+    window.showToast('已把当前编排存为模板「' + orch.conds[0].field + ' 判定」，可在规则库「规则模板」复用', 'success');
+  });
+
+  /* ---------- 初始化 ---------- */
+  var dl = document.createElement('datalist');
+  dl.id = 're-field-pool';
+  FIELD_POOL.forEach(function (f) { var o = document.createElement('option'); o.value = f; dl.appendChild(o); });
+  document.body.appendChild(dl);
+  renderOrch();
+})();
+</script>
+</body>
+</html>
