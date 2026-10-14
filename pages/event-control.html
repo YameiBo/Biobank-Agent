@@ -179,18 +179,6 @@
 
       <div class="pm-stat-strip" id="ec-strip" style="margin-bottom:16px;"></div>
 
-      <!-- 我的待办事项（默认事件流页，2026-10-07） -->
-      <div class="card" id="ec-todo-card" style="margin-bottom:16px;">
-        <div class="card-header">
-          <div class="card-title">我的待办事项 <span class="muted" style="font-size:12px; font-weight:400;">按当前用户汇总其待完成 / 进行中 / 已完成事项</span></div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span style="font-size:12px; color:var(--text-tertiary);">当前用户</span>
-            <select class="select" id="ec-todo-user" style="width:130px; height:30px;"></select>
-          </div>
-        </div>
-        <div id="ec-todo-body"></div>
-      </div>
-
       <div class="pm-split" id="ec-stream">
         <div>
           <!-- 看板 -->
@@ -222,6 +210,18 @@
 
         <!-- 右侧栏：趋势 / 指标 / 事件详情 -->
         <aside class="pm-rail" id="ec-rail"></aside>
+      </div>
+
+      <!-- 我的待办事项（放在事件流下方，2026-10-07） -->
+      <div class="card" id="ec-todo-card" style="margin-top:16px;">
+        <div class="card-header">
+          <div class="card-title">我的待办事项 <span class="muted" style="font-size:12px; font-weight:400;">按当前用户汇总其待完成 / 进行中 / 已完成事项</span></div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span style="font-size:12px; color:var(--text-tertiary);">当前用户</span>
+            <select class="select" id="ec-todo-user" style="width:130px; height:30px;"></select>
+          </div>
+        </div>
+        <div id="ec-todo-body"></div>
       </div>
 
       <!-- 维度视图：按条款 / 按人员（与「任务分配」同源，2026-09-24） -->
