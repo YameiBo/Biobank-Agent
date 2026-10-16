@@ -8,6 +8,21 @@
 <link rel="stylesheet" href="../assets/styles.css?v=20260924m" />
 <link rel="stylesheet" href="../assets/agent-widget.css?v=20260924m" />
 <link rel="stylesheet" href="../assets/platform-modules.css?v=20260924m" />
+<style>
+  /* 样本血缘（MVP，2026-10-07） */
+  .sl-chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px 0;padding:12px;background:var(--bg-page);border:1px solid var(--border-light);border-radius:10px;overflow-x:auto;}
+  .sl-node{flex:0 0 auto;width:176px;background:#fff;border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:8px;padding:10px 12px;cursor:pointer;transition:box-shadow .15s,transform .15s;position:relative;}
+  .sl-node:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);}
+  .sl-node .sl-k{font-size:13px;font-weight:600;color:var(--text-primary);}
+  .sl-node .sl-v{font-size:11.5px;color:var(--text-secondary);margin-top:4px;line-height:1.5;min-height:34px;}
+  .sl-node .sl-meta{font-size:11px;color:var(--text-tertiary);margin-top:6px;}
+  .sl-node .sl-tag{position:absolute;top:8px;right:8px;font-size:10.5px;padding:1px 6px;border-radius:8px;background:var(--bg);color:var(--text-tertiary);}
+  .sl-node.sl-ok{border-left-color:var(--success);} .sl-node.sl-ok .sl-tag{background:#E8FFEA;color:var(--success);}
+  .sl-node.sl-warn{border-left-color:var(--warning);} .sl-node.sl-warn .sl-tag{background:#FFF3E0;color:var(--warning);}
+  .sl-node.sl-err{border-left-color:var(--error);box-shadow:0 0 0 1px rgba(245,63,63,.18);} .sl-node.sl-err .sl-tag{background:#FFECE8;color:var(--error);}
+  .sl-node.sl-pending{border-left-color:var(--border);opacity:.72;} .sl-node.sl-pending .sl-tag{background:var(--bg);color:var(--text-tertiary);}
+  .sl-arrow{flex:0 0 auto;display:flex;align-items:center;color:var(--text-tertiary);font-size:16px;padding:0 4px;}
+</style>
 </head>
 <body>
 <div class="layout">
@@ -328,6 +343,16 @@
 
         <!-- ============ 数据血缘 ============ -->
         <div data-pane="pane-lineage" style="display:none;">
+          <!-- 按样本ID 追踪血缘（MVP，2026-10-07） -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+            <div style="font-size:13px;font-weight:600;">按样本ID 追踪血缘</div>
+            <div class="search-box" style="width:280px;"><input class="input" id="dq-sl-id" placeholder="输入样本ID，如 S-20241201-042" /></div>
+            <button class="btn btn-sm btn-primary" id="dq-sl-go">查询血缘</button>
+            <select class="select" id="dq-sl-pick" style="width:190px;"><option value="">选择示例样本…</option></select>
+            <span style="font-size:12px;color:var(--text-tertiary);">以单个样本为中心：上游来源 → 下游去向，异常环节标红</span>
+          </div>
+          <div id="dq-sl-body"></div>
+          <div style="height:1px;background:var(--border-light);margin:18px 0;"></div>
           <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
             <div style="font-size:13px;font-weight:600;">数据血缘追踪</div>
             <div style="font-size:12px;color:var(--text-tertiary);">记录数据从采集到使用的完整路径</div>
@@ -589,6 +614,115 @@
       '<svg class="pm-lineage-svg" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">' + edges + nodes + '</svg>';
   }
 
+  /* ---------- 按样本ID 追踪血缘（MVP，2026-10-07） ---------- */
+  var SL_STATUS = { ok: ['sl-ok', '正常'], warn: ['sl-warn', '告警'], error: ['sl-err', '异常'], pending: ['sl-pending', '待发生'] };
+  var SL_TAG = { ok: 'tag-success', warn: 'tag-warning', error: 'tag-error', pending: 'tag-default' };
+  var SAMPLE_LINEAGE = {
+    'S-20241201-042': { sample: 'S-20241201-042', donor: 'D-00612', consent: 'IC-2024-0612', stages: [
+      { k: '供者/伦理', sys: '伦理管理系统', who: '—', time: '2024-11-20 09:00', fields: '供者 D-00612 · 同意书 IC-2024-0612 · 伦理批件 2024-EC-118', status: 'ok' },
+      { k: '采集', sys: '采集端 App', who: '吴九', time: '2024-11-20 10:12', fields: '外周血 · 采集量 6mL · 左臂', status: 'ok' },
+      { k: '运输', sys: '冷链监控', who: '吴敏', time: '2024-11-20 11:05', fields: '温度 -79.5℃ · 时长 53min · 交接人 吴敏', status: 'ok' },
+      { k: '接收登记', sys: '样本库 LIMS', who: '孙伟', time: '2024-11-20 12:30', fields: '外观合格 · 唯一编码 S-20241201-042', status: 'ok' },
+      { k: '处理/分装', sys: '分装工作台', who: '周八', time: '2024-11-20 14:10', fields: '离心 2500rpm · 分装 4 管（0.24/0.26/0.28/0.30mL）', status: 'warn' },
+      { k: '质控 QC', sys: 'QC 系统', who: '郑十', time: '2024-11-20 15:00', fields: '浓度 42ng/µL · 结论 合格', status: 'ok' },
+      { k: '储存', sys: '储存监控', who: '王志强', time: '2024-11-20 15:20', fields: 'ULT-03 · 位置 A2-03 · -80℃（温度报警）', status: 'error' },
+      { k: '出库/分发', sys: '分发管理', who: '—', time: '—', fields: '未分发', status: 'pending' },
+      { k: '使用/检测', sys: '检测系统', who: '—', time: '—', fields: '未使用', status: 'pending' },
+      { k: '报告', sys: '报告系统', who: '—', time: '—', fields: '未出具', status: 'pending' }
+    ] },
+    'S-20241201-019': { sample: 'S-20241201-019', donor: 'D-00455', consent: 'IC-2024-0455', stages: [
+      { k: '供者/伦理', sys: '伦理管理系统', who: '—', time: '2024-11-26 08:40', fields: '供者 D-00455 · 同意书 IC-2024-0455', status: 'ok' },
+      { k: '采集', sys: '采集端 App', who: '吴九', time: '2024-11-26 09:30', fields: '外周血 · 6mL', status: 'ok' },
+      { k: '运输', sys: '冷链监控', who: '吴敏', time: '2024-11-26 10:10', fields: '温度 -80.1℃ · 40min', status: 'ok' },
+      { k: '接收登记', sys: '样本库 LIMS', who: '孙伟', time: '2024-11-26 11:00', fields: '外观合格', status: 'ok' },
+      { k: '处理/分装', sys: '分装工作台', who: '周八', time: '2024-11-26 12:20', fields: '分装 3 管（0.5mL×3）', status: 'ok' },
+      { k: '质控 QC', sys: 'QC 系统', who: '郑十', time: '2024-11-26 13:10', fields: '浓度 55ng/µL · 合格', status: 'ok' },
+      { k: '储存', sys: '储存监控', who: '王志强', time: '2024-11-26 13:30', fields: 'ULT-05 · B1-07 · -80℃', status: 'ok' },
+      { k: '出库/分发', sys: '分发管理', who: '孙伟', time: '2024-12-01 09:00', fields: '分发至合作实验室（MTA-2024-33）', status: 'ok' },
+      { k: '使用/检测', sys: '检测系统', who: '周八', time: '2024-12-02 10:00', fields: '检测项目 WES · 结果已出', status: 'ok' },
+      { k: '报告', sys: '报告系统', who: '李慧', time: '2024-12-03 16:00', fields: '报告 R-2024-1203-07', status: 'ok' }
+    ] },
+    'S-20241130-057': { sample: 'S-20241130-057', donor: 'D-00128', consent: '—', stages: [
+      { k: '供者/伦理', sys: '伦理管理系统', who: '—', time: '2024-11-30 08:00', fields: '供者 D-00128 · 知情同意书编号缺失', status: 'error' },
+      { k: '采集', sys: '采集端 App', who: '吴九', time: '2024-11-30 09:10', fields: '外周血 · 6mL', status: 'ok' },
+      { k: '运输', sys: '冷链监控', who: '吴敏', time: '2024-11-30 09:50', fields: '温度 -79.8℃ · 40min', status: 'ok' },
+      { k: '接收登记', sys: '样本库 LIMS', who: '孙伟', time: '2024-11-30 10:40', fields: '外观合格（合规待补）', status: 'warn' },
+      { k: '处理/分装', sys: '分装工作台', who: '周八', time: '2024-11-30 11:30', fields: '分装 2 管（0.3mL×2）', status: 'ok' },
+      { k: '质控 QC', sys: 'QC 系统', who: '郑十', time: '2024-11-30 12:20', fields: '浓度 48ng/µL · 合格', status: 'ok' },
+      { k: '储存', sys: '储存监控', who: '王志强', time: '2024-11-30 12:40', fields: 'ULT-03 · A3-11 · -80℃', status: 'ok' },
+      { k: '出库/分发', sys: '分发管理', who: '—', time: '—', fields: '已冻结出库（合规未补齐）', status: 'pending' },
+      { k: '使用/检测', sys: '检测系统', who: '—', time: '—', fields: '—', status: 'pending' },
+      { k: '报告', sys: '报告系统', who: '—', time: '—', fields: '—', status: 'pending' }
+    ] }
+  };
+  var slCurrent = 'S-20241201-042';
+  function slRow(k, v, full) { return '<div class="desc-item' + (full ? ' full' : '') + '"><div class="desc-label">' + k + '</div><div class="desc-value">' + v + '</div></div>'; }
+  function slNodeHtml(s) {
+    var m = SL_STATUS[s.status] || SL_STATUS.ok;
+    return '<div class="sl-node ' + m[0] + '" data-sl-stage="' + esc(s.k) + '">' +
+      '<span class="sl-tag">' + m[1] + '</span>' +
+      '<div class="sl-k">' + esc(s.k) + '</div>' +
+      '<div class="sl-v">' + esc(s.fields) + '</div>' +
+      '<div class="sl-meta">' + esc(s.who) + ' · ' + esc(s.time) + '</div></div>';
+  }
+  function renderSampleLineage(id) {
+    var host = document.getElementById('dq-sl-body'); if (!host) return;
+    var d = SAMPLE_LINEAGE[id];
+    if (!d) { host.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-tertiary);">未找到该样本ID 的血缘记录，请从右侧下拉选择示例样本</div>'; return; }
+    slCurrent = id;
+    var errs = d.stages.filter(function (s) { return s.status === 'error'; }).length;
+    var warns = d.stages.filter(function (s) { return s.status === 'warn'; }).length;
+    var chain = d.stages.map(function (s, i) { return (i ? '<div class="sl-arrow">›</div>' : '') + slNodeHtml(s); }).join('');
+    var rows = d.stages.map(function (s) {
+      var m = SL_STATUS[s.status] || SL_STATUS.ok;
+      return '<tr><td><strong>' + esc(s.k) + '</strong></td><td>' + esc(s.sys) + '</td><td>' + esc(s.who) + '</td><td>' + esc(s.time) + '</td><td>' + esc(s.fields) + '</td><td><span class="tag ' + SL_TAG[s.status] + '">' + m[1] + '</span></td><td class="col-actions"><button class="btn-text" data-sl-detail="' + esc(s.k) + '">详情</button></td></tr>';
+    }).join('');
+    host.innerHTML =
+      '<div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:10px;">样本 <b>' + esc(d.sample) + '</b> · 供者 ' + esc(d.donor) + ' · 知情同意 ' + esc(d.consent) +
+      '　｜　' + d.stages.length + ' 个环节' + (errs ? ' <span class="tag tag-error">' + errs + ' 处异常</span>' : '') + (warns ? ' <span class="tag tag-warning">' + warns + ' 处告警</span>' : '') + '</div>' +
+      '<div class="sl-chain">' + chain + '</div>' +
+      '<div style="font-size:12.5px;font-weight:600;margin:16px 0 8px;">字段级血缘 / 流转明细</div>' +
+      '<div class="table-wrap"><table class="table"><thead><tr>' +
+      '<th style="width:110px;">环节</th><th style="width:130px;">来源系统</th><th style="width:80px;">操作人</th><th style="width:130px;">时间</th><th>字段 / 数据</th><th style="width:80px;">状态</th><th class="col-actions" style="width:72px;">操作</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }
+  function slOpenNode(k) {
+    var d = SAMPLE_LINEAGE[slCurrent]; if (!d) return;
+    var s = d.stages.filter(function (x) { return x.k === k; })[0]; if (!s) return;
+    var m = SL_STATUS[s.status] || SL_STATUS.ok;
+    var bad = (s.status === 'error' || s.status === 'warn');
+    modal({
+      title: '血缘节点 · ' + s.k, sub: '样本 ' + d.sample + ' · 来源系统 ' + s.sys, size: 'modal-md',
+      body: '<div class="desc-list">' +
+        slRow('环节', esc(s.k)) + slRow('来源系统', esc(s.sys)) + slRow('操作人', esc(s.who)) + slRow('时间', esc(s.time)) +
+        slRow('字段 / 数据', esc(s.fields), true) + slRow('状态', '<span class="tag ' + SL_TAG[s.status] + '">' + m[1] + '</span>') +
+        '</div>' + (bad ? '<div class="alert alert-info" style="margin-top:12px;">该环节存在' + (s.status === 'error' ? '异常' : '告警') + '，可生成事件并下发负责人跟踪整改。</div>' : ''),
+      footer: '<a class="btn" href="archive.html">关联材料</a><button class="btn" data-pm-close>关闭</button>' +
+        (bad ? '<button class="btn btn-primary" id="sl-gen-ev" data-pm-close>生成事件并下发</button>' : ''),
+      onMount: function (root) {
+        var b = root.querySelector('#sl-gen-ev');
+        if (b) b.addEventListener('click', function () {
+          if (window.EVENT_STORE) EVENT_STORE.add({ title: '样本血缘异常 · ' + s.k + '（' + d.sample + '）', type: '数据质量', pri: (s.status === 'error' ? '高' : '中'), owner: '王明', clause: '7.5', desc: '样本 ' + d.sample + ' 的「' + s.k + '」环节：' + s.fields, source: '数据质控 · 数据血缘', status: 'assigned' });
+          window.showToast('已生成事件并下发至 王明（质量管理员），可在「事件管控中心」跟踪', 'success');
+        });
+      }
+    });
+  }
+  (function initSampleLineage() {
+    var inp = document.getElementById('dq-sl-id'), go = document.getElementById('dq-sl-go'), pick = document.getElementById('dq-sl-pick'), host = document.getElementById('dq-sl-body');
+    if (!host) return;
+    if (pick) pick.innerHTML = '<option value="">选择示例样本…</option>' + Object.keys(SAMPLE_LINEAGE).map(function (k) { return '<option>' + k + '</option>'; }).join('');
+    if (go) go.addEventListener('click', function () { renderSampleLineage((inp.value || '').trim()); });
+    if (inp) inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') renderSampleLineage((inp.value || '').trim()); });
+    if (pick) pick.addEventListener('change', function () { if (pick.value) { if (inp) inp.value = pick.value; renderSampleLineage(pick.value); } });
+    host.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-sl-detail]'); if (b) { slOpenNode(b.getAttribute('data-sl-detail')); return; }
+      var n = e.target.closest('.sl-node'); if (n) slOpenNode(n.getAttribute('data-sl-stage'));
+    });
+    renderSampleLineage(slCurrent);
+  })();
+
+
   /* ---------- 弹窗 ---------- */
   function modal(opts) {
     var root = document.getElementById('pm-modal-root');
@@ -647,7 +781,7 @@
     tab.addEventListener('click', function () {
       var t = tab.getAttribute('data-target');
       if (t === 'pane-trend') setTimeout(renderTrend, 20);
-      if (t === 'pane-lineage') setTimeout(renderLineage, 20);
+      if (t === 'pane-lineage') setTimeout(function () { renderLineage(); renderSampleLineage(slCurrent); }, 20);
     });
   });
 
