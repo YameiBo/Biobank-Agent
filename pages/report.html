@@ -5,8 +5,13 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>智能报告 - CNAS 迎检</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924k" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924k" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924l" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924l" />
+<style>
+  /* 导出格式按钮的选中态（2026-10-07） */
+  .btn.sel { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+  .btn.sel::after { content: " ✓"; font-weight: 700; }
+</style>
 </head>
 <body>
 <div class="layout">
@@ -136,7 +141,7 @@
         </div>
         <div class="page-actions">
           <button class="btn" data-action="report-template">⚙ 模板管理</button>
-          <button class="btn" data-action="toast" data-msg="已进入历史报告列表">📚 历史报告</button>
+          <a class="btn" href="report-history.html">📚 历史报告</a>
           <button class="btn btn-primary" data-action="report-new">＋ 新建报告</button>
         </div>
       </div>
@@ -151,13 +156,11 @@
           <div style="font-size:13px;" id="rpt-tpl-list"></div>
 
           <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border-light);">
-            <strong style="font-size:13px; display:block; margin-bottom:8px;">已生成报告</strong>
-            <div style="font-size:12px; color:var(--text-secondary); line-height:1.9;">
-              <div>📄 CNAS-2026-自评-初稿.docx</div>
-              <div style="color:var(--text-tertiary); font-size:11px;">2026-09-05 · 8.4MB</div>
-              <div style="margin-top:8px;">📄 CNAS-2026-不符合项清单.docx</div>
-              <div style="color:var(--text-tertiary); font-size:11px;">2026-09-02 · 0.8MB</div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <strong style="font-size:13px;">已生成报告</strong>
+              <a class="btn-text" href="report-history.html" style="font-size:12px;">全部 ›</a>
             </div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.9;" id="rpt-gen-list"></div>
           </div>
         </div>
 
@@ -226,9 +229,8 @@
 
           <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-light); display:flex; gap:8px;">
             <button class="btn" data-action="report-preview">👁 预览报告</button>
-            <button class="btn" data-action="toast" data-msg="报告正在导出为 Word">📤 导出 Word</button>
-            <button class="btn" data-action="toast" data-msg="报告正在导出为 PDF">📤 导出 PDF</button>
-            <button class="btn" data-action="toast" data-msg="报告邮件分发中">📧 邮件分发</button>
+            <button class="btn" data-action="report-export" data-fmt="word">📤 导出 Word</button>
+            <button class="btn" data-action="report-export" data-fmt="pdf">📤 导出 PDF</button>
             <button class="btn btn-primary" style="margin-left:auto;" data-action="report-generate">⚡ 立即生成报告</button>
           </div>
         </div>
@@ -302,11 +304,11 @@
   </div>
 </div>
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924k"></script>
-<script src="../assets/task-store.js?v=20260924k"></script>
-  <script src="../assets/app.js?v=20260924k"></script>
-<script src="../assets/role-guard.js?v=20260924k"></script>
-<script src="../assets/agent-widget.js?v=20260924k"></script>
+<script src="../assets/roles.js?v=20260924l"></script>
+<script src="../assets/task-store.js?v=20260924l"></script>
+  <script src="../assets/app.js?v=20260924l"></script>
+<script src="../assets/role-guard.js?v=20260924l"></script>
+<script src="../assets/agent-widget.js?v=20260924l"></script>
 <script>
 /* 智能报告页交互（2026-09-24）：
    1) 右上角「＋」增加模板 → 表单弹窗 → 加入左侧列表并打开模板详情（可操作）；
@@ -603,8 +605,55 @@
     };
   };
 
+  /* ---------- 导出格式选中 + 生成报告写入历史报告 ---------- */
+  var RPT_KEY = 'cnas_reports_v1';
+  var RPT_SEED = [
+    { id: 'RPT-20260905-1', name: 'CNAS-2026-自评-初稿', no: 'CNAS-2026-Q4-SR-001', tpl: 'CNAS 自评报告', formats: ['Word'], time: '2026-09-05 10:20', size: '8.4MB', status: '已生成' },
+    { id: 'RPT-20260902-1', name: 'CNAS-2026-不符合项清单', no: 'CNAS-2026-NCR-001', tpl: '整改报告', formats: ['Word'], time: '2026-09-02 16:05', size: '0.8MB', status: '已生成' }
+  ];
+  function rptRead() { try { var a = JSON.parse(localStorage.getItem(RPT_KEY)); return Array.isArray(a) ? a : RPT_SEED.slice(); } catch (e) { return RPT_SEED.slice(); } }
+  function rptWrite(a) { try { localStorage.setItem(RPT_KEY, JSON.stringify(a)); } catch (e) { } }
+  function selectedFmts() {
+    return Array.prototype.slice.call(document.querySelectorAll('[data-action="report-export"].sel'))
+      .map(function (b) { return b.getAttribute('data-fmt') === 'pdf' ? 'PDF' : 'Word'; });
+  }
+  function renderGenList() {
+    var host = document.getElementById('rpt-gen-list'); if (!host) return;
+    var list = rptRead().slice(0, 3);
+    host.innerHTML = list.length ? list.map(function (r) {
+      var ico = (r.formats || []).indexOf('PDF') >= 0 && (r.formats || []).indexOf('Word') < 0 ? '📕' : '📄';
+      return '<div>' + ico + ' ' + esc(r.name) + '.' + ((r.formats || []).indexOf('Word') >= 0 ? 'docx' : 'pdf') + '</div>' +
+        '<div style="color:var(--text-tertiary); font-size:11px;">' + esc(r.time || '') + (r.size ? ' · ' + esc(r.size) : '') + '</div>';
+    }).join('') : '<div style="color:var(--text-tertiary);">暂无已生成报告</div>';
+  }
+  INLINE['report-export'] = function (el) {
+    el.classList.toggle('sel');
+    var on = el.classList.contains('sel');
+    window.showToast((on ? '已选择导出格式：' : '已取消导出格式：') + (el.getAttribute('data-fmt') === 'pdf' ? 'PDF' : 'Word'), on ? 'success' : 'info');
+  };
+  INLINE['report-generate'] = function () {
+    var fmts = selectedFmts();
+    if (!fmts.length) { window.showToast('请先选择导出格式（导出 Word / 导出 PDF）再生成报告', 'error'); return; }
+    var t = byId(currentTpl) || TEMPLATES[0];
+    var title = (document.getElementById('rpt-c-title') || {}).value || t.name;
+    var no = (document.getElementById('rpt-c-no') || {}).value || 'CNAS-2026-Q4-SR-001';
+    var now = new Date();
+    var p = function (n) { return n < 10 ? '0' + n : '' + n; };
+    var time = now.getFullYear() + '-' + p(now.getMonth() + 1) + '-' + p(now.getDate()) + ' ' + p(now.getHours()) + ':' + p(now.getMinutes());
+    var rec = {
+      id: 'RPT-' + now.getTime().toString(36).toUpperCase(),
+      name: title, no: no, tpl: t.name, formats: fmts, time: time,
+      size: (2 + fmts.length * 0.6).toFixed(1) + 'MB', status: '已生成'
+    };
+    var list = rptRead(); list.unshift(rec); rptWrite(list);
+    renderGenList();
+    window.showToast('报告已生成（' + fmts.join(' / ') + '），已写入「历史报告」', 'success');
+  };
+
   renderTplList();
   selectTpl(currentTpl, false);
+  try { if (!localStorage.getItem(RPT_KEY)) rptWrite(RPT_SEED.slice()); } catch (e) { }
+  renderGenList();
 })();
 </script>
 </body>

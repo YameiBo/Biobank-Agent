@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>智能报告 - CNAS 迎检</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924l" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924l" />
+<style>
+  /* 导出格式按钮的选中态（2026-10-07） */
+  .btn.sel { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+  .btn.sel::after { content: " ✓"; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="#"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="#"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="#"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3 active" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>CNAS 迎检</span><span class="sep">/</span>
+        <span>评审档案</span><span class="sep">/</span>
+        <span class="current">历史报告</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">历史报告</div>
+          <div class="page-desc">已生成报告的列表 · 查看 / 下载 / 删除；由「智能报告」页生成后写入</div>
+        </div>
+        <div class="page-actions">
+          <a class="btn" href="report.html">← 返回智能报告</a>
+          <a class="btn btn-primary" href="report.html">＋ 新建报告</a>
+        </div>
+      </div>
+
+      <div class="grid grid-4" id="rh-kpi" style="margin-bottom:16px;"></div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">报告列表</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div class="search-box"><input class="input" id="rh-search" placeholder="搜索报告名称 / 编号 / 模板" /></div>
+            <select class="select" id="rh-fmt" style="width:120px; height:32px;">
+              <option value="">全部格式</option><option value="Word">Word</option><option value="PDF">PDF</option>
+            </select>
+            <button class="btn btn-sm" id="rh-reset">重置</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr>
+              <th style="width:150px;">报告编号</th>
+              <th>报告名称</th>
+              <th style="width:130px;">模板</th>
+              <th style="width:120px;">导出格式</th>
+              <th style="width:140px;">生成时间</th>
+              <th style="width:90px;">大小</th>
+              <th style="width:88px;">状态</th>
+              <th class="col-actions" style="width:170px;">操作</th>
+            </tr></thead>
+            <tbody id="rh-body"></tbody>
+          </table>
+        </div>
+        <div style="font-size:12px;color:var(--text-tertiary);margin-top:10px;">共 <strong id="rh-count">0</strong> 份报告</div>
+      </div>
+    </main>
+  </div>
+</div>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924l"></script>
+<script src="../assets/task-store.js?v=20260924l"></script>
+<script src="../assets/app.js?v=20260924l"></script>
+<script src="../assets/role-guard.js?v=20260924l"></script>
+<script src="../assets/agent-widget.js?v=20260924l"></script>
+<script>
+/* 历史报告（报告列表页，2026-10-07）：读取 localStorage cnas_reports_v1（与智能报告页同源） */
+(function () {
+  var KEY = 'cnas_reports_v1';
+  var SEED = [
+    { id: 'RPT-20260905-1', name: 'CNAS-2026-自评-初稿', no: 'CNAS-2026-Q4-SR-001', tpl: 'CNAS 自评报告', formats: ['Word'], time: '2026-09-05 10:20', size: '8.4MB', status: '已生成' },
+    { id: 'RPT-20260902-1', name: 'CNAS-2026-不符合项清单', no: 'CNAS-2026-NCR-001', tpl: '整改报告', formats: ['Word'], time: '2026-09-02 16:05', size: '0.8MB', status: '已生成' }
+  ];
+  function read() { try { var a = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(a) ? a : SEED.slice(); } catch (e) { return SEED.slice(); } }
+  function write(a) { try { localStorage.setItem(KEY, JSON.stringify(a)); } catch (e) { } }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+  function fmtTags(fmts) { return (fmts || []).map(function (f) { return '<span class="tag ' + (f === 'PDF' ? 'tag-warning' : 'tag-primary') + '">' + f + '</span>'; }).join(' '); }
+  var kw = '', fmt = '';
+  function filtered() {
+    return read().filter(function (r) {
+      if (fmt && (r.formats || []).indexOf(fmt) < 0) return false;
+      if (kw && ((r.name || '') + ' ' + (r.no || '') + ' ' + (r.tpl || '')).indexOf(kw) < 0) return false;
+      return true;
+    });
+  }
+  function renderKpi() {
+    var all = read();
+    var w = all.filter(function (r) { return (r.formats || []).indexOf('Word') >= 0; }).length;
+    var p = all.filter(function (r) { return (r.formats || []).indexOf('PDF') >= 0; }).length;
+    var cells = [
+      { l: '📄 报告总数', v: all.length, u: '份', m: '全部已生成报告' },
+      { l: '📝 Word', v: w, u: '份', m: '可编辑正文' },
+      { l: '📕 PDF', v: p, u: '份', m: '只读定稿' },
+      { l: '🕒 最近生成', v: all.length ? (all[0].time || '').slice(5, 10) : '—', u: '', m: all.length ? all[0].name : '暂无' }
+    ];
+    document.getElementById('rh-kpi').innerHTML = cells.map(function (c) {
+      return '<div class="stat"><div class="stat-label">' + c.l + '</div>' +
+        '<div class="stat-value">' + c.v + (c.u ? '<span class="stat-unit">' + c.u + '</span>' : '') + '</div>' +
+        '<div class="stat-meta">' + esc(c.m) + '</div></div>';
+    }).join('');
+  }
+  function render() {
+    var rows = filtered();
+    document.getElementById('rh-count').textContent = rows.length;
+    document.getElementById('rh-body').innerHTML = rows.length ? rows.map(function (r) {
+      return '<tr data-id="' + esc(r.id) + '">' +
+        '<td><span style="font-family:Menlo,monospace;font-size:12px;color:var(--primary-dark);">' + esc(r.no || '—') + '</span></td>' +
+        '<td><strong>' + esc(r.name) + '</strong></td>' +
+        '<td>' + esc(r.tpl || '—') + '</td>' +
+        '<td>' + fmtTags(r.formats) + '</td>' +
+        '<td>' + esc(r.time || '—') + '</td>' +
+        '<td>' + esc(r.size || '—') + '</td>' +
+        '<td><span class="tag tag-success">' + esc(r.status || '已生成') + '</span></td>' +
+        '<td class="col-actions">' +
+          '<button class="btn-text" data-rh="preview" data-id="' + esc(r.id) + '">预览</button>' +
+          '<button class="btn-text" data-rh="download" data-id="' + esc(r.id) + '">下载</button>' +
+          '<button class="btn-text" data-rh="del" data-id="' + esc(r.id) + '" style="color:var(--error);">删除</button>' +
+        '</td></tr>';
+    }).join('') : '<tr><td colspan="8"><div style="padding:24px;text-align:center;color:var(--text-tertiary);">没有符合条件的报告，去「智能报告」页生成一份吧</div></td></tr>';
+  }
+  document.getElementById('rh-search').addEventListener('input', function () { kw = this.value.trim(); render(); });
+  document.getElementById('rh-fmt').addEventListener('change', function () { fmt = this.value; render(); });
+  document.getElementById('rh-reset').addEventListener('click', function () { kw = ''; fmt = ''; document.getElementById('rh-search').value = ''; document.getElementById('rh-fmt').value = ''; render(); });
+  document.getElementById('rh-body').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-rh]'); if (!b) return;
+    var id = b.getAttribute('data-id'), act = b.getAttribute('data-rh');
+    var list = read(), r = list.filter(function (x) { return x.id === id; })[0];
+    if (act === 'del') {
+      write(list.filter(function (x) { return x.id !== id; })); renderKpi(); render();
+      window.showToast('报告「' + (r ? r.name : '') + '」已删除', 'info'); return;
+    }
+    if (act === 'preview') { if (window.openModal) openModal('report-preview', { name: r ? r.name : '报告' }); else window.showToast('预览：' + (r ? r.name : ''), 'info'); return; }
+    if (act === 'download') { window.showToast('正在下载「' + (r ? r.name : '') + '」（' + (r && r.formats ? r.formats.join(' / ') : '') + '）', 'success'); return; }
+  });
+  try { if (!localStorage.getItem(KEY)) write(SEED.slice()); } catch (e) { }
+  renderKpi(); render();
+})();</script>
+</body>
+</html>
