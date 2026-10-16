@@ -463,7 +463,7 @@ const MODALS = {
         <div style="border:1.5px dashed var(--border);border-radius:8px;padding:22px;text-align:center;cursor:pointer;" data-modal-close data-toast="已打开文件选择器">
           <div style="font-size:26px;">📤</div>
           <div style="font-size:13px;margin-top:6px;color:var(--text-secondary);">点击或拖拽文件到此处上传</div>
-          <div style="font-size:11px;margin-top:4px;color:var(--text-tertiary);">支持 PDF / Word / Excel / 图片，单个文件不超过 50 MB</div>
+          <div style="font-size:11px;margin-top:4px;color:var(--text-tertiary);">支持 PDF / Word / Excel / JPG、PNG格式，单文件最大 50MB，单次不大于10个文件</div>
         </div>
       </div>`,
     footer: fSave()
@@ -539,7 +539,7 @@ const MODALS = {
         <div style="border:1.5px dashed var(--border);border-radius:8px;padding:22px;text-align:center;cursor:pointer;" data-modal-close data-toast="已打开文件选择器">
           <div style="font-size:26px;">📄</div>
           <div style="font-size:13px;margin-top:6px;color:var(--text-secondary);">点击或拖拽文件到此处上传</div>
-          <div style="font-size:11px;margin-top:4px;color:var(--text-tertiary);">支持 PDF / Word / Excel，单个文件不超过 50 MB</div>
+          <div style="font-size:11px;margin-top:4px;color:var(--text-tertiary);">支持 PDF / Word / Excel / JPG、PNG格式，单文件最大 50MB，单次不大于10个文件</div>
         </div>
       </div>`,
     footer: fConfirm('添加文档', '文档已添加，已加入比对列表')
@@ -981,7 +981,7 @@ const MODALS = {
         <div style="border:1.5px dashed var(--border);border-radius:8px;padding:36px;text-align:center;cursor:pointer;background:var(--primary-50);" data-modal-close data-toast="已打开文件选择器">
           <div style="font-size:40px;">📤</div>
           <div style="font-size:14px;margin-top:10px;color:var(--text-secondary);">点击选择文件或拖拽到此处</div>
-          <div style="font-size:12px;margin-top:6px;color:var(--text-tertiary);">支持 PDF / Word / Excel / PPT / 图片，单个不超过 50 MB，可多选</div>
+          <div style="font-size:12px;margin-top:6px;color:var(--text-tertiary);">支持 PDF / Word / Excel / JPG、PNG格式，单文件最大 50MB，单次不大于10个文件</div>
         </div>
       </div>
       <div class="modal-section">
@@ -1287,7 +1287,7 @@ const MODALS = {
         <div style="border:1.5px dashed var(--border);border-radius:8px;padding:32px;text-align:center;cursor:pointer;background:var(--primary-50);" data-modal-close data-toast="已打开文件选择器">
           <div style="font-size:38px;">📤</div>
           <div style="font-size:14px;margin-top:10px;color:var(--text-secondary);">点击选择文件或拖拽到此处</div>
-          <div style="font-size:12px;margin-top:6px;color:var(--text-tertiary);">支持 PDF / Word / Excel / 图片 / 扫描件，单个不超过 100 MB，可多选</div>
+          <div style="font-size:12px;margin-top:6px;color:var(--text-tertiary);">支持 PDF / Word / Excel / JPG、PNG格式，单文件最大 50MB，单次不大于10个文件</div>
         </div>
       </div>
 
@@ -2340,14 +2340,14 @@ const MODALS = {
 
   'audit-files-upload': () => ({
     title: '上传内审材料',
-    subtitle: '支持 docx / pdf / xlsx / 图片，系统将智能归类',
+    subtitle: '支持 PDF / Word / Excel / JPG、PNG格式，单文件最大 50MB，单次不大于10个文件，系统将智能归类',
     size: 'modal-lg',
     body: `
       <div class="modal-section">
         <div class="modal-section-title">📥 文件上传</div>
         <div class="dropzone">
           <div class="dropzone-icon">📎</div>
-          <div class="dropzone-text">点击或拖拽上传支持 docx / pdf / xlsx / 图片，单文件最大 50MB</div>
+          <div class="dropzone-text">点击或拖拽上传，支持 PDF / Word / Excel / JPG、PNG格式，单文件最大 50MB，单次不大于10个文件</div>
           <div class="dropzone-hint">上传后将自动 OCR 并按内容 + 文件名双因子识别</div>
         </div>
       </div>
@@ -2532,7 +2532,7 @@ const MODALS = {
     var preset = (window.CLAUSE_LIB && c.lib && window.CLAUSE_LIB.libs[c.lib] && c.cid) ? (c.lib + '|' + c.cid) : '';
     return {
       title: batch ? '批量导入材料' : '上传佐证材料',
-      subtitle: c.clause ? ('归属条款 ' + esc(c.clause) + '　·　支持 PDF / Word / Excel / 图片')
+      subtitle: c.clause ? ('归属条款 ' + esc(c.clause) + '　·　支持 PDF / Word / Excel / JPG、PNG格式，单文件最大 50MB，单次不大于10个文件')
         : '支持批量上传，系统将自动识别并推荐归档位置',
       size: 'modal-lg',
       body: `
@@ -2541,7 +2541,7 @@ const MODALS = {
           <div class="dropzone" id="evu-drop" style="cursor:pointer;">
             <div class="dropzone-icon">📎</div>
             <div class="dropzone-text">点击选择文件，或将文件拖拽到此处</div>
-            <div class="dropzone-hint">支持 PDF / Word / Excel / 图片，单文件最大 50MB${batch ? '，可多选批量导入' : ''}</div>
+            <div class="dropzone-hint">支持 PDF / Word / Excel / JPG、PNG格式，单文件最大 50MB，单次不大于10个文件${batch ? '（批量导入）' : ''}</div>
           </div>
           <input type="file" id="evu-input" multiple style="display:none"
                  accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.txt" />
