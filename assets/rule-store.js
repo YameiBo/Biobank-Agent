@@ -19,8 +19,8 @@ window.RULE_STORE = (function () {
       trigger: '定时触发（每日 08:00）', freq: '365 次', last: '12-01 08:00',
       conds: [{ field: '校准到期日', op: '≤', val: '30天', join: 'AND' }],
       acts: [{ act: '发送通知', who: '设备负责人', how: '邮件' },
-             { act: '生成工单', who: '事件管控中心', how: '待分派' }],
-      expr: 'IF 设备校准到期日 ≤ 30天 → 发送邮件通知设备负责人 + 生成预警工单'
+             { act: '生成事件', who: '事件管控中心', how: '待分派' }],
+      expr: 'IF 设备校准到期日 ≤ 30天 → 发送邮件通知设备负责人 + 生成预警事件'
     },
     {
       id: 'ncr', name: '不符合项超期告警', ver: 'v1.3', on: true,
@@ -28,7 +28,7 @@ window.RULE_STORE = (function () {
       conds: [{ field: '整改截止日', op: '≤', val: '今天', join: 'AND' },
               { field: '事件状态', op: '≠', val: '已关闭', join: 'AND' }],
       acts: [{ act: '发送通知', who: '质量负责人', how: '邮件' },
-             { act: '生成工单', who: '事件管控中心', how: '升级' }],
+             { act: '生成事件', who: '事件管控中心', how: '升级' }],
       expr: 'IF NCR 整改截止日期已过期且状态未关闭 → 发送告警至质量负责人 + 升级处理级别'
     },
     {
@@ -37,7 +37,7 @@ window.RULE_STORE = (function () {
       conds: [{ field: '储存温度', op: '≤', val: '-60℃', join: 'OR' },
               { field: '样本编号', op: '为空', val: '', join: 'OR' }],
       acts: [{ act: '阻断操作', who: '入库流程', how: '拒绝入库' },
-             { act: '生成工单', who: '事件管控中心', how: '待分派' }],
+             { act: '生成事件', who: '事件管控中心', how: '待分派' }],
       expr: 'IF 样本温度超出可接受范围 OR 标识信息不完整 → 拒绝入库 + 生成质量异常记录 + 通知采集方'
     },
     {
@@ -53,7 +53,7 @@ window.RULE_STORE = (function () {
       trigger: '传感器数据触发', freq: '12 次', last: '09-20 03:14',
       conds: [{ field: '液氮液位', op: '≤', val: '30%', join: 'AND' }],
       acts: [{ act: '发送通知', who: '样本管理员', how: '短信 + 邮件' },
-             { act: '生成工单', who: '事件管控中心', how: '待分派' }],
+             { act: '生成事件', who: '事件管控中心', how: '待分派' }],
       expr: 'IF 液氮液位 < 30% → 立即发送短信+邮件至储存管理员 + 触发补液流程'
     }
   ];

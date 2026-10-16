@@ -5,9 +5,9 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>新建规则  - 体系管理智能体</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924l" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924l" />
-<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924l" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924m" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924m" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924m" />
 </head>
 <body>
 <div class="layout">
@@ -183,7 +183,7 @@
             <div class="pm-orch-group">
               <small>动作节点</small>
               <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="0"><span class="pm-node-ico">🔔</span>发送通知</div>
-              <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="1"><span class="pm-node-ico">🧾</span>生成工单</div>
+              <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="1"><span class="pm-node-ico">🧾</span>生成事件</div>
               <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="2"><span class="pm-node-ico">⛔</span>阻断操作</div>
               <div class="pm-node-chip" draggable="true" data-kind="act" data-idx="3"><span class="pm-node-ico">🗒</span>写入日志</div>
             </div>
@@ -220,12 +220,12 @@
 </div>
 
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924l"></script>
-<script src="../assets/task-store.js?v=20260924l"></script>
-  <script src="../assets/app.js?v=20260924l"></script>
-<script src="../assets/role-guard.js?v=20260924l"></script>
-<script src="../assets/agent-widget.js?v=20260924l"></script>
-<script src="../assets/rule-store.js?v=20260924l"></script>
+<script src="../assets/roles.js?v=20260924m"></script>
+<script src="../assets/task-store.js?v=20260924m"></script>
+  <script src="../assets/app.js?v=20260924m"></script>
+<script src="../assets/role-guard.js?v=20260924m"></script>
+<script src="../assets/agent-widget.js?v=20260924m"></script>
+<script src="../assets/rule-store.js?v=20260924m"></script>
 <script>
 /* ===================== 规则库 · 新建 / 编辑规则（可视化编排） ===================== */
 (function () {
@@ -240,7 +240,7 @@
     ],
     act: [
       { t: '发送通知', who: '设备负责人', how: '邮件' },
-      { t: '生成工单', who: '事件管控中心', how: '待分派' },
+      { t: '生成事件', who: '事件管控中心', how: '待分派' },
       { t: '阻断操作', who: '入库流程', how: '拒绝入库' },
       { t: '写入日志', who: '操作日志', how: '触发日志' }
     ]
@@ -260,7 +260,7 @@
     ],
     acts: [
       { who: '设备负责人', how: '邮件', act: '发送通知' },
-      { who: '事件管控中心', how: '待分派', act: '生成工单' }
+      { who: '事件管控中心', how: '待分派', act: '生成事件' }
     ]
   };
 
@@ -307,7 +307,7 @@
     if (!orch.acts.length) { elActRows.innerHTML = '<div class="pm-empty" style="padding:18px 8px;font-size:12px;">把左侧「动作节点」拖到这里</div>'; return; }
     elActRows.innerHTML = orch.acts.map(function (a, i) {
       return '<div class="pm-orch-row pm-act-row" draggable="true" data-zone="act" data-i="' + i + '">' +
-        '<select class="select" data-orch="act" data-i="' + i + '">' + optList(['发送通知', '生成工单', '阻断操作', '写入日志'], a.act) + '</select>' +
+        '<select class="select" data-orch="act" data-i="' + i + '">' + optList(['发送通知', '生成事件', '阻断操作', '写入日志'], a.act) + '</select>' +
         '<select class="select" data-orch="who" data-i="' + i + '">' + optList(WHO_POOL.concat(['入库流程', '文件持有人']), a.who) + '</select>' +
         '<button class="pm-orch-del" data-orch-del="act" data-i="' + i + '" title="删除该动作">✕</button>' +
         '</div>';

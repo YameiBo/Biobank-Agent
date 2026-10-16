@@ -5,9 +5,9 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>事件管控中心  - 体系管理智能体</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924l" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924l" />
-<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924l" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924m" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924m" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924m" />
 <style>
   /* 维度视图（按条款 / 按人员）· 与任务分配打通（2026-09-24） */
   .ec-dim-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -248,11 +248,12 @@
 </div>
 
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924l"></script>
-<script src="../assets/task-store.js?v=20260924l"></script>
-<script src="../assets/app.js?v=20260924l"></script>
-<script src="../assets/role-guard.js?v=20260924l"></script>
-<script src="../assets/agent-widget.js?v=20260924l"></script>
+<script src="../assets/roles.js?v=20260924m"></script>
+<script src="../assets/task-store.js?v=20260924m"></script>
+<script src="../assets/event-store.js?v=20260924m"></script>
+<script src="../assets/app.js?v=20260924m"></script>
+<script src="../assets/role-guard.js?v=20260924m"></script>
+<script src="../assets/agent-widget.js?v=20260924m"></script>
 <script>
 /* ===================== 事件管控中心 · 页面交互 ===================== */
 (function () {
@@ -271,6 +272,14 @@
     { id: 'EV003', title: '样本S-20241201-042质量异常', type: '样本质量', pri: '中',   owner: '孙伟',   due: '11-30 17:00', progress: 100, status: 'closed',
       desc: '样本 S-20241201-042 温度偏高（-65℃），已拒绝入库并通知采集方。', clause: '7.2', created: '2024-11-30 11:32' }
   ];
+
+  /* 合并「数据质控」下发的事件（localStorage 共享数据源） */
+  var BASE_EVENTS = EVENTS.slice();
+  function loadStoredEvents() {
+    EVENTS = (window.EVENT_STORE ? EVENT_STORE.all() : []).concat(BASE_EVENTS);
+  }
+  loadStoredEvents();
+  window.addEventListener('eventchange', function () { loadStoredEvents(); if (typeof render === 'function') render(); });
 
   var COLS = [
     { key: 'open',     label: '待分派', cls: 'pm-col-open' },

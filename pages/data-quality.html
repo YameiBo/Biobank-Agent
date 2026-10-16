@@ -5,9 +5,9 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>样本数据质控  - 体系管理智能体</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924l" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924l" />
-<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924l" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924m" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924m" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924m" />
 </head>
 <body>
 <div class="layout">
@@ -232,7 +232,7 @@
           <div id="dq-issue-list">
             <div class="pm-issue" data-field="储存温度记录">
               <div class="pm-issue-body">
-                <div class="pm-issue-head"><span class="pm-issue-field">储存温度记录</span><span class="pm-chip pm-chip-type">异常数据</span><span class="tag tag-error">严重</span></div>
+                <div class="pm-issue-head"><span class="pm-issue-field">储存温度记录</span><span class="pm-chip pm-chip-type">异常数据</span><span class="tag tag-error">严重</span><span class="tag tag-primary" data-dq-owner="孙七">负责人 孙七</span></div>
                 <div class="pm-issue-desc">18 条记录温度超出 -80℃±2℃ 范围，请核查对应冰箱校准状态</div>
               </div>
               <div class="pm-issue-count"><b>18</b><small>条记录</small></div>
@@ -244,7 +244,7 @@
             </div>
             <div class="pm-issue" data-field="处理时间">
               <div class="pm-issue-body">
-                <div class="pm-issue-head"><span class="pm-issue-field">处理时间</span><span class="pm-chip pm-chip-type">超时数据</span><span class="tag tag-warning">中等</span></div>
+                <div class="pm-issue-head"><span class="pm-issue-field">处理时间</span><span class="pm-chip pm-chip-type">超时数据</span><span class="tag tag-warning">中等</span><span class="tag tag-primary" data-dq-owner="王明">负责人 王明</span></div>
                 <div class="pm-issue-desc">7 批次从采集到处理超过 4h，建议追溯原因并记录说明</div>
               </div>
               <div class="pm-issue-count"><b>7</b><small>条记录</small></div>
@@ -256,7 +256,7 @@
             </div>
             <div class="pm-issue" data-field="供者ID">
               <div class="pm-issue-body">
-                <div class="pm-issue-head"><span class="pm-issue-field">供者 ID</span><span class="pm-chip pm-chip-type">重复数据</span><span class="tag tag-warning">中等</span></div>
+                <div class="pm-issue-head"><span class="pm-issue-field">供者 ID</span><span class="pm-chip pm-chip-type">重复数据</span><span class="tag tag-warning">中等</span><span class="tag tag-primary" data-dq-owner="赵六">负责人 赵六</span></div>
                 <div class="pm-issue-desc">3 条记录供者 ID 相同但采集时间不同，请确认是否为同一供者的多次采集</div>
               </div>
               <div class="pm-issue-count"><b>3</b><small>条记录</small></div>
@@ -268,7 +268,7 @@
             </div>
             <div class="pm-issue" data-field="样本分装量">
               <div class="pm-issue-body">
-                <div class="pm-issue-head"><span class="pm-issue-field">样本分装量</span><span class="pm-chip pm-chip-type">异常数据</span><span class="tag tag-default">轻微</span></div>
+                <div class="pm-issue-head"><span class="pm-issue-field">样本分装量</span><span class="pm-chip pm-chip-type">异常数据</span><span class="tag tag-default">轻微</span><span class="tag tag-primary" data-dq-owner="周八">负责人 周八</span></div>
                 <div class="pm-issue-desc">18 管分装量 &lt; 0.3mL，建议核实是否满足下游使用要求</div>
               </div>
               <div class="pm-issue-count"><b>18</b><small>条记录</small></div>
@@ -280,19 +280,19 @@
             </div>
             <div class="pm-issue" data-field="知情同意书编号">
               <div class="pm-issue-body">
-                <div class="pm-issue-head"><span class="pm-issue-field">知情同意书编号</span><span class="pm-chip pm-chip-type">缺失数据</span><span class="tag tag-error">严重</span></div>
+                <div class="pm-issue-head"><span class="pm-issue-field">知情同意书编号</span><span class="pm-chip pm-chip-type">缺失数据</span><span class="tag tag-error">严重</span><span class="tag tag-primary" data-dq-owner="李慧">负责人 李慧</span></div>
                 <div class="pm-issue-desc">6 条样本记录未关联知情同意书编号，违反伦理合规要求</div>
               </div>
               <div class="pm-issue-count"><b>6</b><small>条记录</small></div>
               <div class="pm-issue-sug">
                 <span class="pm-sug-label">清洗建议</span>
-                <span>按供者档案与纸质同意书编号自动回填；30 天内无法补齐的记录冻结出库权限并生成整改工单</span>
+                <span>按供者档案与纸质同意书编号自动回填；30 天内无法补齐的记录冻结出库权限并生成整改事件</span>
                 <button class="btn btn-sm" data-dq-adopt="知情同意书编号">采纳建议</button>
               </div>
             </div>
           </div>
           <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px;">
-            点击任意问题卡可查看命中记录明细 · 清洗结果<strong>不直接改写原始数据</strong>，只生成待处理工单；采纳建议后由责任人确认执行
+            点击任意问题卡可查看命中记录明细 · 清洗结果<strong>不直接改写原始数据</strong>，只生成待处理事件并<strong>按问题类型下发至负责人 / 执行人</strong>；采纳建议后由责任人确认执行
           </div>
         </div>
 
@@ -472,12 +472,13 @@
 </div>
 
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924l"></script>
-<script src="../assets/task-store.js?v=20260924l"></script>
-  <script src="../assets/app.js?v=20260924l"></script>
-<script src="../assets/rule-store.js?v=20260924l"></script>
-<script src="../assets/role-guard.js?v=20260924l"></script>
-<script src="../assets/agent-widget.js?v=20260924l"></script>
+<script src="../assets/roles.js?v=20260924m"></script>
+<script src="../assets/task-store.js?v=20260924m"></script>
+  <script src="../assets/app.js?v=20260924m"></script>
+<script src="../assets/rule-store.js?v=20260924m"></script>
+<script src="../assets/event-store.js?v=20260924m"></script>
+<script src="../assets/role-guard.js?v=20260924m"></script>
+<script src="../assets/agent-widget.js?v=20260924m"></script>
 <script>
 /* ===================== 样本数据质控 · 页面交互 ===================== */
 (function () {
@@ -705,7 +706,7 @@
         '<div style="font-size:12.5px;color:var(--text-secondary);line-height:1.8;margin-top:12px;">' +
         '<strong>整改建议：</strong><br/>1）及时性 94.7% 为主要短板，建议对「处理时限符合性」命中的 7 个批次做原因追溯并纳入下月培训；<br/>' +
         '2）准确性维度中「样本量最低要求」仅 87.3%，建议在分装工位张贴最低分装量标识；<br/>' +
-        '3）储温异常 18 条记录需核查 ULT-03 冰箱校准状态，已同步生成事件工单。</div>',
+        '3）储温异常 18 条记录需核查 ULT-03 冰箱校准状态，已同步生成事件。</div>',
       footer: '<button class="btn" data-pm-close>取消</button><button class="btn" id="dq-export-word" data-pm-close>导出 Word</button><button class="btn btn-primary" id="dq-export-pdf" data-pm-close>导出 PDF</button>',
       onMount: function (root) {
         root.querySelector('#dq-export-word').addEventListener('click', function () { window.showToast('质量报告已导出为 Word', 'success'); });
@@ -720,7 +721,7 @@
     '处理时间': [['S-20241130-008', '5.2h', '2024-11-30 08:10', '追溯并补录说明'], ['S-20241130-022', '4.8h', '2024-11-30 12:45', '追溯并补录说明'], ['S-20241201-007', '6.1h', '2024-12-01 02:20', '追溯并补录说明'], ['S-20241201-015', '4.4h', '2024-12-01 06:50', '追溯并补录说明'], ['S-20241201-031', '5.6h', '2024-12-01 10:15', '追溯并补录说明']],
     '供者ID': [['D-00128', 'ID 重复（2 次采集）', '2024-11-24 / 11-29', '确认是否同一供者'], ['D-00455', 'ID 重复（2 次采集）', '2024-11-26 / 12-01', '确认是否同一供者'], ['D-00612', 'ID 重复（3 次采集）', '2024-11-20 / 11-25 / 11-30', '建议合并供者档案']],
     '样本分装量': [['S-20241201-052', '0.24mL', '2024-12-01 11:02', '核实下游用量要求'], ['S-20241201-063', '0.18mL', '2024-12-01 11:40', '核实下游用量要求'], ['S-20241201-071', '0.27mL', '2024-12-01 12:05', '核实下游用量要求'], ['S-20241201-088', '0.21mL', '2024-12-01 12:30', '核实下游用量要求'], ['S-20241201-094', '0.26mL', '2024-12-01 13:10', '核实下游用量要求']],
-    '知情同意书编号': [['S-20241126-011', '编号为空', '2024-11-26 09:20', '按供者档案回填同意书编号'], ['S-20241128-034', '编号为空', '2024-11-28 10:45', '调阅纸质同意书补齐'], ['S-20241129-048', '编号为空', '2024-11-29 14:12', '按供者档案回填同意书编号'], ['S-20241130-057', '编号为空', '2024-11-30 08:35', '冻结出库并生成整改工单'], ['S-20241201-072', '编号为空', '2024-12-01 09:50', '调阅纸质同意书补齐']]
+    '知情同意书编号': [['S-20241126-011', '编号为空', '2024-11-26 09:20', '按供者档案回填同意书编号'], ['S-20241128-034', '编号为空', '2024-11-28 10:45', '调阅纸质同意书补齐'], ['S-20241129-048', '编号为空', '2024-11-29 14:12', '按供者档案回填同意书编号'], ['S-20241130-057', '编号为空', '2024-11-30 08:35', '冻结出库并生成整改事件'], ['S-20241201-072', '编号为空', '2024-12-01 09:50', '调阅纸质同意书补齐']]
   };
 
   document.getElementById('dq-issue-list').addEventListener('click', function (e) {
@@ -734,10 +735,14 @@
       body: '<div class="table-wrap"><table class="table"><thead><tr><th>样本 / 供者编号</th><th>异常值</th><th>发生时间</th><th>处理建议</th></tr></thead><tbody>' +
         rows.map(function (r) { return '<tr><td><strong>' + r[0] + '</strong></td><td style="color:var(--error);">' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>'; }).join('') +
         '</tbody></table></div>',
-      footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" id="dq-gen-order" data-pm-close>批量生成整改工单</button>',
+      footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" id="dq-gen-order" data-pm-close>批量生成事件并下发</button>',
       onMount: function (root) {
         root.querySelector('#dq-gen-order').addEventListener('click', function () {
-          window.showToast('已生成 ' + total + ' 条整改工单，可在「事件管控中心」跟踪', 'success');
+          var n = 0;
+          document.querySelectorAll('#dq-issue-list .pm-issue').forEach(function (c) {
+            if (window.EVENT_STORE) { EVENT_STORE.add(makeIssueEvent(c.getAttribute('data-field'), c)); n++; }
+          });
+          window.showToast('已批量生成 ' + n + ' 条事件，按问题类型下发至负责人，可在「事件管控中心」跟踪', 'success');
         });
       }
     });
@@ -1042,6 +1047,27 @@
     });
   });
 
+  /* ---------- 数据清洗 → 生成事件（按问题类型自动指派负责人/执行人） ---------- */
+  var DQ_OWNER = {
+    '储存温度记录':   { who: '孙七', role: '设备负责人',   type: '设备异常', pri: '高', clause: '6.5' },
+    '处理时间':       { who: '王明', role: '质量管理员',   type: '整改追踪', pri: '中', clause: '7.4' },
+    '供者ID':         { who: '赵六', role: '质量管理员',   type: '数据质量', pri: '中', clause: '7.10' },
+    '样本分装量':     { who: '周八', role: '样本库操作员', type: '样本质量', pri: '中', clause: '7.6' },
+    '知情同意书编号': { who: '李慧', role: '质量负责人',   type: '样本质量', pri: '高', clause: '7.2' }
+  };
+  function makeIssueEvent(field, card) {
+    var o = DQ_OWNER[field] || { who: '王明', role: '质量管理员', type: '数据质量', pri: '中', clause: '—' };
+    var n = card ? ((card.querySelector('.pm-issue-count b') || {}).textContent || '') : '';
+    var desc = card ? ((card.querySelector('.pm-issue-desc') || {}).textContent || '') : '';
+    return {
+      title: '数据质量问题 · ' + field + (n ? '（' + n + ' 条）' : ''),
+      type: o.type, pri: o.pri, owner: o.who, due: '12-08 17:00',
+      desc: desc || ('数据清洗发现「' + field + '」质量问题'),
+      clause: o.clause, source: '数据质控 · 数据清洗', count: parseInt(n, 10) || 1,
+      status: 'assigned'
+    };
+  }
+
   document.getElementById('dq-issue-list').addEventListener('click', function (e) {
     var b = e.target.closest('[data-dq-adopt]');
     if (!b) return;
@@ -1050,17 +1076,19 @@
     b.disabled = true;
     b.style.opacity = '.55';
     b.textContent = '已采纳';
+    var o = DQ_OWNER[field] || { who: '王明', role: '质量管理员' };
+    if (window.EVENT_STORE) EVENT_STORE.add(makeIssueEvent(field, card));
     var head = card.querySelector('.pm-issue-head');
     if (head && !head.querySelector('[data-dq-adopted]')) {
       var tag = document.createElement('span');
       tag.className = 'tag tag-success';
       tag.setAttribute('data-dq-adopted', '1');
-      tag.textContent = '已生成清洗工单';
+      tag.textContent = '已生成事件 · 已下发';
       head.appendChild(tag);
     }
     card.classList.add('pm-flash');
     setTimeout(function () { card.classList.remove('pm-flash'); }, 1700);
-    window.showToast('已采纳「' + field + '」清洗建议，工单已生成并推送至事件管控中心', 'success');
+    window.showToast('已采纳「' + field + '」清洗建议，生成事件并下发至 ' + o.who + '（' + o.role + '），可在「事件管控中心」跟踪', 'success');
   });
 
   /* ---------- 初始化 ---------- */

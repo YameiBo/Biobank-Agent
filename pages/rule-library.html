@@ -5,9 +5,9 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>规则库  - 体系管理智能体</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924l" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924l" />
-<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924l" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924m" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924m" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924m" />
 </head>
 <body>
 <div class="layout">
@@ -275,12 +275,12 @@
 </div>
 
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924l"></script>
-<script src="../assets/task-store.js?v=20260924l"></script>
-  <script src="../assets/app.js?v=20260924l"></script>
-<script src="../assets/role-guard.js?v=20260924l"></script>
-<script src="../assets/agent-widget.js?v=20260924l"></script>
-<script src="../assets/rule-store.js?v=20260924l"></script>
+<script src="../assets/roles.js?v=20260924m"></script>
+<script src="../assets/task-store.js?v=20260924m"></script>
+  <script src="../assets/app.js?v=20260924m"></script>
+<script src="../assets/role-guard.js?v=20260924m"></script>
+<script src="../assets/agent-widget.js?v=20260924m"></script>
+<script src="../assets/rule-store.js?v=20260924m"></script>
 <script>
 /* ===================== 规则库 · 页面交互 ===================== */
 (function () {
@@ -413,7 +413,7 @@
         footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" data-pm-close id="rl-view-export">⬇ 导出执行记录</button>',
         html: (disabled ? '<div class="pm-banner"><span class="pm-banner-ico">⚠</span><div>该规则当前已禁用，以下为历史执行记录，仅供参考。</div></div>' : '') +
           '<div class="table-wrap"><table class="table"><thead><tr><th>执行时间</th><th>结果</th><th>耗时</th><th>说明</th></tr></thead><tbody>' +
-          [['12-01 08:00', '触发', '0.8s', '生成预警工单 WO-20241201-03'], ['11-30 08:00', '无触发', '0.2s', '当前无设备即将到期'],
+          [['12-01 08:00', '触发', '0.8s', '生成预警事件 WO-20241201-03'], ['11-30 08:00', '无触发', '0.2s', '当前无设备即将到期'],
            ['11-29 08:00', '无触发', '0.2s', '当前无设备即将到期'], ['11-28 08:00', '触发', '0.9s', '设备 EQ-021 将到期，已通知'],
            ['11-27 08:00', '无触发', '0.2s', '当前无设备即将到期']]
             .map(function (r) { return '<tr><td>' + r[0] + '</td><td><span class="tag ' + (r[1] === '触发' ? 'tag-warning' : 'tag-default') + '">' + r[1] + '</span></td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>'; }).join('') +
@@ -454,9 +454,9 @@
     { name: '设备校准到期预警', cat: '设备', scene: '计量设备到期前提前通知负责人，避免超期使用', params: [{ k: '{提前天数}', v: '30' }, { k: '{通知对象}', v: '设备负责人' }, { k: '{通知方式}', v: '邮件' }], use: 12, rule: '设备校准到期预警' },
     { name: '样本温度超限拦截', cat: '样本', scene: '入库时校验储存温度，超限直接阻断并通知采集方', params: [{ k: '{温度下限}', v: '-80' }, { k: '{温度上限}', v: '-60' }, { k: '{处理动作}', v: '拒绝入库' }], use: 31, rule: '样本温度超限拦截' },
     { name: '不符合项超期升级', cat: '质量', scene: 'NCR 整改超期自动升级通知质量负责人并提升优先级', params: [{ k: '{超期天数}', v: '1' }, { k: '{升级对象}', v: '质量负责人' }], use: 8, rule: '不符合项超期升级' },
-    { name: '库存容量预警', cat: '容量', scene: '库存使用率超过阈值时提醒扩容并生成工单', params: [{ k: '{使用率阈值}', v: '85' }, { k: '{通知方式}', v: '邮件 + 系统通知' }], use: 5, rule: '库存容量预警' },
+    { name: '库存容量预警', cat: '容量', scene: '库存使用率超过阈值时提醒扩容并生成事件', params: [{ k: '{使用率阈值}', v: '85' }, { k: '{通知方式}', v: '邮件 + 系统通知' }], use: 5, rule: '库存容量预警' },
     { name: '文件版本废止通知', cat: '质量', scene: '文件审批通过后自动废止旧版并通知持有人', params: [{ k: '{通知范围}', v: '文件持有人' }], use: 19, rule: '文件版本废止通知' },
-    { name: '知情同意缺失拦截', cat: '样本', scene: '供者知情同意字段缺失时阻断入库并生成整改工单', params: [{ k: '{校验字段}', v: '知情同意书编号' }], use: 3, rule: '知情同意缺失拦截' }
+    { name: '知情同意缺失拦截', cat: '样本', scene: '供者知情同意字段缺失时阻断入库并生成整改事件', params: [{ k: '{校验字段}', v: '知情同意书编号' }], use: 3, rule: '知情同意缺失拦截' }
   ];
   var tplGrid = document.getElementById('rl-tpl-grid');
 
@@ -532,7 +532,7 @@
      版本管理（17.3-3）
      ========================================================== */
   var VERSIONS = [
-    { v: 'v3.2', date: '2024-11-28 16:40', by: '刘梅', type: '修改阈值', sum: '校准提前预警天数 15 天 → 30 天；新增「生成预警工单」动作' },
+    { v: 'v3.2', date: '2024-11-28 16:40', by: '刘梅', type: '修改阈值', sum: '校准提前预警天数 15 天 → 30 天；新增「生成预警事件」动作' },
     { v: 'v3.1', date: '2024-10-12 09:20', by: '王志强', type: '新增条件', sum: '新增条件「设备状态 = 在用」，排除停用设备' },
     { v: 'v3.0', date: '2024-08-30 14:05', by: '刘梅', type: '结构调整', sum: '触发方式由手动改为定时（每日 08:00）' },
     { v: 'v2.2', date: '2024-06-18 11:12', by: '陈磊', type: '修改阈值', sum: '校准提前预警天数 30 天 → 15 天' },
@@ -540,7 +540,7 @@
     { v: 'v2.0', date: '2024-03-15 09:00', by: '系统管理员', type: '初始创建', sum: '规则首次创建并启用' }
   ];
   var DIFFS = {
-    'v3.2': [['mod', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 30天'], ['add', '', '→ 生成预警工单（事件管控中心 · 待分派）'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
+    'v3.2': [['mod', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 30天'], ['add', '', '→ 生成预警事件（事件管控中心 · 待分派）'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
     'v3.1': [['add', '', 'AND 设备状态 = 在用'], ['keep', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 15天'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
     'v3.0': [['mod', '触发方式：手动触发', '触发方式：定时触发（每日 08:00）'], ['keep', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 15天'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
     'v2.2': [['mod', 'IF 设备校准到期日 ≤ 30天', 'IF 设备校准到期日 ≤ 15天']],
