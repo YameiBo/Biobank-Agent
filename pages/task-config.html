@@ -286,22 +286,6 @@
           </table>
         </div>
       </div>
-
-      <!-- 智能推荐 -->
-      <div class="card" style="margin-top:16px; background:linear-gradient(135deg, #F2F7FF 0%, #FFFFFF 100%); border-color:var(--primary-100);">
-        <div class="card-header">
-          <div class="card-title"><span style="font-size:18px;">💡</span> 智能分配建议</div>
-          <button class="btn btn-sm" data-action="task-adopt">全部采纳</button>
-        </div>
-        <div style="font-size:13px; color:var(--text-secondary); line-height:1.8;">
-          <p style="margin-bottom:8px;">根据历史评审数据与人员专业方向，系统为以下条款推荐负责人：</p>
-          <ul style="margin-left:18px;">
-            <li><strong style="color:var(--primary);">6.5 计量溯源性</strong>：建议由 <strong style="color:var(--text-primary);">孙七</strong> 负责（设备/设施类专家，过去 3 次评审承担同类条款均一次性通过）</li>
-            <li><strong style="color:var(--primary);">7.2 抽样</strong>：建议由 <strong style="color:var(--text-primary);">周八</strong> 负责（分子生物实验方向，参与 8.3 抽样方案制定）</li>
-            <li><strong style="color:var(--primary);">6.4 设备</strong>：建议增加 <strong style="color:var(--text-primary);">郑十</strong> 为自评人（设备管理员，可提供完整校准记录）</li>
-          </ul>
-        </div>
-      </div>
     </main>
   </div>
 </div>
@@ -427,71 +411,6 @@
     };
   };
 
-  /* ---------- 全部采纳 ---------- */
-  var SUGGESTS = [
-    { code: '6.5', field: 3, person: '孙七', role: '负责人', why: '设备/设施类专家，过去 3 次评审承担同类条款均一次性通过' },
-    { code: '7.2', field: 3, person: '周八', role: '负责人', why: '分子生物实验方向，参与 8.3 抽样方案制定' },
-    { code: '6.4', field: 4, person: '郑十', role: '自评人', why: '设备管理员，可提供完整校准记录' }
-  ];
-
-  MODALS['task-adopt'] = function () {
-    var body =
-      '<div class="alert alert-info">💡 勾选要采纳的建议（可逐条排除），确认后写回任务清单。</div>' +
-      '<div class="modal-section"><div class="modal-section-title">智能分配建议</div>' +
-      SUGGESTS.map(function (s, i) {
-        return '<div class="check-item tc-sug" data-idx="' + i + '">' +
-          '<div class="checkbox checked"></div>' +
-          '<div class="check-item-text"><strong style="color:var(--primary);">' + s.code +
-          '</strong> 建议' + s.role + '：<strong style="color:var(--text-primary);">' + s.person + '</strong>' +
-          '<div class="check-item-note">' + s.why + '</div></div></div>';
-      }).join('') + '</div>';
-    return {
-      title: '全部采纳智能分配建议',
-      subtitle: '按历史评审数据与人员专业方向生成',
-      size: 'modal-md',
-      body: body,
-      footer: '<button class="btn" data-modal-close>取消</button>' +
-              '<button class="btn btn-primary" data-tc-adopt>确认采纳</button>',
-      onMount: function (root) {
-        var btn = root.querySelector('[data-tc-adopt]');
-        if (!btn) return;
-        btn.addEventListener('click', function () {
-          var picks = [];
-          root.querySelectorAll('.tc-sug').forEach(function (item) {
-            var cb = item.querySelector('.checkbox');
-            if (cb && cb.classList.contains('checked')) picks.push(SUGGESTS[+item.getAttribute('data-idx')]);
-          });
-          if (!picks.length) { showToast('请至少勾选一条建议', 'error'); return; }
-          var rows = document.querySelectorAll('.card tbody tr');
-          var delta = 0;
-          picks.forEach(function (s) {
-            rows.forEach(function (tr) {
-              var first = tr.cells[1].textContent.trim();
-              if (first.indexOf(s.code + ' ') !== 0) return;
-              var sel = tr.cells[s.field] ? tr.cells[s.field].querySelector('select') : null;
-              if (!sel) return;
-              var before = rowLevel(tr);
-              /* 示例表格的 select 只带了一个初始 option，直接赋 value 会
-                 静默失败（value 落空）——先补 option 再选中。 */
-              var has = Array.prototype.some.call(sel.options, function (o) { return o.value === s.person; });
-              if (!has) {
-                var opt = document.createElement('option');
-                opt.value = s.person; opt.textContent = s.person;
-                sel.appendChild(opt);
-              }
-              sel.value = s.person;
-              var after = rowLevel(tr);
-              setRowStatus(tr, after);
-              if (before !== 'ok' && after === 'ok') delta++;
-            });
-          });
-          bumpKpi(delta);
-          closeModal();
-          showToast('已采纳 ' + picks.length + ' 条智能分配建议并写回任务清单', 'success');
-        });
-      }
-    };
-  };
 
   /* ==========================================================
      任务清单 · 视图增强（2026-09-24）
@@ -605,6 +524,9 @@
       sel.innerHTML = TASK_STORE.STAGES.map(function (s) {
         return '<option' + (s === stage ? ' selected' : '') + '>' + s + '</option>';
       }).join('');
+      /* 已完成的任务：阶段锁定，不允许再修改状态 */
+      sel.disabled = (stage === '已完成');
+      sel.title = sel.disabled ? '任务已完成，阶段不可修改' : '';
     });
   }
   initStages();
