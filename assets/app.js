@@ -4067,3 +4067,59 @@ document.addEventListener('click', function (e) {
 
 window.openModal = openModal;
 window.closeModal = closeModal;
+
+
+/* ==========================================================================
+   AI 智能问答 / 知识库 / 知识图谱 —— 右侧工作区嵌入外部系统（2026-10-07）
+   保持左侧菜单布局：点击后仅把右侧 .content 换成 iframe，不做整页跳转，
+   使外部接入部分与当前系统更像一个整体。
+   ========================================================================== */
+(function () {
+  var BASE = 'http://192.168.77.144:20080/package1/';
+  var MAP = { 'AI智能问答': { k: 'chat', t: 'AI 智能问答' }, '知识库': { k: 'kb', t: '知识库' }, '知识图谱': { k: 'kg', t: '知识图谱' } };
+  var nav = document.querySelector('.sidebar-nav');
+  if (!nav) return;
+  var items = [];
+  Array.prototype.forEach.call(nav.querySelectorAll('a.sidebar-item'), function (a) {
+    var txt = a.textContent.replace(/\s/g, '');
+    Object.keys(MAP).forEach(function (name) {
+      if (txt.indexOf(name) >= 0 && txt.length <= name.length + 2 && !a.getAttribute('data-ext')) {
+        a.setAttribute('data-ext', MAP[name].k);
+        a.setAttribute('href', BASE + MAP[name].k);
+        items.push(a);
+      }
+    });
+  });
+  if (!items.length) return;
+
+  function embed(a) {
+    var k = a.getAttribute('data-ext');
+    var t = '智能体工作台';
+    Object.keys(MAP).forEach(function (n) { if (MAP[n].k === k) t = MAP[n].t; });
+    nav.querySelectorAll('.sidebar-item').forEach(function (x) { x.classList.remove('active'); });
+    a.classList.add('active');
+    var crumb = document.querySelector('.breadcrumb');
+    if (crumb) crumb.innerHTML = '<span>智能体工作台</span><span class="sep">/</span><span class="current">' + t + '</span>';
+    var main = document.querySelector('main.content') || document.querySelector('.content');
+    if (!main) return;
+    main.innerHTML =
+      '<div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">' +
+        '<div style="font-size:15px; font-weight:600;">' + t + '</div>' +
+        '<span class="tag tag-primary">外部接入</span>' +
+        '<span style="font-size:12px; color:var(--text-tertiary);">' + BASE + k + '</span>' +
+        '<span style="margin-left:auto; display:flex; gap:8px;">' +
+          '<button class="btn btn-sm" id="ext-reload">⟳ 刷新</button>' +
+          '<a class="btn btn-sm" href="' + BASE + k + '" target="_blank" rel="noopener">↗ 新窗口打开</a>' +
+        '</span>' +
+      '</div>' +
+      '<div style="border:1px solid var(--border-light); border-radius:12px; overflow:hidden; background:#fff;">' +
+        '<iframe id="ext-frame" src="' + BASE + k + '" title="' + t + '" style="width:100%; height:calc(100vh - 176px); min-height:560px; border:0; display:block;"></iframe>' +
+      '</div>' +
+      '<div class="form-hint" style="margin-top:8px;">若右侧空白，通常是该外部系统禁止被 iframe 嵌入（X-Frame-Options / CSP），可点「↗ 新窗口打开」。</div>';
+    var rb = document.getElementById('ext-reload');
+    if (rb) rb.addEventListener('click', function () { var f = document.getElementById('ext-frame'); if (f) f.src = BASE + k; });
+  }
+  items.forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); embed(a); });
+  });
+})();
