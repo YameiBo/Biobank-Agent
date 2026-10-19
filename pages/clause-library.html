@@ -240,6 +240,7 @@
           <div style="display:flex; gap:8px; align-items:center;">
             <div class="search-box"><input class="input" id="clSearch" placeholder="按条款号 / 名称搜索" /></div>
             <select class="select" id="clChFilter" style="width:150px;"></select>
+            <button class="btn btn-primary" data-action="clause-new" data-mode="single" style="height:32px; padding:0 12px; font-size:12.5px;">＋ 新增</button>
           </div>
         </div>
 
@@ -268,7 +269,8 @@
         <div id="clEmpty" class="empty" style="display:none;">
           <div class="icon">🔍</div>
           <div>没有匹配的条款</div>
-          <div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;">换个关键词查看其它条款</div>
+          <div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;">换个关键词，或直接新增一条自定义条款</div>
+          <button class="btn btn-primary" data-action="clause-new" data-mode="single" style="margin-top:14px;">＋ 新增条款</button>
         </div>
       </div>
     </main>
