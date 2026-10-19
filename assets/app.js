@@ -1385,10 +1385,15 @@ const MODALS = {
       subtitle: '查看此版本完整内容与历史状态',
       size: 'modal-xl',
       body: `<div class="version-viewer">${renderVersionViewer(name, file, activeIndex)}</div>`,
-      footer: `<div class="version-tabs">${buildVersionTabs(name, file.versions, v.ver)}</div><button class="btn btn-primary" data-modal-close>关闭</button>`,
+      footer: `<button class="btn" data-vv-exit>← 退出版本详情</button><div class="version-tabs">${buildVersionTabs(name, file.versions, v.ver)}</div><button class="btn btn-primary" data-modal-close>关闭</button>`,
       // 底部版本号切换：原地更新正文，避免重开弹窗导致滚动跳顶
       onMount(root) {
         const modal = root.querySelector('.modal') || root;
+        const exitBtn = modal.querySelector('[data-vv-exit]');
+        if (exitBtn) exitBtn.addEventListener('click', function () {
+          closeModal();
+          openModal('version-detail', { name: name, ver: v.ver, status: v.status });
+        });
         modal.addEventListener('click', function (e) {
           const tab = e.target.closest('.version-tab');
           if (!tab) return;
