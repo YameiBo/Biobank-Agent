@@ -532,7 +532,7 @@
         '<td class="col-actions">' +
           (r.st === 'nc'
             ? '<button class="btn-text" data-sa-go="' + esc(x.id) + '">详情</button> · <button class="btn-text" data-sa-go="' + esc(x.id) + '">整改</button>'
-            : '<button class="btn-text" data-sa-go="' + esc(x.id) + '">' + (r.st === 'todo' ? '开始自评' : '详情') + '</button> · <button class="btn-text" data-sa-go="' + esc(x.id) + '">编辑</button>') +
+            : '<button class="btn-text" data-sa-go="' + esc(x.id) + '">' + (r.st === 'todo' ? '开始自评' : '详情') + '</button>') +
         '</td>' +
       '</tr>';
     }).join('') : '<tr><td colspan="9" style="text-align:center; padding:28px 0; color:var(--text-tertiary); font-size:12.5px;">没有符合条件的条款</td></tr>';
