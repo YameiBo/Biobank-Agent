@@ -205,10 +205,10 @@
         '<td><div class="ell" title="' + esc(m.time) + '">' + esc(m.time) + '</div></td>' +
         '<td><span class="tag ' + st.tag + '" title="' + esc(st.desc) + '">' + esc(m.status) + '</span></td>' +
         '<td class="col-actions">' +
-          '<button class="btn-text" data-action="evidence-detail" data-id="' + esc(m.id) + '">详情</button> · ' +
+          '<button class="btn-text" data-action="evidence-detail" data-id="' + esc(m.id) + '">详情</button>' +
           (m.status === '待归类'
-            ? '<button class="btn-text" data-action="evidence-classify" data-id="' + esc(m.id) + '">归类</button>'
-            : '<button class="btn-text" data-action="evidence-preview" data-id="' + esc(m.id) + '">预览</button>') +
+            ? ' · <button class="btn-text" data-action="evidence-classify" data-id="' + esc(m.id) + '">归类</button>'
+            : '') +
         '</td></tr>';
     }).join('');
 
