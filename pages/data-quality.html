@@ -23,6 +23,10 @@
   .sl-node.sl-pending{border-left-color:var(--border);opacity:.72;} .sl-node.sl-pending .sl-tag{background:var(--bg);color:var(--text-tertiary);}
   .sl-arrow{flex:0 0 auto;display:flex;align-items:center;color:var(--text-tertiary);font-size:16px;padding:0 4px;}
 </style>
+<style>
+  .dq-sample-row { cursor: pointer; }
+  .dq-sample-row:hover td { background: var(--primary-lighter); }
+</style>
 </head>
 <body>
 <div class="layout">
@@ -156,6 +160,36 @@
         </div>
       </div>
 
+      <!-- ============ 样本列表（2026-10-07） ============ -->
+      <div id="dq-samples-view">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">样本列表 <span class="muted" style="font-size:12px; font-weight:400;">点击样本行或按样本 ID 搜索，进入该样本的质控模块</span></div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="search-box"><input class="input" id="dq-sample-search" placeholder="按样本 ID 搜索，如 S031" /></div>
+              <button class="btn btn-sm btn-primary" id="dq-sample-go">查询</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr>
+                <th style="width:92px;">样本 ID</th><th style="width:112px;">受试者</th><th style="width:88px;">数据来源</th><th style="width:132px;">疾病</th>
+                <th style="width:100px;">分期</th><th style="width:112px;">采集日期</th><th style="width:190px;">存储位置</th><th style="width:88px;">质控状态</th>
+                <th style="width:82px;">样本类型</th><th style="width:64px;">数量</th><th style="width:96px;">知情同意</th>
+              </tr></thead>
+              <tbody id="dq-sample-body"></tbody>
+            </table>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap;">
+            <span style="font-size:12px; color:var(--text-tertiary);" id="dq-sample-foot"></span>
+            <div id="dq-sample-pages" style="margin-left:auto; display:flex; gap:6px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 质控模块工作区（选中样本后显示） ============ -->
+      <div id="dq-workspace-view" style="display:none;">
+        <div class="card" id="dq-current-sample" style="margin-bottom:16px;"></div>
       <!-- 四维质量评分 -->
       <div class="grid grid-4" id="dq-kpi" style="margin-bottom:16px;"></div>
 
@@ -436,6 +470,7 @@
         </div>
 
 
+      </div>
       </div>
     </main>
   </div>
@@ -1031,6 +1066,117 @@
   renderLineage();
   renderReports();
   renderFlow();
+  /* ---------- 样本列表 → 进入质控模块（2026-10-07） ---------- */
+  (function () {
+    var DISEASES = ['肝细胞癌', '肝硬化（对照）', '肝内胆管癌', '混合型肝细胞-胆管癌', '肝细胞癌'];
+    var STAGES = ['IIIb 期', 'IV 期', 'I 期', 'Child-Pugh B', 'IIIa 期', 'II 期'];
+    var TYPES = ['血清', '血浆', '组织'];
+    var QCS = [['合格', 'tag-success'], ['合格', 'tag-success'], ['合格', 'tag-success'], ['不合格', 'tag-error'], ['待检', 'tag-warning']];
+    var LOCS = ['A 库', 'B 库'];
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    var SAMPLES = [];
+    for (var i = 1; i <= 75; i++) {
+      var id = 'S' + (i < 10 ? '00' : (i < 100 ? '0' : '')) + i;
+      SAMPLES.push({
+        id: id,
+        subject: 'SUBJ-' + (5217 + i),
+        source: (i % 11 === 7 ? '自创建' : '系统'),
+        disease: DISEASES[i % DISEASES.length],
+        stage: STAGES[i % STAGES.length],
+        date: '2026-' + (i % 3 === 0 ? '03' : '04') + '-' + pad((i * 2) % 27 + 1),
+        location: LOCS[i % 2] + ' / ' + pad((i % 4) + 1) + ' 架 / ' + pad((i * 3) % 40 + 1) + ' 盒 / B' + ((i % 6) + 1),
+        qc: QCS[i % QCS.length][0], qcCls: QCS[i % QCS.length][1],
+        type: TYPES[i % TYPES.length],
+        tubes: (i % 5) + 1,
+        consent: (i % 17 === 0 ? '已撤回' : '已签署')
+      });
+    }
+    var page = 1, PER = 15, kw = '';
+    function filtered() {
+      if (!kw) return SAMPLES;
+      var q = kw.toUpperCase();
+      return SAMPLES.filter(function (s) { return s.id.toUpperCase().indexOf(q) >= 0; });
+    }
+    function renderSamples() {
+      var list = filtered();
+      var total = list.length;
+      var pages = Math.max(1, Math.ceil(total / PER));
+      if (page > pages) page = pages;
+      var start = (page - 1) * PER;
+      var slice = list.slice(start, start + PER);
+      document.getElementById('dq-sample-body').innerHTML = slice.length ? slice.map(function (s) {
+        return '<tr class="dq-sample-row" data-sample="' + s.id + '">' +
+          '<td><strong>' + s.id + '</strong></td>' +
+          '<td>' + s.subject + '</td>' +
+          '<td>' + s.source + '</td>' +
+          '<td>' + s.disease + '</td>' +
+          '<td>' + s.stage + '</td>' +
+          '<td>' + s.date + '</td>' +
+          '<td>' + s.location + '</td>' +
+          '<td><span class="tag ' + s.qcCls + '">' + s.qc + '</span></td>' +
+          '<td>' + s.type + '</td>' +
+          '<td>' + s.tubes + '</td>' +
+          '<td><span class="tag ' + (s.consent === '已签署' ? 'tag-success' : 'tag-error') + '">' + s.consent + '</span></td>' +
+          '</tr>';
+      }).join('') : '<tr><td colspan="11"><div style="padding:24px; text-align:center; color:var(--text-tertiary);">未找到样本</div></td></tr>';
+      document.getElementById('dq-sample-foot').textContent = '第 ' + (total ? start + 1 : 0) + '–' + Math.min(start + PER, total) + ' 条 / 共 ' + total + ' 条';
+      var pg = '<button class="btn btn-sm" data-dq-page="prev"' + (page <= 1 ? ' disabled' : '') + '>上一页</button>';
+      for (var p = 1; p <= pages; p++) {
+        pg += '<button class="btn btn-sm' + (p === page ? ' btn-primary' : '') + '" data-dq-page="' + p + '">' + p + '</button>';
+      }
+      pg += '<button class="btn btn-sm" data-dq-page="next"' + (page >= pages ? ' disabled' : '') + '>下一页</button>';
+      document.getElementById('dq-sample-pages').innerHTML = pg;
+    }
+    function back() {
+      document.getElementById('dq-workspace-view').style.display = 'none';
+      document.getElementById('dq-samples-view').style.display = '';
+      var pa = document.querySelector('.page-actions'); if (pa) pa.style.display = 'none';
+    }
+    function enter(id) {
+      var s = SAMPLES.filter(function (x) { return x.id === id; })[0]; if (!s) return;
+      document.getElementById('dq-samples-view').style.display = 'none';
+      document.getElementById('dq-workspace-view').style.display = '';
+      var pa = document.querySelector('.page-actions'); if (pa) pa.style.display = '';
+      document.getElementById('dq-current-sample').innerHTML =
+        '<div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">' +
+          '<button class="btn btn-sm" id="dq-back-samples">← 返回样本列表</button>' +
+          '<span style="font-size:12.5px; color:var(--text-tertiary);">当前样本</span>' +
+          '<b style="font-size:14px;">' + s.id + '</b>' +
+          '<span class="tag tag-primary">' + s.subject + '</span>' +
+          '<span style="font-size:12.5px; color:var(--text-secondary);">' + s.disease + ' · ' + s.stage + ' · 采集 ' + s.date + ' · ' + s.location + '</span>' +
+        '</div>';
+      document.getElementById('dq-back-samples').addEventListener('click', back);
+      window.scrollTo(0, 0);
+    }
+    var search = document.getElementById('dq-sample-search');
+    function goSearch() {
+      kw = (search.value || '').trim();
+      page = 1;
+      var list = filtered();
+      if (list.length === 1) { enter(list[0].id); return; }
+      renderSamples();
+    }
+    if (search) {
+      search.addEventListener('input', function () { kw = (search.value || '').trim(); page = 1; renderSamples(); });
+      search.addEventListener('keydown', function (e) { if (e.key === 'Enter') goSearch(); });
+    }
+    var goBtn = document.getElementById('dq-sample-go'); if (goBtn) goBtn.addEventListener('click', goSearch);
+    document.getElementById('dq-sample-body').addEventListener('click', function (e) {
+      var tr = e.target.closest('[data-sample]'); if (tr) enter(tr.getAttribute('data-sample'));
+    });
+    document.getElementById('dq-sample-pages').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-dq-page]'); if (!b || b.disabled) return;
+      var v = b.getAttribute('data-dq-page');
+      var pages = Math.max(1, Math.ceil(filtered().length / PER));
+      if (v === 'prev') page = Math.max(1, page - 1);
+      else if (v === 'next') page = Math.min(pages, page + 1);
+      else page = parseInt(v, 10) || 1;
+      renderSamples();
+    });
+    renderSamples();
+    back();
+  })();
+
 })();
 </script>
 </body>
