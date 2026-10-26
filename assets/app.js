@@ -4128,3 +4128,44 @@ window.closeModal = closeModal;
     a.addEventListener('click', function (e) { e.preventDefault(); embed(a); });
   });
 })();
+
+
+/* ==========================================================================
+   当前评审条（全站顶部，2026-10-07）
+   依赖 review-store.js：显示当前激活评审，可下拉切换（全站以激活评审为准）。
+   ========================================================================== */
+(function () {
+  var RS = window.REVIEW_STORE; if (!RS) return;
+  var topbar = document.querySelector('.topbar'); if (!topbar) return;
+  var host = topbar.parentElement; if (!host) return;
+  var isPages = location.pathname.indexOf('/pages/') >= 0;
+  function link(p) { return (isPages ? '' : 'pages/') + p; }
+  function render() {
+    var bar = document.getElementById('review-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'review-bar'; bar.className = 'review-bar';
+      host.insertBefore(bar, host.querySelector('main.content') || null);
+    }
+    var a = RS.active();
+    var list = RS.all();
+    var opts = list.map(function (r) {
+      return '<option value="' + r.id + '"' + (a && r.id === a.id ? ' selected' : '') + '>' + r.name + '（' + r.id + '）</option>';
+    }).join('');
+    bar.innerHTML =
+      '<div class="rb-left">' +
+        '<span class="rb-label">当前评审</span>' +
+        (a ? '<span class="rb-name">' + a.name + '</span><span class="tag ' + (a.status === '进行中' ? 'tag-primary' : 'tag-default') + '">' + a.status + '</span><span class="rb-meta">' + a.period + ' · ' + a.std + '</span>'
+          : '<span class="rb-name" style="color:var(--warning);">未激活评审</span><span class="rb-meta">请到「评审列表」激活一个评审</span>') +
+      '</div>' +
+      '<div class="rb-right">' +
+        '<span class="rb-switch-label">切换评审</span>' +
+        '<select class="select" id="rb-select" style="width:230px;height:28px;">' + opts + '</select>' +
+        '<a class="btn btn-sm" href="' + link('review-list.html') + '">评审列表 ›</a>' +
+      '</div>';
+    var sel = document.getElementById('rb-select');
+    if (sel) sel.addEventListener('change', function () { RS.setActive(sel.value); location.reload(); });
+  }
+  render();
+  window.addEventListener('reviewchange', render);
+})();

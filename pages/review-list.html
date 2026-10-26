@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>评审列表 - CNAS 迎检</title>
+<link rel="stylesheet" href="../assets/styles.css?v=20260924r" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924r" />
+<style>
+  /* 导出格式按钮的选中态（2026-10-07） */
+  .btn.sel { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+  .btn.sel::after { content: " ✓"; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">◈</div>
+      <div class="sidebar-title">体系管理智能体</div>
+      <div class="sidebar-collapse-btn">⤢</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-item" href="http://192.168.77.144:20080/package1/chat"><span class="icon">◉</span>AI智能问答</a>
+      <a class="sidebar-item" href="http://192.168.77.144:20080/package1/kb"><span class="icon">⚡</span>知识库</a>
+      <a class="sidebar-item" href="http://192.168.77.144:20080/package1/kg"><span class="icon">◇</span>知识图谱</a>
+      <!-- 智能分析：按需求去掉（2026-09-23）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">⚙</span>智能分析</a> -->
+
+      <!-- ========== 迎检模块 · 三级菜单（2026-09-23 重构） ==========
+           一级「CNAS 迎检认可」是行式菜单，点击折叠整个模块；
+           二级＝迎检总览 + 四个分组头（同一视觉层级）；三级＝各分组子页。
+           分组顺序即业务流程：筹备 → 条款 → 材料 → 档案。
+           缩进与引导线由 styles.css 的 .sidebar-level1 / .sidebar-l2 /
+           .sidebar-l3 表达（12 → 26 → 44px），不靠 DOM 嵌套深度。
+           折叠态由 app.js 以 class "collapsed" 加在被折叠块的父级上：
+           一级加在 .sidebar-module，二级分组加在 .sidebar-group。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1 has-active">
+          <span class="icon">🏛</span>
+          <span>CNAS 迎检认可</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 active" href="review-list.html"><span class="icon">📋</span>评审列表</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="../index.html"><span class="icon">⌂</span>迎检总览</a>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📋</span>
+              <span>迎检筹备</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="task-config.html"><span class="icon">⊕</span>任务分配</a>
+              <a class="sidebar-item sidebar-l3" href="checklist.html"><span class="icon">✓</span>检查清单</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">📚</span>
+              <span>条款管理</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="clause-library.html"><span class="icon">≡</span>CNAS 条款库</a>
+              <a class="sidebar-item sidebar-l3" href="self-assessment.html"><span class="icon">☐</span>条款自评</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2">
+              <span class="icon">🗂️</span>
+              <span>证据材料中心</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3" href="archive.html"><span class="icon">📁</span>材料智能归档</a>
+              <a class="sidebar-item sidebar-l3" href="version.html"><span class="icon">↻</span>版本管理</a>
+            </div>
+          </div>
+
+          <div class="sidebar-group">
+            <div class="sidebar-group-header sidebar-l2 has-active">
+              <span class="icon">📜</span>
+              <span>评审档案</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="sidebar-subgroup">
+              <a class="sidebar-item sidebar-l3 active" href="report.html"><span class="icon">▤</span>智能报告</a>
+              <a class="sidebar-item sidebar-l3" href="history.html"><span class="icon">⏱</span>历史评审记录</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 平台级模块：迎检模块之后 -->
+      <a class="sidebar-item" href="rule-library.html"><span class="icon">📘</span>规则库</a>
+      <a class="sidebar-item" href="event-control.html"><span class="icon">🧭</span>事件管控中心</a>
+      <a class="sidebar-item" href="data-quality.html"><span class="icon">📊</span>样本数据质控</a>
+      <!-- 任务管理：按需求隐藏（2026-09-22）。恢复时把本行换回下面注释里保留的原始 <a> 即可 -->
+      <!-- 原始导航项：<a class="sidebar-item" href="#"><span class="icon">▦</span>任务管理</a> -->
+
+      <!-- ========== 系统管理 · 二级菜单（2026-09-24 新增） ==========
+           一级「系统管理」可折叠；二级＝用户管理 / 角色管理 / 操作日志。
+           RBAC 模型里对应第 9 个功能模块（权限粒度到功能模块）。 -->
+      <div class="sidebar-module">
+        <div class="sidebar-level1">
+          <span class="icon">⚙</span>
+          <span>系统管理</span>
+          <span class="arrow">▾</span>
+        </div>
+        <div class="sidebar-module-body">
+          <a class="sidebar-item sidebar-l2 root-item" href="system-users.html"><span class="icon">◎</span>用户管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-roles.html"><span class="icon">🛡</span>角色管理</a>
+          <a class="sidebar-item sidebar-l2 root-item" href="system-audit.html"><span class="icon">🔍</span>操作日志</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>CNAS 迎检</span><span class="sep">/</span>
+        <span class="current">评审列表</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon-btn">🔍</div><div class="topbar-icon-btn">🔔</div>
+        <div class="user-chip"><div class="user-avatar">质</div><span>质量管理员</span></div>
+      </div>
+    </header>
+
+    
+    
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">评审列表</div>
+          <div class="page-desc">管理历次 CNAS 评审 · 同一时间仅一个评审处于「激活」状态，全站以激活评审为准</div>
+        </div>
+      </div>
+
+      <div class="card" id="rl-active-card" style="margin-bottom:16px;"></div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">全部评审 <span class="muted" id="rl-count" style="font-size:12px; font-weight:400;"></span></div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div class="search-box"><input class="input" id="rl-search" placeholder="搜索名称 / 编号" /></div>
+            <select class="select" id="rl-status" style="width:120px; height:32px;">
+              <option value="">全部状态</option><option>进行中</option><option>已归档</option>
+            </select>
+            <button class="btn btn-sm" id="rl-reset">重置</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr>
+              <th>评审名称 / 编号</th><th style="width:96px;">类型</th><th style="width:190px;">评审周期</th><th style="width:120px;">标准</th>
+              <th style="width:130px;">进度</th><th style="width:88px;">状态</th><th style="width:110px;">激活</th><th class="col-actions" style="width:190px;">操作</th>
+            </tr></thead>
+            <tbody id="rl-body"></tbody>
+          </table>
+        </div>
+        <div style="font-size:12px; color:var(--text-tertiary); margin-top:10px;" id="rl-foot"></div>
+      </div>
+    </main>
+  </div>
+</div>
+<!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
+<script src="../assets/roles.js?v=20260924r"></script>
+<script src="../assets/task-store.js?v=20260924r"></script>
+<script src="../assets/review-store.js?v=20260924r"></script>
+<script src="../assets/app.js?v=20260924r"></script>
+<script src="../assets/role-guard.js?v=20260924r"></script>
+<script src="../assets/agent-widget.js?v=20260924r"></script>
+<script>
+(function () {
+  var RS = window.REVIEW_STORE;
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
+  var kw='', st='';
+  function pct(r){ var p=r.progress||0; return (p && p<1 ? p.toFixed(2) : p.toFixed(1)) + '%'; }
+  function renderActive(){
+    var host=document.getElementById('rl-active-card'); if(!host) return;
+    var a=RS.active();
+    if(!a){ host.innerHTML='<div style="padding:24px; text-align:center; color:var(--text-tertiary);">当前没有激活的评审，请在下方列表点「激活」。</div>'; return; }
+    host.innerHTML =
+      '<div class="card-header"><div class="card-title">当前激活评审</div><div style="display:flex; gap:8px; align-items:center;">' +
+        '<span class="tag ' + (a.status==='进行中'?'tag-primary':'tag-default') + '">' + esc(a.status) + '</span>' +
+        '<a class="btn btn-primary btn-sm" href="../index.html">进入工作台</a></div></div>' +
+      '<div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">' +
+        '<div><div style="font-size:16px; font-weight:600;">' + esc(a.name) + '</div>' +
+        '<div style="font-size:12px; color:var(--text-tertiary); margin-top:4px;">' + esc(a.id) + ' · ' + esc(a.period) + ' · 评审组：' + esc(a.team) + ' · ' + esc(a.std) + '</div></div>' +
+        '<div style="margin-left:auto; text-align:right;"><div style="font-size:12px; color:var(--text-tertiary);">条款自评已完成</div>' +
+        '<div style="font-size:18px; font-weight:700; color:var(--primary);">' + pct(a) + '</div>' +
+        '<div style="font-size:11.5px; color:var(--text-tertiary);">' + a.done + ' / ' + a.total + ' 条</div></div>' +
+      '</div>';
+  }
+  function rows(){
+    return RS.all().filter(function(r){
+      if(st && r.status!==st) return false;
+      if(kw && ((r.name||'')+' '+(r.id||'')).indexOf(kw)<0) return false;
+      return true;
+    });
+  }
+  function renderTable(){
+    var list=rows();
+    document.getElementById('rl-count').textContent='共 '+list.length+' 次';
+    document.getElementById('rl-body').innerHTML = list.length ? list.map(function(r){
+      return '<tr data-id="'+esc(r.id)+'">' +
+        '<td><div style="font-weight:600;">'+esc(r.name)+'</div><div style="font-size:11.5px; color:var(--text-tertiary);">'+esc(r.id)+' · 评审组：'+esc(r.team)+'</div></td>' +
+        '<td><span class="tag tag-primary">'+esc(r.type)+'</span></td>' +
+        '<td>'+esc(r.period)+'</td><td>'+esc(r.std)+'</td>' +
+        '<td>'+pct(r)+' <span style="font-size:11px; color:var(--text-tertiary);">('+r.done+'/'+r.total+')</span></td>' +
+        '<td><span class="tag '+(r.status==='进行中'?'tag-primary':'tag-default')+'">'+esc(r.status)+'</span></td>' +
+        '<td>'+(r.active?'<span class="tag tag-success">当前激活</span>':'—')+'</td>' +
+        '<td class="col-actions">' +
+          '<a class="btn-text" href="../index.html">进入工作台</a>' +
+          (r.active
+            ? ' · <button class="btn-text" data-rl-off="'+esc(r.id)+'" style="color:var(--text-tertiary);">取消激活</button>'
+            : ' · <button class="btn-text" data-rl-on="'+esc(r.id)+'">激活</button>') +
+        '</td></tr>';
+    }).join('') : '<tr><td colspan="8"><div style="padding:24px; text-align:center; color:var(--text-tertiary);">没有符合条件的评审</div></td></tr>';
+    document.getElementById('rl-foot').textContent = '共 '+list.length+' 条';
+  }
+  function renderAll(){ renderActive(); renderTable(); }
+  document.getElementById('rl-search').addEventListener('input', function(){ kw=this.value.trim(); renderTable(); });
+  document.getElementById('rl-status').addEventListener('change', function(){ st=this.value; renderTable(); });
+  document.getElementById('rl-reset').addEventListener('click', function(){ kw=''; st=''; document.getElementById('rl-search').value=''; document.getElementById('rl-status').value=''; renderTable(); });
+  document.getElementById('rl-body').addEventListener('click', function(e){
+    var on=e.target.closest('[data-rl-on]'); var off=e.target.closest('[data-rl-off]');
+    if(on){ RS.setActive(on.getAttribute('data-rl-on')); renderAll(); window.showToast('已激活评审，全站以该评审为准','success'); return; }
+    if(off){ RS.setActive(null); renderAll(); window.showToast('已取消激活','info'); return; }
+  });
+  renderAll();
+})();
+</script>
+</body>
+</html>

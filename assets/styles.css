@@ -1830,3 +1830,14 @@ tbody tr.selected:hover { background: var(--primary-light); }
 .sidebar-item.active::before { display: none; }
 .sidebar .sidebar-item.active .icon { opacity: 1; }
 .sidebar-item.active .nav-ai { color: var(--sidebar-bg); background: #FFFFFF; }
+
+/* ==========================================================================
+   当前评审条（全站顶部，2026-10-07）
+   ========================================================================== */
+.review-bar { display: flex; align-items: center; gap: 12px; padding: 8px 24px; background: var(--primary-50); border-bottom: 1px solid var(--primary-100); font-size: 12.5px; flex-wrap: wrap; }
+.review-bar .rb-label { color: var(--text-tertiary); }
+.review-bar .rb-name { font-weight: 600; color: var(--text-primary); }
+.review-bar .rb-meta { color: var(--text-tertiary); }
+.review-bar .rb-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.review-bar .rb-switch-label { color: var(--text-tertiary); }
+.review-bar .rb-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
