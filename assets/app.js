@@ -1090,9 +1090,9 @@ const MODALS = {
       </div>
       <div class="modal-section">
         <div class="modal-section-title">评审档案</div>
-        <div class="file-card"><div class="file-icon">📄</div><div class="file-meta"><div class="file-name">CNAS 评审报告正本.pdf</div><div class="file-sub">2.4 MB</div></div><button class="btn btn-sm" data-modal-close data-toast="正在下载">下载</button></div>
-        <div class="file-card"><div class="file-icon">📊</div><div class="file-meta"><div class="file-name">不符合项整改报告.pdf</div><div class="file-sub">1.8 MB</div></div><button class="btn btn-sm" data-modal-close data-toast="正在下载">下载</button></div>
-        <div class="file-card"><div class="file-icon">📑</div><div class="file-meta"><div class="file-name">现场评审记录与照片.zip</div><div class="file-sub">48 MB</div></div><button class="btn btn-sm" data-modal-close data-toast="正在下载">下载</button></div>
+        <div class="file-card"><div class="file-icon">📄</div><div class="file-meta"><div class="file-name">CNAS 评审报告正本.pdf</div><div class="file-sub">2.4 MB</div></div><button class="btn btn-sm" data-modal-close data-toast="正在打开预览…">预览</button><button class="btn btn-sm" data-modal-close data-toast="正在下载">下载</button></div>
+        <div class="file-card"><div class="file-icon">📊</div><div class="file-meta"><div class="file-name">不符合项整改报告.pdf</div><div class="file-sub">1.8 MB</div></div><button class="btn btn-sm" data-modal-close data-toast="正在打开预览…">预览</button><button class="btn btn-sm" data-modal-close data-toast="正在下载">下载</button></div>
+        <div class="file-card"><div class="file-icon">📑</div><div class="file-meta"><div class="file-name">现场评审记录与照片.zip</div><div class="file-sub">48 MB</div></div><button class="btn btn-sm" data-modal-close data-toast="正在打开预览…">预览</button><button class="btn btn-sm" data-modal-close data-toast="正在下载">下载</button></div>
       </div>`,
     footer: `<button class="btn" data-modal-close>关闭</button>`
   }),
