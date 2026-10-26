@@ -148,7 +148,7 @@
       <div class="page-header">
         <div>
           <div class="page-title">样本数据质控</div>
-          <div class="page-desc">多维度质量规则 · 数据清洗 · 质量评分与报告 · 血缘追踪 · 质量预警 · 脱敏与加密存储</div>
+          <div class="page-desc">多维度质量规则 · 数据清洗 · 质量评分与报告 · 血缘追踪 · 质量预警</div>
         </div>
         <div class="page-actions">
           <button class="btn" id="dq-detect">⟳ 立即检测</button>
@@ -166,7 +166,6 @@
           <div class="tab" data-target="pane-trend">质量趋势</div>
           <div class="tab" data-target="pane-lineage">数据血缘</div>
           <div class="tab" data-target="pane-alert">预警配置</div>
-          <div class="tab" data-target="pane-mask">安全与脱敏</div>
         </div>
 
         <!-- ============ 规则管理 ============ -->
@@ -255,7 +254,6 @@
               <div class="pm-issue-sug">
                 <span class="pm-sug-label">清洗建议</span>
                 <span>先核验 ULT-03 温度探头校准状态；确认属设备异常的记录保留原值并标记，属探针漂移的按同批次均值修正并留痕</span>
-                <button class="btn btn-sm" data-dq-adopt="储存温度记录">采纳建议</button>
               </div>
             </div>
             <div class="pm-issue" data-field="处理时间">
@@ -267,7 +265,6 @@
               <div class="pm-issue-sug">
                 <span class="pm-sug-label">清洗建议</span>
                 <span>自动补全「超时原因」字段为空值的记录，按交接班记录回填说明；无法溯源的统一标记为「待人工确认」</span>
-                <button class="btn btn-sm" data-dq-adopt="处理时间">采纳建议</button>
               </div>
             </div>
             <div class="pm-issue" data-field="供者ID">
@@ -279,7 +276,6 @@
               <div class="pm-issue-sug">
                 <span class="pm-sug-label">清洗建议</span>
                 <span>按「供者 ID + 采集时间 + 采集部位」组合判重：确为多次采集的合并供者档案并保留独立样本号，真重复记录标记作废</span>
-                <button class="btn btn-sm" data-dq-adopt="供者ID">采纳建议</button>
               </div>
             </div>
             <div class="pm-issue" data-field="样本分装量">
@@ -291,7 +287,6 @@
               <div class="pm-issue-sug">
                 <span class="pm-sug-label">清洗建议</span>
                 <span>不修改原始分装量，改为在样本卡上附加「分装量偏低」标记并通知下游；建议在分装工位张贴最低分装量标识</span>
-                <button class="btn btn-sm" data-dq-adopt="样本分装量">采纳建议</button>
               </div>
             </div>
             <div class="pm-issue" data-field="知情同意书编号">
@@ -303,12 +298,11 @@
               <div class="pm-issue-sug">
                 <span class="pm-sug-label">清洗建议</span>
                 <span>按供者档案与纸质同意书编号自动回填；30 天内无法补齐的记录冻结出库权限并生成整改事件</span>
-                <button class="btn btn-sm" data-dq-adopt="知情同意书编号">采纳建议</button>
               </div>
             </div>
           </div>
           <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px;">
-            点击任意问题卡可查看命中记录明细 · 清洗结果<strong>不直接改写原始数据</strong>，只生成待处理事件并<strong>按问题类型下发至负责人 / 执行人</strong>；采纳建议后由责任人确认执行
+            点击任意问题卡可查看命中记录明细 · 清洗结果<strong>不直接改写原始数据</strong>，<strong>仅提供清洗建议</strong>，由责任人线下核实处理
           </div>
         </div>
 
@@ -441,57 +435,7 @@
           </div>
         </div>
 
-        <!-- ============ 安全与脱敏（17.5-6） ============ -->
-        <div data-pane="pane-mask" style="display:none;">
-          <div class="pm-mask-grid" id="dq-mask-kpi"></div>
 
-          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px;">
-            <div style="font-size:13px;font-weight:600;">敏感字段脱敏与加密存储</div>
-            <div style="font-size:12px;color:var(--text-tertiary);">字段级脱敏规则 + 落库加密，展示层默认脱敏；确需明文时按权限申请并留痕</div>
-          </div>
-          <div class="table-wrap">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th style="width:150px;">字段</th>
-                  <th style="width:104px;">所属对象</th>
-                  <th style="width:88px;">敏感等级</th>
-                  <th>脱敏规则</th>
-                  <th style="width:134px;">加密算法</th>
-                  <th style="width:92px;">存储状态</th>
-                  <th class="col-actions" style="width:96px;">操作</th>
-                </tr>
-              </thead>
-              <tbody id="dq-mask-body"></tbody>
-            </table>
-          </div>
-
-          <div class="grid grid-2" style="margin-top:16px;">
-            <div class="pm-key-card">
-              <div class="pm-rail-title">密钥与加密策略</div>
-              <div class="pm-key-row"><span class="k">主密钥算法</span><span class="v">SM4-CBC（国密）</span></div>
-              <div class="pm-key-row"><span class="k">数据加密算法</span><span class="v">AES-256-GCM + SM4 双模式</span></div>
-              <div class="pm-key-row"><span class="k">密钥轮换周期</span><span class="v">90 天（自动）</span></div>
-              <div class="pm-key-row"><span class="k">上次轮换</span><span class="v">2024-10-08</span></div>
-              <div class="pm-key-row"><span class="k">下次轮换</span><span class="v">2025-01-06</span></div>
-              <div class="pm-key-row"><span class="k">加密覆盖率</span><span class="v" id="dq-key-cov">12 / 12 个敏感字段 · 100%</span></div>
-              <div class="pm-key-progress"><span id="dq-key-bar" style="width:72%;"></span></div>
-              <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
-                <span style="font-size:11.5px;color:var(--text-tertiary);">距下次自动轮换还有 36 天</span>
-                <button class="btn btn-sm" id="dq-key-rotate" style="margin-left:auto;">立即轮换密钥</button>
-              </div>
-            </div>
-
-            <div class="pm-key-card">
-              <div class="pm-rail-title">敏感数据访问审计（近 24 小时）</div>
-              <div id="dq-access-list"></div>
-            </div>
-          </div>
-
-          <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px;">
-            共 <strong>8</strong> 个敏感字段已配置脱敏规则 · 全部敏感字段落库加密 · 每次敏感数据访问均写入操作日志，符合数据安全管理规范
-          </div>
-        </div>
       </div>
     </main>
   </div>
@@ -871,16 +815,7 @@
       body: '<div class="table-wrap"><table class="table"><thead><tr><th>样本 / 供者编号</th><th>异常值</th><th>发生时间</th><th>处理建议</th></tr></thead><tbody>' +
         rows.map(function (r) { return '<tr><td><strong>' + r[0] + '</strong></td><td style="color:var(--error);">' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>'; }).join('') +
         '</tbody></table></div>',
-      footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" id="dq-gen-order" data-pm-close>批量生成事件并下发</button>',
-      onMount: function (root) {
-        root.querySelector('#dq-gen-order').addEventListener('click', function () {
-          var n = 0;
-          document.querySelectorAll('#dq-issue-list .pm-issue').forEach(function (c) {
-            if (window.EVENT_STORE) { EVENT_STORE.add(makeIssueEvent(c.getAttribute('data-field'), c)); n++; }
-          });
-          window.showToast('已批量生成 ' + n + ' 条事件，按问题类型下发至负责人，可在「事件管控中心」跟踪', 'success');
-        });
-      }
+      footer: '<button class="btn" data-pm-close>关闭</button>'
     });
   });
 
@@ -962,99 +897,6 @@
         '<td>' + f.path + '</td><td>' + f.cnt + '</td><td>' + f.up + '</td></tr>';
     }).join('');
   }
-
-  /* ==========================================================
-     安全与脱敏（17.5-6）
-     ========================================================== */
-  var MASKS = [
-    { f: '供者姓名', obj: '供者档案', lv: '高', lvc: 'tag-error', rule: '保留姓氏，其余以 * 代替', algo: 'SM4-CBC', raw: '张明华', masked: '张**', st: '已加密' },
-    { f: '身份证号', obj: '供者档案', lv: '高', lvc: 'tag-error', rule: '保留前 6 位与后 4 位，中间掩码', algo: 'AES-256-GCM', raw: '510107199203181234', masked: '510107********1234', st: '已加密' },
-    { f: '手机号', obj: '供者档案', lv: '高', lvc: 'tag-error', rule: '中间 4 位掩码', algo: 'AES-256-GCM', raw: '13812346677', masked: '138****6677', st: '已加密' },
-    { f: '家庭住址', obj: '供者档案', lv: '中', lvc: 'tag-warning', rule: '截断到区县一级', algo: 'SM4-CBC', raw: '四川省成都市武侯区某某路 128 号 3 栋 502', masked: '四川省成都市武侯区', st: '已加密' },
-    { f: '知情同意书编号', obj: '样本记录', lv: '中', lvc: 'tag-warning', rule: '保留后 4 位，其余掩码', algo: 'AES-256-GCM', raw: 'IC-2024-SC-0421', masked: '************0421', st: '已加密' },
-    { f: '临床诊断信息', obj: '供者档案', lv: '高', lvc: 'tag-error', rule: '仅展示 ICD 大类，不展示明细', algo: 'SM4-CBC', raw: 'D32.9 脑膜良性肿瘤', masked: 'C/D 类 · 良性肿瘤', st: '已加密' },
-    { f: '样本位置编码', obj: '库存台账', lv: '低', lvc: 'tag-default', rule: '内部编码，不脱敏', algo: 'AES-256-GCM', raw: 'LN-002-B3-014', masked: 'LN-002-B3-014', st: '已加密' },
-    { f: '检测原始结果', obj: '检测记录', lv: '中', lvc: 'tag-warning', rule: '数值区间化（±5% 区间）', algo: 'SM4-CBC', raw: '5.02 mmol/L', masked: '4.8–5.3 mmol/L', st: '已加密' }
-  ];
-
-  var ACCESS = [
-    { t: '12-01 11:32', who: '孙伟（样本管理员）', act: '查询 供者姓名', mode: '脱敏展示', use: '样本接收核对' },
-    { t: '12-01 09:15', who: '王志强（技术主管）', act: '导出 检测原始结果', mode: '脱敏导出', use: '方法学验证' },
-    { t: '12-01 08:40', who: '王明（质量主管）', act: '申请明文 身份证号', mode: '已审批（限时 30 分钟）', use: 'CNAS 评审取证' },
-    { t: '11-30 17:20', who: '刘梅（文件管理员）', act: '查询 知情同意书编号', mode: '脱敏展示', use: '文件关联校对' },
-    { t: '11-30 14:05', who: '赵丽（审计员）', act: '查询 临床诊断信息', mode: '脱敏展示', use: '内审抽样' }
-  ];
-
-  function renderMask() {
-    var kpi = [
-      { n: '8', c: '敏感字段', s: '覆盖供者与样本两类对象', color: 'var(--primary)' },
-      { n: '8', c: '已配脱敏规则', s: '字段级规则，覆盖率 100%', color: 'var(--success)' },
-      { n: '12', c: '已加密字段', s: 'AES-256-GCM / SM4-CBC', color: 'var(--pm-violet)' },
-      { n: '90', c: '密钥轮换周期（天）', s: '下次轮换 2025-01-06', color: 'var(--warning)' }
-    ];
-    document.getElementById('dq-mask-kpi').innerHTML = kpi.map(function (k) {
-      return '<div class="pm-mask-tile"><div class="pm-mask-num" style="color:' + k.color + ';">' + k.n + '</div>' +
-        '<div class="pm-mask-cap">' + k.c + '</div><div class="pm-mask-sub">' + k.s + '</div></div>';
-    }).join('');
-
-    document.getElementById('dq-mask-body').innerHTML = MASKS.map(function (m, i) {
-      return '<tr><td><strong>' + m.f + '</strong></td><td>' + m.obj + '</td>' +
-        '<td><span class="tag ' + m.lvc + '">' + m.lv + '</span></td>' +
-        '<td><span class="pm-mask-rule">' + m.rule + '</span></td>' +
-        '<td><span class="pm-hash">' + m.algo + '</span></td>' +
-        '<td><span class="tag tag-success">' + m.st + '</span></td>' +
-        '<td class="col-actions"><button class="btn-text" data-mask-view="' + i + '">脱敏预览</button></td></tr>';
-    }).join('');
-
-    document.getElementById('dq-access-list').innerHTML = ACCESS.map(function (a) {
-      return '<div class="pm-report-item"><span class="pm-report-name">' + a.who + '</span>' +
-        '<span class="pm-report-meta">' + a.act + ' · ' + a.mode + '</span>' +
-        '<span class="pm-report-meta" style="margin-left:auto;">' + a.t + '</span></div>';
-    }).join('');
-  }
-
-  document.getElementById('dq-mask-body').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-mask-view]');
-    if (!b) return;
-    var m = MASKS[+b.getAttribute('data-mask-view')];
-    modal({
-      title: '脱敏预览 · ' + m.f,
-      sub: '敏感等级 ' + m.lv + ' · 加密算法 ' + m.algo,
-      body: '<div class="pm-mask-demo">' +
-        '<div class="pm-mask-cell raw">' + esc(m.raw) + '</div>' +
-        '<div class="pm-mask-arrow">➜</div>' +
-        '<div class="pm-mask-cell masked">' + esc(m.masked) + '</div></div>' +
-        '<div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-tertiary);margin-top:6px;">' +
-        '<span>原始值（落库已加密，界面不展示）</span><span>脱敏后展示值</span></div>' +
-        '<div class="pm-desc-list" style="margin-top:14px;">' +
-        '<div class="pm-desc-row"><span class="k">脱敏规则</span><span class="v">' + m.rule + '</span></div>' +
-        '<div class="pm-desc-row"><span class="k">所属对象</span><span class="v">' + m.obj + '</span></div>' +
-        '<div class="pm-desc-row"><span class="k">存储加密</span><span class="v">' + m.algo + '（密文存储，密钥由 KMS 托管）</span></div>' +
-        '<div class="pm-desc-row"><span class="k">明文申请</span><span class="v">需在「规则库 · 用户管理」中具备该模块审批权限，且申请记录写入操作日志</span></div>' +
-        '</div>',
-      footer: '<button class="btn" data-pm-close>关闭</button><button class="btn btn-primary" data-pm-close id="dq-mask-apply">申请查看明文</button>',
-      onMount: function (root) {
-        root.querySelector('#dq-mask-apply').addEventListener('click', function () {
-          window.showToast('明文查看申请已提交，待质量主管审批（限时 30 分钟，访问将记入审计）', 'success');
-        });
-      }
-    });
-  });
-
-  document.getElementById('dq-key-rotate').addEventListener('click', function () {
-    var btn = this;
-    if (btn.disabled) return;
-    btn.disabled = true;
-    var old = btn.textContent;
-    btn.textContent = '轮换中…';
-    setTimeout(function () {
-      btn.disabled = false;
-      btn.textContent = old;
-      document.getElementById('dq-key-bar').style.width = '100%';
-      document.getElementById('dq-key-cov').textContent = '12 / 12 个敏感字段 · 100%（密钥已轮换）';
-      window.showToast('密钥已轮换完成：SM4 主密钥重新生成，历史密文已用新密钥重新加密', 'success');
-    }, 1200);
-  });
 
   /* ==========================================================
      新建质量规则 / 新建预警 / 采纳清洗建议
@@ -1183,57 +1025,12 @@
     });
   });
 
-  /* ---------- 数据清洗 → 生成事件（按问题类型自动指派负责人/执行人） ---------- */
-  var DQ_OWNER = {
-    '储存温度记录':   { who: '孙七', role: '设备负责人',   type: '设备异常', pri: '高', clause: '6.5' },
-    '处理时间':       { who: '王明', role: '质量管理员',   type: '整改追踪', pri: '中', clause: '7.4' },
-    '供者ID':         { who: '赵六', role: '质量管理员',   type: '数据质量', pri: '中', clause: '7.10' },
-    '样本分装量':     { who: '周八', role: '样本库操作员', type: '样本质量', pri: '中', clause: '7.6' },
-    '知情同意书编号': { who: '李慧', role: '质量负责人',   type: '样本质量', pri: '高', clause: '7.2' }
-  };
-  function makeIssueEvent(field, card) {
-    var o = DQ_OWNER[field] || { who: '王明', role: '质量管理员', type: '数据质量', pri: '中', clause: '—' };
-    var n = card ? ((card.querySelector('.pm-issue-count b') || {}).textContent || '') : '';
-    var desc = card ? ((card.querySelector('.pm-issue-desc') || {}).textContent || '') : '';
-    return {
-      title: '数据质量问题 · ' + field + (n ? '（' + n + ' 条）' : ''),
-      type: o.type, pri: o.pri, owner: o.who, due: '12-08 17:00',
-      desc: desc || ('数据清洗发现「' + field + '」质量问题'),
-      clause: o.clause, source: '数据质控 · 数据清洗', count: parseInt(n, 10) || 1,
-      status: 'assigned'
-    };
-  }
-
-  document.getElementById('dq-issue-list').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-dq-adopt]');
-    if (!b) return;
-    var card = b.closest('.pm-issue');
-    var field = b.getAttribute('data-dq-adopt');
-    b.disabled = true;
-    b.style.opacity = '.55';
-    b.textContent = '已采纳';
-    var o = DQ_OWNER[field] || { who: '王明', role: '质量管理员' };
-    if (window.EVENT_STORE) EVENT_STORE.add(makeIssueEvent(field, card));
-    var head = card.querySelector('.pm-issue-head');
-    if (head && !head.querySelector('[data-dq-adopted]')) {
-      var tag = document.createElement('span');
-      tag.className = 'tag tag-success';
-      tag.setAttribute('data-dq-adopted', '1');
-      tag.textContent = '已生成事件 · 已下发';
-      head.appendChild(tag);
-    }
-    card.classList.add('pm-flash');
-    setTimeout(function () { card.classList.remove('pm-flash'); }, 1700);
-    window.showToast('已采纳「' + field + '」清洗建议，生成事件并下发至 ' + o.who + '（' + o.role + '），可在「事件管控中心」跟踪', 'success');
-  });
-
   /* ---------- 初始化 ---------- */
   renderKpi();
   renderTrend();
   renderLineage();
   renderReports();
   renderFlow();
-  renderMask();
 })();
 </script>
 </body>
