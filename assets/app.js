@@ -1094,7 +1094,7 @@ const MODALS = {
         <div class="file-card"><div class="file-icon">📊</div><div class="file-meta"><div class="file-name">不符合项整改报告.pdf</div><div class="file-sub">1.8 MB</div></div><button class="btn btn-sm" data-modal-close data-toast="正在下载">下载</button></div>
         <div class="file-card"><div class="file-icon">📑</div><div class="file-meta"><div class="file-name">现场评审记录与照片.zip</div><div class="file-sub">48 MB</div></div><button class="btn btn-sm" data-modal-close data-toast="正在下载">下载</button></div>
       </div>`,
-    footer: `<button class="btn" data-modal-close>关闭</button><button class="btn" data-modal-close data-toast="已导出评审档案">导出档案</button><button class="btn btn-primary" data-modal-close data-toast="已加载该次评审经验">复用经验</button>`
+    footer: `<button class="btn" data-modal-close>关闭</button>`
   }),
 
   'history-download': (c) => ({

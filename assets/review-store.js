@@ -33,6 +33,11 @@ window.REVIEW_STORE = (function () {
   function ensure() {
     var a = read();
     if (!a || !a.length) { a = JSON.parse(JSON.stringify(SEED)); write(a); }
+    a.forEach(function (r) {
+      if (!r.source) r.source = (r.id === 'CNAS-UNIQ-8078' ? '系统创建' : '历史上传');
+      /* 历史上传档案只读：不可激活，状态固定「已归档」 */
+      if (r.source === '历史上传') { r.active = false; r.status = '已归档'; }
+    });
     return a;
   }
 

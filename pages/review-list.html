@@ -5,8 +5,8 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>评审列表 - CNAS 迎检</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924r" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924r" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924t" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924t" />
 <style>
   /* 导出格式按钮的选中态（2026-10-07） */
   .btn.sel { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
@@ -160,7 +160,7 @@
           <table class="table">
             <thead><tr>
               <th>评审名称 / 编号</th><th style="width:96px;">类型</th><th style="width:190px;">评审周期</th><th style="width:120px;">标准</th>
-              <th style="width:130px;">进度</th><th style="width:88px;">状态</th><th style="width:110px;">激活</th><th class="col-actions" style="width:190px;">操作</th>
+              <th style="width:130px;">进度</th><th style="width:88px;">状态</th><th style="width:96px;">来源</th><th style="width:110px;">激活</th><th class="col-actions" style="width:190px;">操作</th>
             </tr></thead>
             <tbody id="rl-body"></tbody>
           </table>
@@ -171,18 +171,18 @@
   </div>
 </div>
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924r"></script>
-<script src="../assets/task-store.js?v=20260924r"></script>
-<script src="../assets/review-store.js?v=20260924r"></script>
-<script src="../assets/app.js?v=20260924r"></script>
-<script src="../assets/role-guard.js?v=20260924r"></script>
-<script src="../assets/agent-widget.js?v=20260924r"></script>
+<script src="../assets/roles.js?v=20260924t"></script>
+<script src="../assets/task-store.js?v=20260924t"></script>
+<script src="../assets/review-store.js?v=20260924t"></script>
+<script src="../assets/app.js?v=20260924t"></script>
+<script src="../assets/role-guard.js?v=20260924t"></script>
+<script src="../assets/agent-widget.js?v=20260924t"></script>
 <script>
 (function () {
   var RS = window.REVIEW_STORE;
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
   var kw='', st='';
-  function pct(r){ var p=r.progress||0; return (p && p<1 ? p.toFixed(2) : p.toFixed(1)) + '%'; }
+  function pct(r){ var p=r.progress||0; return (p<=1 ? (p*100).toFixed(0) : p.toFixed(1)) + '%'; }
   function renderActive(){
     var host=document.getElementById('rl-active-card'); if(!host) return;
     var a=RS.active();
@@ -210,20 +210,25 @@
     var list=rows();
     document.getElementById('rl-count').textContent='共 '+list.length+' 次';
     document.getElementById('rl-body').innerHTML = list.length ? list.map(function(r){
+      var isHist = (r.source||'') === '历史上传';
+      var srcTag = isHist ? '<span class="tag tag-warning">历史上传</span>' : '<span class="tag tag-primary">系统创建</span>';
+      var activeCell = isHist ? '—' : (r.active?'<span class="tag tag-success">当前激活</span>':'—');
+      var ops = isHist
+        ? '<a class="btn-text" href="history.html?archive='+encodeURIComponent(r.id)+'">查看</a>'
+        : ('<a class="btn-text" href="../index.html">进入工作台</a>' +
+            (r.active
+              ? ' · <button class="btn-text" data-rl-off="'+esc(r.id)+'" style="color:var(--text-tertiary);">取消激活</button>'
+              : ' · <button class="btn-text" data-rl-on="'+esc(r.id)+'">激活</button>'));
       return '<tr data-id="'+esc(r.id)+'">' +
         '<td><div style="font-weight:600;">'+esc(r.name)+'</div><div style="font-size:11.5px; color:var(--text-tertiary);">'+esc(r.id)+' · 评审组：'+esc(r.team)+'</div></td>' +
         '<td><span class="tag tag-primary">'+esc(r.type)+'</span></td>' +
         '<td>'+esc(r.period)+'</td><td>'+esc(r.std)+'</td>' +
         '<td>'+pct(r)+' <span style="font-size:11px; color:var(--text-tertiary);">('+r.done+'/'+r.total+')</span></td>' +
         '<td><span class="tag '+(r.status==='进行中'?'tag-primary':'tag-default')+'">'+esc(r.status)+'</span></td>' +
-        '<td>'+(r.active?'<span class="tag tag-success">当前激活</span>':'—')+'</td>' +
-        '<td class="col-actions">' +
-          '<a class="btn-text" href="../index.html">进入工作台</a>' +
-          (r.active
-            ? ' · <button class="btn-text" data-rl-off="'+esc(r.id)+'" style="color:var(--text-tertiary);">取消激活</button>'
-            : ' · <button class="btn-text" data-rl-on="'+esc(r.id)+'">激活</button>') +
-        '</td></tr>';
-    }).join('') : '<tr><td colspan="8"><div style="padding:24px; text-align:center; color:var(--text-tertiary);">没有符合条件的评审</div></td></tr>';
+        '<td>'+srcTag+'</td>' +
+        '<td>'+activeCell+'</td>' +
+        '<td class="col-actions">'+ops+'</td></tr>';
+    }).join('') : '<tr><td colspan="9"><div style="padding:24px; text-align:center; color:var(--text-tertiary);">没有符合条件的评审</div></td></tr>';
     document.getElementById('rl-foot').textContent = '共 '+list.length+' 条';
   }
   function renderAll(){ renderActive(); renderTable(); }
