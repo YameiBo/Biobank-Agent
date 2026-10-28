@@ -18,16 +18,16 @@ window.RULE_STORE = (function () {
       id: 'calib', name: '设备校准到期预警', ver: 'v2.1', on: true,
       trigger: '定时触发（每日 08:00）', freq: '365 次', last: '12-01 08:00',
       conds: [{ field: '校准到期日', op: '≤', val: '30天', join: 'AND' }],
-      acts: [{ act: '发送通知', who: '设备负责人', how: '邮件' },
+      acts: [{ act: '发送通知', who: '设备负责人', how: '系统通知' },
              { act: '生成事件', who: '事件管控中心', how: '待分派' }],
-      expr: 'IF 设备校准到期日 ≤ 30天 → 发送邮件通知设备负责人 + 生成预警事件'
+      expr: 'IF 设备校准到期日 ≤ 30天 → 发送系统通知设备负责人 + 生成预警事件'
     },
     {
       id: 'ncr', name: '不符合项超期告警', ver: 'v1.3', on: true,
       trigger: '定时触发（每日 09:00）', freq: '48 次', last: '12-01 09:00',
       conds: [{ field: '整改截止日', op: '≤', val: '今天', join: 'AND' },
               { field: '事件状态', op: '≠', val: '已关闭', join: 'AND' }],
-      acts: [{ act: '发送通知', who: '质量负责人', how: '邮件' },
+      acts: [{ act: '发送通知', who: '质量负责人', how: '系统通知' },
              { act: '生成事件', who: '事件管控中心', how: '升级' }],
       expr: 'IF NCR 整改截止日期已过期且状态未关闭 → 发送告警至质量负责人 + 升级处理级别'
     },
@@ -52,9 +52,9 @@ window.RULE_STORE = (function () {
       id: 'ln2', name: '液氮液位低告警', ver: 'v1.0', on: false,
       trigger: '传感器数据触发', freq: '12 次', last: '09-20 03:14',
       conds: [{ field: '液氮液位', op: '≤', val: '30%', join: 'AND' }],
-      acts: [{ act: '发送通知', who: '样本管理员', how: '短信 + 邮件' },
+      acts: [{ act: '发送通知', who: '样本管理员', how: '系统通知' },
              { act: '生成事件', who: '事件管控中心', how: '待分派' }],
-      expr: 'IF 液氮液位 < 30% → 立即发送短信+邮件至储存管理员 + 触发补液流程'
+      expr: 'IF 液氮液位 < 30% → 立即发送系统通知至储存管理员 + 触发补液流程'
     }
   ];
 

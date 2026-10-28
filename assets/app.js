@@ -2243,7 +2243,7 @@ const MODALS = {
           </tbody>
         </table>
       </div>`,
-    footer: `<button class="btn" data-modal-close>关闭</button><button class="btn" data-modal-close data-toast="正在导出 Word">📤 导出 Word</button><button class="btn" data-modal-close data-toast="正在导出 PDF">📤 导出 PDF</button><button class="btn btn-primary" data-modal-close data-toast="已邮件发送至管理层">📧 邮件发送</button>`
+    footer: `<button class="btn" data-modal-close>关闭</button><button class="btn" data-modal-close data-toast="正在导出 Word">📤 导出 Word</button><button class="btn" data-modal-close data-toast="正在导出 PDF">📤 导出 PDF</button><button class="btn btn-primary" data-modal-close data-toast="已通过系统通知发送至管理层">📩 系统通知</button>`
   }),
 
   'audit-report-new': () => ({
@@ -2482,7 +2482,7 @@ const MODALS = {
     body: `
       <div class="modal-section">
         <div class="modal-section-title">提醒设置</div>
-        <div class="check-item"><div class="checkbox checked"></div><div class="check-item-text">任务截止前 3 天提醒负责人<div class="check-item-note">站内消息 + 邮件</div></div></div>
+        <div class="check-item"><div class="checkbox checked"></div><div class="check-item-text">任务截止前 3 天提醒负责人<div class="check-item-note">系统通知</div></div></div>
         <div class="check-item"><div class="checkbox checked"></div><div class="check-item-text">自评提交后通知复核人</div></div>
         <div class="check-item"><div class="checkbox"></div><div class="check-item-text">每周一推送迎检进度周报</div></div>
       </div>

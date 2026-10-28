@@ -5,9 +5,9 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>规则库  - 体系管理智能体</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924u" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924u" />
-<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924u" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924v" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924v" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924v" />
 </head>
 <body>
 <div class="layout">
@@ -276,13 +276,13 @@
 </div>
 
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924u"></script>
-<script src="../assets/task-store.js?v=20260924u"></script>
-  <script src="../assets/review-store.js?v=20260924u"></script>
-  <script src="../assets/app.js?v=20260924u"></script>
-<script src="../assets/role-guard.js?v=20260924u"></script>
-<script src="../assets/agent-widget.js?v=20260924u"></script>
-<script src="../assets/rule-store.js?v=20260924u"></script>
+<script src="../assets/roles.js?v=20260924v"></script>
+<script src="../assets/task-store.js?v=20260924v"></script>
+  <script src="../assets/review-store.js?v=20260924v"></script>
+  <script src="../assets/app.js?v=20260924v"></script>
+<script src="../assets/role-guard.js?v=20260924v"></script>
+<script src="../assets/agent-widget.js?v=20260924v"></script>
+<script src="../assets/rule-store.js?v=20260924v"></script>
 <script>
 /* ===================== 规则库 · 页面交互 ===================== */
 (function () {
@@ -441,7 +441,7 @@
         ok: '存为模板', done: '已加入模板库',
         after: function (root) {
           var nm = (root.querySelector('#rl-tpl-name') || {}).value || (rule.name + '模板');
-          TEMPLATES.push({ name: nm, cat: '质量', scene: '由已配置规则抽象，可跨环境复用', params: [{ k: '{提前天数}', v: '30' }, { k: '{通知对象}', v: '设备负责人' }, { k: '{通知方式}', v: '邮件' }], use: 0, rule: rule.name });
+          TEMPLATES.push({ name: nm, cat: '质量', scene: '由已配置规则抽象，可跨环境复用', params: [{ k: '{提前天数}', v: '30' }, { k: '{通知对象}', v: '设备负责人' }, { k: '{通知方式}', v: '系统通知' }], use: 0, rule: rule.name });
           renderTpl();
         }
       });
@@ -453,10 +453,10 @@
      规则模板（17.3-4）
      ========================================================== */
   var TEMPLATES = [
-    { name: '设备校准到期预警', cat: '设备', scene: '计量设备到期前提前通知负责人，避免超期使用', params: [{ k: '{提前天数}', v: '30' }, { k: '{通知对象}', v: '设备负责人' }, { k: '{通知方式}', v: '邮件' }], use: 12, rule: '设备校准到期预警' },
+    { name: '设备校准到期预警', cat: '设备', scene: '计量设备到期前提前通知负责人，避免超期使用', params: [{ k: '{提前天数}', v: '30' }, { k: '{通知对象}', v: '设备负责人' }, { k: '{通知方式}', v: '系统通知' }], use: 12, rule: '设备校准到期预警' },
     { name: '样本温度超限拦截', cat: '样本', scene: '入库时校验储存温度，超限直接阻断并通知采集方', params: [{ k: '{温度下限}', v: '-80' }, { k: '{温度上限}', v: '-60' }, { k: '{处理动作}', v: '拒绝入库' }], use: 31, rule: '样本温度超限拦截' },
     { name: '不符合项超期升级', cat: '质量', scene: 'NCR 整改超期自动升级通知质量负责人并提升优先级', params: [{ k: '{超期天数}', v: '1' }, { k: '{升级对象}', v: '质量负责人' }], use: 8, rule: '不符合项超期升级' },
-    { name: '库存容量预警', cat: '容量', scene: '库存使用率超过阈值时提醒扩容并生成事件', params: [{ k: '{使用率阈值}', v: '85' }, { k: '{通知方式}', v: '邮件 + 系统通知' }], use: 5, rule: '库存容量预警' },
+    { name: '库存容量预警', cat: '容量', scene: '库存使用率超过阈值时提醒扩容并生成事件', params: [{ k: '{使用率阈值}', v: '85' }, { k: '{通知方式}', v: '系统通知' }], use: 5, rule: '库存容量预警' },
     { name: '文件版本废止通知', cat: '质量', scene: '文件审批通过后自动废止旧版并通知持有人', params: [{ k: '{通知范围}', v: '文件持有人' }], use: 19, rule: '文件版本废止通知' },
     { name: '知情同意缺失拦截', cat: '样本', scene: '供者知情同意字段缺失时阻断入库并生成整改事件', params: [{ k: '{校验字段}', v: '知情同意书编号' }], use: 3, rule: '知情同意缺失拦截' }
   ];
@@ -521,7 +521,7 @@
         STORE.add({
           id: 'tpl_' + Date.now() + '_' + Math.floor(Math.random() * 1000), name: t.rule || t.name, ver: 'v1.0', on: true,
           trigger: '模板套用生成', freq: '0 次', last: '—', conds: conds,
-          acts: [{ act: '发送通知', who: '质量负责人', how: '邮件' }],
+          acts: [{ act: '发送通知', who: '质量负责人', how: '系统通知' }],
           expr: 'IF ' + conds.map(function (c) { return c.field + ' ' + c.op + ' ' + c.val; }).join(' / ') + ' → 按模板「' + t.name + '」执行'
         });
         t.use++;
@@ -538,15 +538,15 @@
     { v: 'v3.1', date: '2024-10-12 09:20', by: '王志强', type: '新增条件', sum: '新增条件「设备状态 = 在用」，排除停用设备' },
     { v: 'v3.0', date: '2024-08-30 14:05', by: '刘梅', type: '结构调整', sum: '触发方式由手动改为定时（每日 08:00）' },
     { v: 'v2.2', date: '2024-06-18 11:12', by: '陈磊', type: '修改阈值', sum: '校准提前预警天数 30 天 → 15 天' },
-    { v: 'v2.1', date: '2024-04-02 10:33', by: '刘梅', type: '新增动作', sum: '新增「发送邮件通知设备负责人」动作' },
+    { v: 'v2.1', date: '2024-04-02 10:33', by: '刘梅', type: '新增动作', sum: '新增「发送系统通知设备负责人」动作' },
     { v: 'v2.0', date: '2024-03-15 09:00', by: '系统管理员', type: '初始创建', sum: '规则首次创建并启用' }
   ];
   var DIFFS = {
-    'v3.2': [['mod', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 30天'], ['add', '', '→ 生成预警事件（事件管控中心 · 待分派）'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
-    'v3.1': [['add', '', 'AND 设备状态 = 在用'], ['keep', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 15天'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
-    'v3.0': [['mod', '触发方式：手动触发', '触发方式：定时触发（每日 08:00）'], ['keep', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 15天'], ['keep', '→ 发送邮件通知设备负责人', '→ 发送邮件通知设备负责人']],
+    'v3.2': [['mod', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 30天'], ['add', '', '→ 生成预警事件（事件管控中心 · 待分派）'], ['keep', '→ 发送系统通知设备负责人', '→ 发送系统通知设备负责人']],
+    'v3.1': [['add', '', 'AND 设备状态 = 在用'], ['keep', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 15天'], ['keep', '→ 发送系统通知设备负责人', '→ 发送系统通知设备负责人']],
+    'v3.0': [['mod', '触发方式：手动触发', '触发方式：定时触发（每日 08:00）'], ['keep', 'IF 设备校准到期日 ≤ 15天', 'IF 设备校准到期日 ≤ 15天'], ['keep', '→ 发送系统通知设备负责人', '→ 发送系统通知设备负责人']],
     'v2.2': [['mod', 'IF 设备校准到期日 ≤ 30天', 'IF 设备校准到期日 ≤ 15天']],
-    'v2.1': [['add', '', '→ 发送邮件通知设备负责人'], ['keep', 'IF 设备校准到期日 ≤ 30天 AND 采集时间 有效', 'IF 设备校准到期日 ≤ 30天 AND 采集时间 有效']],
+    'v2.1': [['add', '', '→ 发送系统通知设备负责人'], ['keep', 'IF 设备校准到期日 ≤ 30天 AND 采集时间 有效', 'IF 设备校准到期日 ≤ 30天 AND 采集时间 有效']],
     'v2.0': [['add', '', 'IF 设备校准到期日 ≤ 30天 AND 采集时间 有效'], ['add', '', '→ 记录执行日志']]
   };
   var curVer = 'v3.2';
@@ -636,7 +636,7 @@
     { t: '2024-12-01 08:00', rule: '设备校准到期预警', cond: '校准到期日 ≤ 30天', res: '触发', cost: '0.9s', det: '设备 EQ-021 校准将于 2025-01-01 到期，已通知王志强' },
     { t: '2024-11-30 08:00', rule: '设备校准到期预警', cond: '校准到期日 ≤ 30天', res: '无触发', cost: '0.2s', det: '当前无设备即将到期' },
     { t: '2024-11-28 16:15', rule: '文件版本自动归档', cond: '文件状态 = 已审批', res: '触发', cost: '0.6s', det: 'SOP-007 v4.0 审批完成，v3.2 已标记废止' },
-    { t: '2024-11-27 03:14', rule: '液氮液位低告警', cond: '液氮液位 < 30%', res: '失败', cost: '5.0s', det: '短信网关超时，已自动重试并降级为邮件通知' },
+    { t: '2024-11-27 03:14', rule: '液氮液位低告警', cond: '液氮液位 < 30%', res: '失败', cost: '5.0s', det: '系统通知发送失败，已自动重试' },
     { t: '2024-11-25 09:00', rule: '不符合项超期告警', cond: 'NCR 截止日已过期且未关闭', res: '无触发', cost: '0.3s', det: '当前无超期不符合项' },
     { t: '2024-11-20 10:22', rule: '样本入库质量检查', cond: '标识信息不完整', res: '触发', cost: '0.7s', det: '样本 S-20241120-018 缺供者编号，已拒绝入库' }
   ];

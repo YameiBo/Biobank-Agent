@@ -5,9 +5,9 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>样本数据质控  - 体系管理智能体</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924u" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924u" />
-<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924u" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924v" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924v" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924v" />
 <style>
   /* 样本血缘（MVP，2026-10-07） */
   .sl-chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px 0;padding:12px;background:var(--bg-page);border:1px solid var(--border-light);border-radius:10px;overflow-x:auto;}
@@ -422,7 +422,7 @@
               <div class="pm-alert-ico">🔔</div>
               <div class="pm-alert-body">
                 <div class="pm-alert-name">温度超限预警</div>
-                <div class="pm-alert-cond"><span>阈值：储存温度超出 -80℃±2℃</span><span>通知对象：储存管理员、质量主管</span><span>通知方式：短信 + 邮件</span><span>频率：立即</span><span>最近触发：12-01 02:14</span></div>
+                <div class="pm-alert-cond"><span>阈值：储存温度超出 -80℃±2℃</span><span>通知对象：储存管理员、质量主管</span><span>通知方式：系统通知</span><span>频率：立即</span><span>最近触发：12-01 02:14</span></div>
               </div>
               <span class="tag tag-success" data-dq-alert-tag>已启用</span>
               <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
@@ -431,7 +431,7 @@
               <div class="pm-alert-ico">📉</div>
               <div class="pm-alert-body">
                 <div class="pm-alert-name">数据质量分下降</div>
-                <div class="pm-alert-cond"><span>阈值：任一维度评分下降 &gt; 2%</span><span>通知对象：质量主管</span><span>通知方式：邮件</span><span>频率：每日 08:00</span><span>最近触发：11-26 08:00</span></div>
+                <div class="pm-alert-cond"><span>阈值：任一维度评分下降 &gt; 2%</span><span>通知对象：质量主管</span><span>通知方式：系统通知</span><span>频率：每日 08:00</span><span>最近触发：11-26 08:00</span></div>
               </div>
               <span class="tag tag-success" data-dq-alert-tag>已启用</span>
               <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
@@ -449,7 +449,7 @@
               <div class="pm-alert-ico">📋</div>
               <div class="pm-alert-body">
                 <div class="pm-alert-name">知情同意缺失告警</div>
-                <div class="pm-alert-cond"><span>阈值：知情同意书编号为空</span><span>通知对象：质量主管、文件管理员</span><span>通知方式：邮件 + 系统通知</span><span>频率：每日 09:00</span><span>最近触发：11-29 09:00</span></div>
+                <div class="pm-alert-cond"><span>阈值：知情同意书编号为空</span><span>通知对象：质量主管、文件管理员</span><span>通知方式：系统通知</span><span>频率：每日 09:00</span><span>最近触发：11-29 09:00</span></div>
               </div>
               <span class="tag tag-success" data-dq-alert-tag>已启用</span>
               <button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>
@@ -458,7 +458,7 @@
               <div class="pm-alert-ico" style="background:var(--bg-disabled);color:var(--text-tertiary);">💾</div>
               <div class="pm-alert-body">
                 <div class="pm-alert-name">存储容量预警</div>
-                <div class="pm-alert-cond"><span>阈值：库存使用率 &gt; 85%</span><span>通知对象：样本库主管、质量主管</span><span>通知方式：邮件 + 系统通知</span><span>频率：每周汇报</span><span>最近触发：—</span></div>
+                <div class="pm-alert-cond"><span>阈值：库存使用率 &gt; 85%</span><span>通知对象：样本库主管、质量主管</span><span>通知方式：系统通知</span><span>频率：每周汇报</span><span>最近触发：—</span></div>
               </div>
               <span class="tag tag-default" data-dq-alert-tag>已禁用</span>
               <button class="pm-switch" data-dq-switch aria-label="启用 / 停用"></button>
@@ -477,14 +477,14 @@
 </div>
 
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924u"></script>
-<script src="../assets/task-store.js?v=20260924u"></script>
-  <script src="../assets/review-store.js?v=20260924u"></script>
-  <script src="../assets/app.js?v=20260924u"></script>
-<script src="../assets/rule-store.js?v=20260924u"></script>
-<script src="../assets/event-store.js?v=20260924u"></script>
-<script src="../assets/role-guard.js?v=20260924u"></script>
-<script src="../assets/agent-widget.js?v=20260924u"></script>
+<script src="../assets/roles.js?v=20260924v"></script>
+<script src="../assets/task-store.js?v=20260924v"></script>
+  <script src="../assets/review-store.js?v=20260924v"></script>
+  <script src="../assets/app.js?v=20260924v"></script>
+<script src="../assets/rule-store.js?v=20260924v"></script>
+<script src="../assets/event-store.js?v=20260924v"></script>
+<script src="../assets/role-guard.js?v=20260924v"></script>
+<script src="../assets/agent-widget.js?v=20260924v"></script>
 <script>
 /* ===================== 样本数据质控 · 页面交互 ===================== */
 (function () {
@@ -1034,7 +1034,7 @@
         '<div class="form-item"><label class="form-label">通知对象</label><select class="select" id="dq-na-who">' +
         ['样本管理员、质量主管', '质量主管', '技术主管', '储存管理员'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
         '<div class="form-item"><label class="form-label">通知方式</label><select class="select" id="dq-na-how">' +
-        ['系统通知', '邮件', '短信 + 邮件'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
+        ['系统通知'].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></div>' +
         '</div>',
       ok: '保存并启用',
       onOk: function (root) {

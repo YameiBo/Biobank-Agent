@@ -5,9 +5,9 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>新建规则  - 体系管理智能体</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924u" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924u" />
-<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924u" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924v" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924v" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924v" />
 </head>
 <body>
 <div class="layout">
@@ -221,13 +221,13 @@
 </div>
 
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924u"></script>
-<script src="../assets/task-store.js?v=20260924u"></script>
-  <script src="../assets/review-store.js?v=20260924u"></script>
-  <script src="../assets/app.js?v=20260924u"></script>
-<script src="../assets/role-guard.js?v=20260924u"></script>
-<script src="../assets/agent-widget.js?v=20260924u"></script>
-<script src="../assets/rule-store.js?v=20260924u"></script>
+<script src="../assets/roles.js?v=20260924v"></script>
+<script src="../assets/task-store.js?v=20260924v"></script>
+  <script src="../assets/review-store.js?v=20260924v"></script>
+  <script src="../assets/app.js?v=20260924v"></script>
+<script src="../assets/role-guard.js?v=20260924v"></script>
+<script src="../assets/agent-widget.js?v=20260924v"></script>
+<script src="../assets/rule-store.js?v=20260924v"></script>
 <script>
 /* ===================== 规则库 · 新建 / 编辑规则（可视化编排） ===================== */
 (function () {
@@ -241,7 +241,7 @@
       { t: '字段缺失', field: '知情同意书编号', op: '为空', val: '' }
     ],
     act: [
-      { t: '发送通知', who: '设备负责人', how: '邮件' },
+      { t: '发送通知', who: '设备负责人', how: '系统通知' },
       { t: '生成事件', who: '事件管控中心', how: '待分派' },
       { t: '阻断操作', who: '入库流程', how: '拒绝入库' },
       { t: '写入日志', who: '操作日志', how: '触发日志' }
@@ -261,7 +261,7 @@
       { field: '校准到期日', op: '≤', val: '30天', join: 'AND' }
     ],
     acts: [
-      { who: '设备负责人', how: '邮件', act: '发送通知' },
+      { who: '设备负责人', how: '系统通知', act: '发送通知' },
       { who: '事件管控中心', how: '待分派', act: '生成事件' }
     ]
   };
