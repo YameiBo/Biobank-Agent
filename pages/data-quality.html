@@ -173,9 +173,7 @@
           <div class="table-wrap">
             <table class="table">
               <thead><tr>
-                <th style="width:92px;">样本 ID</th><th style="width:112px;">受试者</th><th style="width:88px;">数据来源</th><th style="width:132px;">疾病</th>
-                <th style="width:100px;">分期</th><th style="width:112px;">采集日期</th><th style="width:190px;">存储位置</th><th style="width:88px;">质控状态</th>
-                <th style="width:82px;">样本类型</th><th style="width:64px;">数量</th><th style="width:96px;">知情同意</th>
+                <th style="width:92px;">样本 ID</th><th style="width:112px;">样本源ID</th><th style="width:96px;">样本类型</th><th style="width:88px;">数据来源</th><th style="width:112px;">采集日期</th><th style="width:190px;">存储位置</th><th style="width:88px;">质控状态</th><th style="width:96px;">知情同意</th>
               </tr></thead>
               <tbody id="dq-sample-body"></tbody>
             </table>
@@ -1070,8 +1068,6 @@
   renderFlow();
   /* ---------- 样本列表 → 进入质控模块（2026-10-07） ---------- */
   (function () {
-    var DISEASES = ['肝细胞癌', '肝硬化（对照）', '肝内胆管癌', '混合型肝细胞-胆管癌', '肝细胞癌'];
-    var STAGES = ['IIIb 期', 'IV 期', 'I 期', 'Child-Pugh B', 'IIIa 期', 'II 期'];
     var TYPES = ['血清', '血浆', '组织'];
     var QCS = [['合格', 'tag-success'], ['合格', 'tag-success'], ['合格', 'tag-success'], ['不合格', 'tag-error'], ['待检', 'tag-warning']];
     var LOCS = ['A 库', 'B 库'];
@@ -1081,16 +1077,13 @@
       var id = 'S' + (i < 10 ? '00' : (i < 100 ? '0' : '')) + i;
       SAMPLES.push({
         id: id,
-        subject: 'SUBJ-' + (5217 + i),
+        subject: 'SRC-' + (5217 + i),
         source: (i % 11 === 7 ? '自创建' : '系统'),
-        disease: DISEASES[i % DISEASES.length],
-        stage: STAGES[i % STAGES.length],
         date: '2026-' + (i % 3 === 0 ? '03' : '04') + '-' + pad((i * 2) % 27 + 1),
         location: LOCS[i % 2] + ' / ' + pad((i % 4) + 1) + ' 架 / ' + pad((i * 3) % 40 + 1) + ' 盒 / B' + ((i % 6) + 1),
         qc: QCS[i % QCS.length][0], qcCls: QCS[i % QCS.length][1],
         type: TYPES[i % TYPES.length],
-        tubes: (i % 5) + 1,
-        consent: (i % 17 === 0 ? '已撤回' : '已签署')
+        consent: (i % 17 === 0 ? '未知' : (i % 7 === 0 ? '否' : '是'))
       });
     }
     var page = 1, PER = 15, kw = '';
@@ -1107,20 +1100,18 @@
       var start = (page - 1) * PER;
       var slice = list.slice(start, start + PER);
       document.getElementById('dq-sample-body').innerHTML = slice.length ? slice.map(function (s) {
+        var cc = s.consent === '是' ? 'tag-success' : (s.consent === '否' ? 'tag-error' : 'tag-warning');
         return '<tr class="dq-sample-row" data-sample="' + s.id + '">' +
           '<td><strong>' + s.id + '</strong></td>' +
           '<td>' + s.subject + '</td>' +
+          '<td>' + s.type + '</td>' +
           '<td>' + s.source + '</td>' +
-          '<td>' + s.disease + '</td>' +
-          '<td>' + s.stage + '</td>' +
           '<td>' + s.date + '</td>' +
           '<td>' + s.location + '</td>' +
           '<td><span class="tag ' + s.qcCls + '">' + s.qc + '</span></td>' +
-          '<td>' + s.type + '</td>' +
-          '<td>' + s.tubes + '</td>' +
-          '<td><span class="tag ' + (s.consent === '已签署' ? 'tag-success' : 'tag-error') + '">' + s.consent + '</span></td>' +
+          '<td><span class="tag ' + cc + '">' + s.consent + '</span></td>' +
           '</tr>';
-      }).join('') : '<tr><td colspan="11"><div style="padding:24px; text-align:center; color:var(--text-tertiary);">未找到样本</div></td></tr>';
+      }).join('') : '<tr><td colspan="8"><div style="padding:24px; text-align:center; color:var(--text-tertiary);">未找到样本</div></td></tr>';
       document.getElementById('dq-sample-foot').textContent = '第 ' + (total ? start + 1 : 0) + '–' + Math.min(start + PER, total) + ' 条 / 共 ' + total + ' 条';
       var pg = '<button class="btn btn-sm" data-dq-page="prev"' + (page <= 1 ? ' disabled' : '') + '>上一页</button>';
       for (var p = 1; p <= pages; p++) {
@@ -1145,7 +1136,7 @@
           '<span style="font-size:12.5px; color:var(--text-tertiary);">当前样本</span>' +
           '<b style="font-size:14px;">' + s.id + '</b>' +
           '<span class="tag tag-primary">' + s.subject + '</span>' +
-          '<span style="font-size:12.5px; color:var(--text-secondary);">' + s.disease + ' · ' + s.stage + ' · 采集 ' + s.date + ' · ' + s.location + '</span>' +
+          '<span style="font-size:12.5px; color:var(--text-secondary);">' + s.type + ' · ' + s.source + ' · 采集 ' + s.date + ' · ' + s.location + '</span>' +
         '</div>';
       document.getElementById('dq-back-samples').addEventListener('click', back);
       window.scrollTo(0, 0);
