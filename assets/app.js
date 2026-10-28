@@ -4177,6 +4177,12 @@ window.closeModal = closeModal;
 (function () {
   var RS = window.REMINDER_STORE; if (!RS) return;
   var bell = document.querySelector('.topbar-icon-btn[data-tip="通知"]');
+  if (!bell) {
+    var cands = document.querySelectorAll('.topbar-right .topbar-icon-btn');
+    for (var i = 0; i < cands.length; i++) {
+      if (cands[i].textContent.indexOf('🔔') >= 0) { bell = cands[i]; break; }
+    }
+  }
   if (!bell) return;
   var isPages = location.pathname.indexOf('/pages/') >= 0;
   function link(p) { return (isPages ? '' : 'pages/') + p; }

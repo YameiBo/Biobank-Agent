@@ -5,7 +5,7 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>CNAS 条款库 - CNAS 迎检</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924w" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924x" />
 <style>
 /* ===== 标准库切换卡 ===== */
 .cl-lib{position:relative;cursor:pointer;transition:transform .16s,box-shadow .16s,border-color .16s;border:1px solid var(--border);}
@@ -100,7 +100,7 @@
 .cl-method.selected .cl-method-n::before{content:"☑ ";color:var(--primary);}
 .cl-read-note{font-size:11.5px;color:var(--text-tertiary);margin-top:10px;}
 </style>
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924w" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924x" />
 </head>
 <body>
 <div class="layout">
@@ -278,16 +278,16 @@
   </div>
 </div>
 
-<script src="../assets/clause-lib.js?v=20260924w"></script>
-<script src="../assets/clause-reading.js?v=20260924w"></script>
+<script src="../assets/clause-lib.js?v=20260924x"></script>
+<script src="../assets/clause-reading.js?v=20260924x"></script>
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924w"></script>
-<script src="../assets/task-store.js?v=20260924w"></script>
-  <script src="../assets/review-store.js?v=20260924w"></script>
-  <script src="../assets/reminder-store.js?v=20260924w"></script>
+<script src="../assets/roles.js?v=20260924x"></script>
+<script src="../assets/task-store.js?v=20260924x"></script>
+  <script src="../assets/review-store.js?v=20260924x"></script>
+  <script src="../assets/reminder-store.js?v=20260924x"></script>
 
-  <script src="../assets/app.js?v=20260924w"></script>
-<script src="../assets/role-guard.js?v=20260924w"></script>
+  <script src="../assets/app.js?v=20260924x"></script>
+<script src="../assets/role-guard.js?v=20260924x"></script>
 <script>
 /* ==========================================================================
    CNAS 条款库 — 页面逻辑
@@ -1052,7 +1052,7 @@
       '发现偏离时是否有处置与纠正记录'
     ];
 
-    /* 条款解读：标准解读段落 + 五类评审方式（数据源 assets/clause-reading.js?v=20260924w） */
+    /* 条款解读：标准解读段落 + 五类评审方式（数据源 assets/clause-reading.js?v=20260924x） */
     var reading = (window.CLAUSE_READING && window.CLAUSE_READING.build)
       ? window.CLAUSE_READING.build({
           id: item.id, name: item.name, lib: item.lib,
@@ -1178,6 +1178,6 @@
   renderAll();
 })();
 </script>
-<script src="../assets/agent-widget.js?v=20260924w"></script>
+<script src="../assets/agent-widget.js?v=20260924x"></script>
 </body>
 </html>
