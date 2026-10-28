@@ -4169,3 +4169,61 @@ window.closeModal = closeModal;
   render();
   window.addEventListener('reviewchange', render);
 })();
+
+/* ==========================================================================
+   通知小铃铛（全站顶栏，2026-10-28）
+   依赖 reminder-store.js：展示最新 10 条提醒，「查看更多」进入事件管控中心待提醒模块。
+   ========================================================================== */
+(function () {
+  var RS = window.REMINDER_STORE; if (!RS) return;
+  var bell = document.querySelector('.topbar-icon-btn[data-tip="通知"]');
+  if (!bell) return;
+  var isPages = location.pathname.indexOf('/pages/') >= 0;
+  function link(p) { return (isPages ? '' : 'pages/') + p; }
+
+  var badge = document.createElement('span');
+  badge.className = 'bell-badge';
+  bell.appendChild(badge);
+
+  var pop = document.createElement('div');
+  pop.className = 'bell-pop';
+  pop.style.display = 'none';
+  bell.appendChild(pop);
+
+  function levelTag(l) {
+    if (l === 'critical') return '<span class="tag tag-error">紧急</span>';
+    if (l === 'warning') return '<span class="tag tag-warning">警告</span>';
+    return '<span class="tag tag-default">一般</span>';
+  }
+  function refreshBadge() {
+    var n = RS.unread();
+    badge.textContent = n > 99 ? '99+' : n;
+    badge.style.display = n ? '' : 'none';
+  }
+  function render() {
+    var list = RS.latest(10);
+    pop.innerHTML =
+      '<div class="bell-pop-head"><span>通知提醒</span><span class="bell-unread">未读 ' + RS.unread() + '</span></div>' +
+      (list.length ? list.map(function (r) {
+        return '<div class="bell-item' + (r.read ? '' : ' unread') + '" data-bell-id="' + esc(r.id) + '">' +
+          '<div class="bell-item-top">' + levelTag(r.level) + '<span class="bell-title">' + esc(r.title) + '</span>' +
+          '<span class="bell-time">' + esc(r.time) + '</span></div>' +
+          '<div class="bell-desc">' + esc(r.desc) + '</div></div>';
+      }).join('') : '<div class="bell-empty">暂无提醒</div>') +
+      '<div class="bell-pop-foot"><a class="bell-more" href="' + link('event-control.html') + '?view=reminder">查看更多 ›</a></div>';
+  }
+  bell.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (pop.style.display === 'none') { render(); pop.style.display = 'block'; }
+    else pop.style.display = 'none';
+  });
+  pop.addEventListener('click', function (e) {
+    var it = e.target.closest('[data-bell-id]');
+    if (it) { RS.markRead(it.getAttribute('data-bell-id')); render(); refreshBadge(); e.stopPropagation(); }
+  });
+  document.addEventListener('click', function (e) {
+    if (!bell.contains(e.target)) pop.style.display = 'none';
+  });
+  window.addEventListener('reminderchange', function () { render(); refreshBadge(); });
+  refreshBadge();
+})();

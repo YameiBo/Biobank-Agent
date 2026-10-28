@@ -5,9 +5,9 @@
 <link rel="icon" href="data:," />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>事件管控中心  - 体系管理智能体</title>
-<link rel="stylesheet" href="../assets/styles.css?v=20260924v" />
-<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924v" />
-<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924v" />
+<link rel="stylesheet" href="../assets/styles.css?v=20260924w" />
+<link rel="stylesheet" href="../assets/agent-widget.css?v=20260924w" />
+<link rel="stylesheet" href="../assets/platform-modules.css?v=20260924w" />
 <style>
   /* 维度视图（按条款 / 按人员）· 与任务分配打通（2026-09-24） */
   .ec-dim-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -213,16 +213,25 @@
         <aside class="pm-rail" id="ec-rail"></aside>
       </div>
 
-      <!-- 我的待办事项（放在事件流下方，2026-10-07） -->
-      <div class="card" id="ec-todo-card" style="margin-top:16px;">
-        <div class="card-header">
-          <div class="card-title">我的待办事项 <span class="muted" style="font-size:12px; font-weight:400;">按当前用户汇总其待完成 / 进行中 / 已完成事项</span></div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span style="font-size:12px; color:var(--text-tertiary);">当前用户</span>
-            <select class="select" id="ec-todo-user" style="width:130px; height:30px;"></select>
+      <!-- 我的待办事项 + 我的提醒事项（提醒 2026-10-28 新增在待办右侧） -->
+      <div class="grid grid-2" style="margin-top:16px; align-items:start;">
+        <div class="card" id="ec-todo-card">
+          <div class="card-header">
+            <div class="card-title">我的待办事项 <span class="muted" style="font-size:12px; font-weight:400;">按当前用户汇总其待完成 / 进行中 / 已完成事项</span></div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span style="font-size:12px; color:var(--text-tertiary);">当前用户</span>
+              <select class="select" id="ec-todo-user" style="width:130px; height:30px;"></select>
+            </div>
           </div>
+          <div id="ec-todo-body"></div>
         </div>
-        <div id="ec-todo-body"></div>
+
+        <div class="card" id="ec-remind-card">
+          <div class="card-header">
+            <div class="card-title">我的提醒事项 <span class="muted" style="font-size:12px; font-weight:400;">系统自动提醒 · 与右上角小铃铛同步</span></div>
+          </div>
+          <div id="ec-remind-body"></div>
+        </div>
       </div>
 
       <!-- 维度视图：按条款 / 按人员（与「任务分配」同源，2026-09-24） -->
@@ -249,13 +258,15 @@
 </div>
 
 <!-- >>> RBAC 图层（roles.js + role-guard.js）勿删 <<< -->
-<script src="../assets/roles.js?v=20260924v"></script>
-<script src="../assets/task-store.js?v=20260924v"></script>
-<script src="../assets/event-store.js?v=20260924v"></script>
-<script src="../assets/review-store.js?v=20260924v"></script>
-  <script src="../assets/app.js?v=20260924v"></script>
-<script src="../assets/role-guard.js?v=20260924v"></script>
-<script src="../assets/agent-widget.js?v=20260924v"></script>
+<script src="../assets/roles.js?v=20260924w"></script>
+<script src="../assets/task-store.js?v=20260924w"></script>
+<script src="../assets/event-store.js?v=20260924w"></script>
+<script src="../assets/review-store.js?v=20260924w"></script>
+  <script src="../assets/reminder-store.js?v=20260924w"></script>
+
+  <script src="../assets/app.js?v=20260924w"></script>
+<script src="../assets/role-guard.js?v=20260924w"></script>
+<script src="../assets/agent-widget.js?v=20260924w"></script>
 <script>
 /* ===================== 事件管控中心 · 页面交互 ===================== */
 (function () {
@@ -966,6 +977,57 @@
       var p = b.getAttribute('data-dim-open').split(':');
       openDimDetail(p[0], p.slice(1).join(':'));
     });
+  })();
+
+  /* ==========================================================
+     我的提醒事项（2026-10-28）—— 与右上角小铃铛同源
+     ========================================================== */
+  function levelTag(l) {
+    if (l === 'critical') return '<span class="tag tag-error">紧急</span>';
+    if (l === 'warning') return '<span class="tag tag-warning">警告</span>';
+    return '<span class="tag tag-default">一般</span>';
+  }
+  function renderRemind() {
+    var body = document.getElementById('ec-remind-body');
+    if (!body) return;
+    var RS = window.REMINDER_STORE;
+    if (!RS) { body.innerHTML = '<div class="ec-dim-empty">提醒数据源未加载</div>'; return; }
+    var list = RS.all();
+    if (!list.length) { body.innerHTML = '<div class="ec-dim-empty">暂无提醒事项</div>'; return; }
+    var unread = RS.unread();
+    body.innerHTML =
+      '<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">' +
+      '<span style="font-size:12.5px; color:var(--text-secondary);"><b style="font-size:16px; color:var(--primary);">' + list.length + '</b> 条提醒 · 未读 <b style="color:var(--error);">' + unread + '</b></span>' +
+      '<button class="btn-text" data-remind-all>全部标记已读</button>' +
+      '</div>' +
+      list.map(function (r) {
+        return '<div class="ec-mini-item ec-remind-item' + (r.read ? '' : ' unread') + '">' +
+          levelTag(r.level) +
+          '<span class="ec-mini-title" title="' + esc(r.desc) + '">' + esc(r.title) + '</span>' +
+          '<span class="tag tag-default">' + esc(r.type) + '</span>' +
+          '<span style="font-size:11px; color:var(--text-tertiary); flex-shrink:0;">' + esc(r.time) + '</span>' +
+          (r.read ? '' : '<button class="btn-text" data-remind-read="' + esc(r.id) + '">标记已读</button>') +
+          '</div>';
+      }).join('');
+  }
+  (function initRemind() {
+    var card = document.getElementById('ec-remind-card');
+    var body = document.getElementById('ec-remind-body');
+    if (!body) return;
+    renderRemind();
+    window.addEventListener('reminderchange', renderRemind);
+    if (card) card.addEventListener('click', function (e) {
+      var all = e.target.closest('[data-remind-all]');
+      var one = e.target.closest('[data-remind-read]');
+      if (all) { if (window.REMINDER_STORE) window.REMINDER_STORE.markAllRead(); return; }
+      if (one) { if (window.REMINDER_STORE) window.REMINDER_STORE.markRead(one.getAttribute('data-remind-read')); return; }
+    });
+    // 小铃铛「查看更多」深链：?view=reminder → 滚动定位到提醒模块
+    if (/view=reminder/.test(location.search)) {
+      setTimeout(function () {
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 400);
+    }
   })();
 
   function dueBadge(it) {
