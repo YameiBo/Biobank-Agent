@@ -678,7 +678,7 @@
         slRow('环节', esc(s.k)) + slRow('来源系统', esc(s.sys)) + slRow('操作人', esc(s.who)) + slRow('时间', esc(s.time)) +
         slRow('字段 / 数据', esc(s.fields), true) + slRow('状态', '<span class="tag ' + SL_TAG[s.status] + '">' + m[1] + '</span>') +
         '</div>' + (bad ? '<div class="alert alert-info" style="margin-top:12px;">该环节存在' + (s.status === 'error' ? '异常' : '告警') + '，可生成事件并下发负责人跟踪整改。</div>' : ''),
-      footer: '<a class="btn" href="archive.html">关联材料</a><button class="btn" data-pm-close>关闭</button>' +
+      footer: '<button class="btn" data-pm-close>关闭</button>' +
         (bad ? '<button class="btn btn-primary" id="sl-gen-ev" data-pm-close>生成事件并下发</button>' : ''),
       onMount: function (root) {
         var b = root.querySelector('#sl-gen-ev');
@@ -936,7 +936,12 @@
   /* ==========================================================
      新建质量规则 / 新建预警 / 采纳清洗建议
      ========================================================== */
-  function addQualityRule(name, dim, expr, fromLib) {
+  function dqCurrentUser() {
+    try { if (window.ROLES && ROLES.current && ROLES.byId) { var r = ROLES.byId(ROLES.current()); if (r && r.name) return r.name; } } catch (e) { }
+    var chip = document.querySelector('.topbar-right .user-chip span');
+    return (chip && chip.textContent.trim()) || '质量管理员';
+  }
+  function addQualityRule(name, dim, expr, fromLib, owner) {
     var host = document.getElementById('dq-rule-list');
     var row = document.createElement('div');
     row.className = 'pm-rule pm-flash';
@@ -945,7 +950,8 @@
       '<div class="pm-rule-main">' +
       '<div class="pm-rule-name">' + esc(name) + ' <span class="pm-chip pm-chip-type">' + esc(dim) + '</span>' +
       (fromLib ? ' <span class="tag tag-primary">规则库</span>' : '') + '</div>' +
-      '<div class="pm-rule-expr">' + esc(expr) + '</div></div>' +
+      '<div class="pm-rule-expr">' + esc(expr) + '</div>' +
+      '<div style="font-size:11.5px;color:var(--text-tertiary);margin-top:3px;">负责人：' + esc(owner || dqCurrentUser()) + '</div></div>' +
       '<div class="pm-rule-score"><b class="pm-score-good" data-pct="100">—</b><small>待检测</small></div>' +
       '<button class="pm-switch on" data-dq-switch aria-label="启用 / 停用"></button>';
     host.insertBefore(row, host.firstChild);
@@ -1010,13 +1016,14 @@
         '<div class="form-item"><label class="form-label">质量维度</label><select class="select" id="dq-nr-dim">' +
         ['完整性', '一致性', '准确性', '及时性'].map(function (d) { return '<option>' + d + '</option>'; }).join('') + '</select></div>' +
         '<div class="form-item"><label class="form-label">严重级别</label><select class="select" id="dq-nr-lv"><option>严重</option><option>中等</option><option selected>轻微</option></select></div>' +
+        '<div class="form-item full"><label class="form-label">负责人（创建人）</label><input class="input" id="dq-nr-owner" value="' + dqCurrentUser() + '" readonly /></div>' +
         '<div class="form-item full"><label class="form-label">校验表达式</label><input class="input" id="dq-nr-expr" placeholder="IF 样本编号在全库唯一" /></div>' +
         '</div>',
       ok: '保存并启用',
       onOk: function (root) {
         var nm = root.querySelector('#dq-nr-name').value.trim();
         if (!nm) { window.showToast('请填写规则名称', 'error'); return false; }
-        addQualityRule(nm, root.querySelector('#dq-nr-dim').value, root.querySelector('#dq-nr-expr').value.trim() || ('IF ' + nm + ' 校验通过'));
+        addQualityRule(nm, root.querySelector('#dq-nr-dim').value, root.querySelector('#dq-nr-expr').value.trim() || ('IF ' + nm + ' 校验通过'), false, root.querySelector('#dq-nr-owner').value);
         window.showToast('质量规则「' + nm + '」已创建并启用，下次检测生效', 'success');
         return true;
       }
