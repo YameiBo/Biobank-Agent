@@ -227,7 +227,7 @@
   /* ---------- 页面状态 ---------- */
   var params = new URLSearchParams(location.search);
   var state = {
-    lib: 'iso20387',
+    lib: 'gb37864',
     id: '',
     kw: '',           /* 条款导航搜索 */
     filter: 'all',    /* 清单筛选 */
@@ -663,7 +663,7 @@
   /* ---------- 库切换 ---------- */
   function renderLibSelect() {
     var sel = $('sa-lib');
-    sel.innerHTML = Object.keys(CL.libs).map(function (k) {
+    sel.innerHTML = ['gb37864', 'cl10'].map(function (k) {
       return '<option value="' + k + '"' + (state.lib === k ? ' selected' : '') + '>' + esc(CL.libs[k].name) + '</option>';
     }).join('');
   }
@@ -825,7 +825,7 @@
   /* ---------- 启动 ---------- */
   (function boot() {
     var libParam = params.get('lib');
-    state.lib = (libParam && CL.libs[libParam]) ? libParam : 'iso20387';
+    state.lib = (libParam && CL.libs[libParam]) ? libParam : 'gb37864';
     ensure(state.lib);
 
     var idParam = params.get('id');
