@@ -79,6 +79,34 @@
     ]
   };
 
+  /* ---------- 经验教训库：历次评审不符合项（按章整理） ---------- */
+  var LESSONS = {
+    '4': [
+      { no: 'NCR-2019-01', clause: '4.2', sev: '一般', desc: '部分可接触机密数据人员未签署保密承诺', fix: '补齐全员保密承诺，纳入入职培训并归档', lesson: '保密承诺需覆盖全体可接触机密数据人员并定期回顾' },
+      { no: 'NCR-2020-02', clause: '4.1', sev: '一般', desc: '公正性风险识别未覆盖所有权与人员关系带来的压力', fix: '完善公正性风险识别清单并形成年度评审', lesson: '公正性风险需按年度识别并覆盖全部关系来源' }
+    ],
+    '5': [
+      { no: 'NCR-2021-01', clause: '5.2', sev: '一般', desc: '关键岗位职责文件未明确权限边界与代理关系', fix: '修订岗位说明书，明确职责权限与代理人', lesson: '岗位职责与权限需以文件明确并随组织变更更新' }
+    ],
+    '6': [
+      { no: 'NCR-2023-01', clause: '6.2', sev: '严重', desc: '2 名技术人员缺少能力监控记录', fix: '补齐培训与能力监控记录并复核授权', lesson: '人员能力监控需按周期覆盖全部授权岗位' },
+      { no: 'NCR-2024-02', clause: '6.4', sev: '一般', desc: '1 台离心机校准过期 12 天', fix: '立即送检，并评估对已出数据的影响', lesson: '设备校准到期前应自动预警，禁止超期使用' },
+      { no: 'NCR-2022-03', clause: '6.3', sev: '一般', desc: '储存区温湿度监控记录出现断档', fix: '补录说明，完善连续监控与异常上报', lesson: '环境监控记录需连续无断档，异常即时上报' }
+    ],
+    '7': [
+      { no: 'NCR-2019-04', clause: '7.5.4', sev: '严重', desc: '储存温度记录不完整（2019 / 2023 两次被开）', fix: '上线连续温度监控并建立复检与整改验证', lesson: '该条款历史复发，列为重点自查项并纳入复发热点预警' },
+      { no: 'NCR-2020-05', clause: '7.5', sev: '一般', desc: '废弃样本处置记录不完整', fix: '补全处置记录并规范处置流程', lesson: '废弃样本处置需逐条留痕、可追溯' },
+      { no: 'NCR-2023-06', clause: '7.2', sev: '严重', desc: '部分样本知情同意书编号缺失', fix: '回填同意书编号并冻结相关出库', lesson: '接收环节即校验知情同意完整性' }
+    ],
+    '8': [
+      { no: 'NCR-2021-07', clause: '8.3', sev: '一般', desc: '风险识别未覆盖新增业务活动', fix: '更新风险与机遇清单', lesson: '风险与机遇需随业务变化动态更新' },
+      { no: 'NCR-2022-08', clause: '8.9', sev: '一般', desc: '内审发现整改闭环证据不全', fix: '补齐整改验证记录并复核关闭', lesson: '内审整改需闭环并保留验证证据' }
+    ]
+  };
+  function lessonsFor(item) {
+    return LESSONS[String(item.ch)] || [];
+  }
+
   /* ---------- 工具 ---------- */
   /* FNV-1a + murmur3 尾混合：纯 FNV-1a 的低位对短字符串分布退化
      （实测 h%4 恒为 0，会让"自评人"整列落进同一个分支），必须做一次 finalizer。 */
@@ -378,7 +406,7 @@
 
     var methods = reading.methods || [];
     var stPane = state.pane;
-    if (stPane !== 'std' && methods.map(function (_, i) { return 'm' + i; }).indexOf(stPane) < 0) stPane = 'std';
+    if (stPane !== 'std' && stPane !== 'lesson' && methods.map(function (_, i) { return 'm' + i; }).indexOf(stPane) < 0) stPane = 'std';
 
     /* --- 头部 --- */
     var head =
@@ -406,6 +434,7 @@
         return '<div class="tab' + (stPane === 'm' + i ? ' active' : '') + '" data-sa-pane="m' + i + '">' +
           m.icon + ' ' + esc(m.n) + (m.main ? '<span class="sa-main-dot" title="建议主用"></span>' : '') + '</div>';
       }).join('') +
+      '<div class="tab' + (stPane === 'lesson' ? ' active' : '') + '" data-sa-pane="lesson">📖 经验教训库</div>' +
     '</div>';
 
     /* --- 内容 --- */
@@ -448,6 +477,31 @@
 
     var stdWrap = '<div data-sa-pane-body="std"' + (stPane === 'std' ? '' : ' style="display:none;"') + '>' + stdPane + '</div>';
 
+    var lessons = lessonsFor(item);
+    var lessonPane = shell(
+      '<div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">' +
+        '<span style="font-size:13px; font-weight:600; color:var(--text-primary);">📖 【经验教训库】</span>' +
+        '<span class="tag tag-warning">历史不符合项 ' + lessons.length + ' 条</span>' +
+      '</div>' +
+      '<div style="font-size:12px; color:var(--text-tertiary); margin-bottom:12px;">汇总历次评审与本条款相关的所有不符合项、整改与经验教训，用于预防复发与重点自查。</div>' +
+      (lessons.length
+        ? '<div class="table-wrap"><table class="table"><thead><tr>' +
+          '<th style="width:104px;">编号</th><th style="width:60px;">条款</th><th style="width:72px;">严重程度</th><th>问题描述</th><th>整改措施</th><th>经验教训</th>' +
+          '</tr></thead><tbody>' +
+          lessons.map(function (l) {
+            return '<tr>' +
+              '<td><strong>' + esc(l.no) + '</strong></td>' +
+              '<td style="font-family:monospace;">' + esc(l.clause) + '</td>' +
+              '<td><span class="tag ' + (l.sev === '严重' ? 'tag-error' : 'tag-warning') + '">' + esc(l.sev) + '</span></td>' +
+              '<td>' + esc(l.desc) + '</td>' +
+              '<td>' + esc(l.fix) + '</td>' +
+              '<td>' + esc(l.lesson) + '</td>' +
+            '</tr>';
+          }).join('') + '</tbody></table></div>'
+        : '<div style="padding:24px; text-align:center; color:var(--text-tertiary);">暂未收集到与本条款相关的不符合项。</div>')
+    );
+    var lessonWrap = '<div data-sa-pane-body="lesson"' + (stPane === 'lesson' ? '' : ' style="display:none;"') + '>' + lessonPane + '</div>';
+
     /* --- 自评结果填写 --- */
     var checked = function (v) { return rec.result === v ? ' checked' : ''; };
     var foot =
@@ -468,7 +522,7 @@
         '</div>' +
       '</div>';
 
-    $('sa-detail').innerHTML = head + tabs + '<div id="sa-panes">' + stdWrap + methodPanes + '</div>' + foot;
+    $('sa-detail').innerHTML = head + tabs + '<div id="sa-panes">' + stdWrap + methodPanes + lessonWrap + '</div>' + foot;
   }
 
   /* ---------- 渲染：清单筛选 tab ---------- */
